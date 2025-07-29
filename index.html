@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THE WAY – Gestão</title>
+  <title>THE WAY – Gestão de Clientes</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#231f20"/>
-  <link rel="icon" type="image/png" href="2.png"/>
-  <!-- Fonte elegante -->
+  <!-- Fonte Montserrat -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -67,7 +66,6 @@
       opacity: .6;
       cursor: not-allowed;
     }
-    .dash, .client-list {margin-top: 2em;}
     .logout {
       float: right;
       background: #fff;
@@ -78,8 +76,32 @@
       font-size: .95em;
       padding: 0.5em 1.5em;
     }
-    .add-client-form {margin-top: 2em;}
-    .client-item { padding: .7em 0; border-bottom: 1px solid #c3ced0; }
+    .client-list {margin-top: 2em;}
+    .client-item {
+      padding: .7em 0;
+      border-bottom: 1px solid #c3ced0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.1em;
+    }
+    .actions {
+      display: flex;
+      gap: 0.7em;
+      margin-top: .3em;
+    }
+    .actions button {
+      padding: 0.3em 0.7em;
+      font-size: .98em;
+      border-radius: 6px;
+      background: #231f20;
+      color: #fff;
+      border: 1px solid #cdbb9e;
+      box-shadow: none;
+    }
+    .actions button.delete {
+      background: #be3c3c;
+      border-color: #be3c3c;
+    }
     @media(max-width:500px){
       .container{padding:1em;}
       .logo{max-width:62px;}
@@ -88,8 +110,9 @@
 </head>
 <body>
   <div class="header">
+    <!-- Coloca o teu ficheiro de logotipo na pasta e atualiza o src se precisares -->
     <img src="2.png" class="logo" alt="THE WAY" />
-    <h2>Gestão THE WAY</h2>
+    <h2>Gestão de Clientes</h2>
     <button id="logoutBtn" class="logout" style="display:none">Logout</button>
   </div>
   <div class="container">
@@ -99,31 +122,24 @@
       <button type="submit">Entrar</button>
     </form>
     <div id="dashboard" style="display:none">
-      <h3>Dashboard</h3>
-      <div class="dash">
-        <span id="clientCount">0</span> clientes registados
-      </div>
-      <div class="client-list" id="clientList"></div>
-      <form class="add-client-form" id="addClientForm">
-        <h4>Adicionar Cliente</h4>
-        <input class="input" type="text" id="clientName" placeholder="Nome do Cliente" required />
-        <input class="input" type="email" id="clientEmail" placeholder="Email do Cliente" required />
-        <button type="submit">Adicionar</button>
+      <h3>Clientes</h3>
+      <form id="addClientForm">
+        <input class="input" type="text" id="clientName" placeholder="Nome" required />
+        <input class="input" type="email" id="clientEmail" placeholder="Email" required />
+        <input class="input" type="tel" id="clientPhone" placeholder="Telefone" required />
+        <input class="input" type="text" id="clientAddress" placeholder="Morada" required />
+        <input class="input" type="date" id="clientBirth" placeholder="Data de Nascimento" required />
+        <button type="submit" id="addClientBtn">Adicionar Cliente</button>
       </form>
+      <div class="client-list" id="clientList"></div>
     </div>
   </div>
-  <!-- Manifest + Service Worker PWA -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
-  <!-- Firebase SDK -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
   <script>
-    // Configuração do Firebase
+    // ==== CONFIGURA O FIREBASE ====
     const firebaseConfig = {
       apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw", 
       authDomain: "tw25-1dbb3.firebaseapp.com",
@@ -134,73 +150,127 @@
     };
     firebase.initializeApp(firebaseConfig);
 
-    let auth, db;
-    window.addEventListener('DOMContentLoaded', () => {
-      if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
-        auth = firebase.auth();
-        db = firebase.firestore();
+    // Só o teu e-mail pode ser admin:
+    const ADMIN_EMAIL = "apscosta8@gmail.com";
 
-        // LOGIN / LOGOUT
-        const loginForm = document.getElementById('loginForm');
-        const dashboard = document.getElementById('dashboard');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const addClientForm = document.getElementById('addClientForm');
-        const clientList = document.getElementById('clientList');
-        const clientCount = document.getElementById('clientCount');
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-        function show(el) { el.style.display = '';}
-        function hide(el) { el.style.display = 'none';}
-        function clearInputs() {
-          loginForm.reset(); addClientForm.reset();
-        }
+    const loginForm = document.getElementById('loginForm');
+    const dashboard = document.getElementById('dashboard');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const addClientForm = document.getElementById('addClientForm');
+    const clientList = document.getElementById('clientList');
+    const addClientBtn = document.getElementById('addClientBtn');
 
-        auth.onAuthStateChanged(user => {
-          if (user) {
-            hide(loginForm); show(dashboard); show(logoutBtn);
-            loadClients();
-          } else {
-            show(loginForm); hide(dashboard); hide(logoutBtn);
-            clearInputs();
-          }
-        });
+    function show(el) { el.style.display = '';}
+    function hide(el) { el.style.display = 'none';}
 
-        loginForm.onsubmit = e => {
-          e.preventDefault();
-          auth.signInWithEmailAndPassword(email.value, password.value)
-            .catch(() => alert("Login falhou. Verifica os dados."));
-        };
+    let editMode = false;
+    let editId = null;
 
-        logoutBtn.onclick = () => auth.signOut();
+    function resetForm() {
+      addClientForm.reset();
+      editMode = false;
+      editId = null;
+      addClientBtn.textContent = "Adicionar Cliente";
+    }
 
-        // CLIENTES
-        function renderClient(doc) {
-          const div = document.createElement('div');
-          div.className = 'client-item';
-          div.innerHTML = `<b>${doc.data().name}</b> — ${doc.data().email}`;
-          clientList.appendChild(div);
-        }
-
-        function loadClients() {
-          clientList.innerHTML = '';
-          db.collection('clientes').orderBy('name').get().then(snapshot => {
-            clientCount.textContent = snapshot.size;
-            snapshot.forEach(renderClient);
-          });
-        }
-
-        addClientForm.onsubmit = e => {
-          e.preventDefault();
-          db.collection('clientes').add({
-            name: clientName.value.trim(),
-            email: clientEmail.value.trim(),
-            criadoEm: new Date()
-          }).then(() => {
-            loadClients();
-            addClientForm.reset();
-          });
-        };
+    // Login/Logout e proteção admin
+    auth.onAuthStateChanged(user => {
+      if (user && user.email === ADMIN_EMAIL) {
+        hide(loginForm); show(dashboard); show(logoutBtn);
+        loadClients();
+      } else {
+        show(loginForm); hide(dashboard); hide(logoutBtn);
+        loginForm.reset();
       }
     });
+
+    loginForm.onsubmit = e => {
+      e.preventDefault();
+      auth.signInWithEmailAndPassword(
+        document.getElementById('email').value,
+        document.getElementById('password').value
+      ).catch(() => alert("Login falhou. Verifica os dados."));
+    };
+
+    logoutBtn.onclick = () => auth.signOut();
+
+    // CRUD de clientes (Firestore)
+    function renderClient(doc) {
+      const data = doc.data();
+      const div = document.createElement('div');
+      div.className = 'client-item';
+      div.innerHTML = `
+        <b>${data.name}</b>
+        <span>Email: ${data.email}</span>
+        <span>Telefone: ${data.phone}</span>
+        <span>Morada: ${data.address}</span>
+        <span>Data Nascimento: ${data.birth || ''}</span>
+        <div class="actions">
+          <button onclick="editClient('${doc.id}')">Editar</button>
+          <button class="delete" onclick="deleteClient('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      clientList.appendChild(div);
+    }
+
+    function loadClients() {
+      clientList.innerHTML = '';
+      db.collection('clientes').orderBy('name').get().then(snapshot => {
+        snapshot.forEach(renderClient);
+      });
+    }
+
+    addClientForm.onsubmit = e => {
+      e.preventDefault();
+      const name = document.getElementById('clientName').value.trim();
+      const email = document.getElementById('clientEmail').value.trim();
+      const phone = document.getElementById('clientPhone').value.trim();
+      const address = document.getElementById('clientAddress').value.trim();
+      const birth = document.getElementById('clientBirth').value;
+
+      if (editMode && editId) {
+        db.collection('clientes').doc(editId).update({
+          name, email, phone, address, birth
+        }).then(() => {
+          resetForm();
+          loadClients();
+        });
+      } else {
+        db.collection('clientes').add({
+          name, email, phone, address, birth
+        }).then(() => {
+          resetForm();
+          loadClients();
+        });
+      }
+    };
+
+    // Editar cliente
+    window.editClient = function(id) {
+      db.collection('clientes').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          document.getElementById('clientName').value = data.name;
+          document.getElementById('clientEmail').value = data.email;
+          document.getElementById('clientPhone').value = data.phone;
+          document.getElementById('clientAddress').value = data.address;
+          document.getElementById('clientBirth').value = data.birth || '';
+          editMode = true;
+          editId = id;
+          addClientBtn.textContent = "Guardar Alterações";
+        }
+      });
+    };
+
+    // Eliminar cliente
+    window.deleteClient = function(id) {
+      if (confirm("Tem a certeza que quer eliminar este cliente?")) {
+        db.collection('clientes').doc(id).delete().then(loadClients);
+      }
+    };
   </script>
 </body>
 </html>
