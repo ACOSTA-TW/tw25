@@ -1,147 +1,316 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>THE WAY – Gestão de Clientes</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#231f20"/>
-  <!-- Fonte Montserrat -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE WAY – Gestão de Clientes & Contratos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: #f6f6f6;
-      color: #231f20;
       margin: 0;
+      background: #f7f5f1;
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: #231f20;
     }
-    .header {
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      width: 210px;
       background: #231f20;
       color: #cdbb9e;
-      padding: 2em 1em 1em 1em;
+      padding: 0 1em;
+      box-shadow: 2px 0 18px #0002;
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+    }
+    .sidebar .logo-box {
       text-align: center;
+      margin: 1.7em 0 1.2em;
     }
     .logo {
-      max-width: 90px;
-      margin-bottom: 1em;
-    }
-    h2 {
-      font-weight: 700;
-      letter-spacing: .18em;
-      margin-top: 0.2em;
-      margin-bottom: 0.7em;
-      color: #cdbb9e;
-      text-transform: uppercase;
-      font-size: 2.2em;
-    }
-    .container {
-      max-width: 430px;
-      margin: 2em auto;
+      width: 78px; height: 78px; border-radius: 50%;
       background: #fff;
-      border-radius: 22px;
-      box-shadow: 0 4px 24px #0001;
-      padding: 2.2em 2em;
-      border: 2px solid #cdbb9e20;
+      border: 3px solid #cdbb9e;
+      padding: .7em;
+      margin-bottom: .5em;
+      box-shadow: 0 2px 12px #0002;
     }
-    .input, button {
-      width: 100%;
-      padding: .95em;
-      margin: .8em 0;
+    .sidebar nav {
+      flex: 1 1 auto;
+      display: flex; flex-direction: column;
+      gap: .8em;
+      margin-top: .5em;
+    }
+    .sidebar nav button {
+      background: none; border: none;
+      color: #cdbb9e;
+      font-size: 1.09em;
+      font-weight: 700;
+      text-align: left;
+      padding: .7em .4em .7em 1.3em;
       border-radius: 9px;
-      border: 1px solid #c3ced0;
-      font-size: 1.08em;
+      cursor: pointer;
+      transition: background .15s;
     }
-    button {
+    .sidebar nav button.active, .sidebar nav button:hover {
+      background: #cdbb9e22;
+      color: #fff;
+    }
+    .logout-btn {
+      background: #fff;
+      color: #231f20;
+      border: 2px solid #cdbb9e;
+      border-radius: 7px;
+      padding: .6em 1.4em;
+      font-weight: 700;
+      margin: 1.1em auto 1.2em auto;
+      display: block;
+      cursor: pointer;
+      font-size: .98em;
+      box-shadow: 0 2px 8px #cdbb9e20;
+    }
+    .main-content {
+      margin-left: 210px;
+      padding: 2.5em 2em 2.2em 2.2em;
+      max-width: 980px;
+      min-height: 100vh;
+    }
+    @media(max-width:900px){
+      .main-content {margin-left:0; padding:1.2em;}
+      .sidebar{position:relative;width:100%;flex-direction:row;align-items:center;gap:1em;}
+      .sidebar nav{flex-direction:row;}
+    }
+    h1, h2, h3 {
+      color: #cdbb9e;
+      font-weight: 700;
+      margin-top: .5em;
+      letter-spacing:.06em;
+    }
+    .section {
+      background: #fff;
+      border-radius: 15px;
+      padding: 2em 1.3em;
+      box-shadow: 0 4px 24px #0001;
+      margin-bottom: 2em;
+    }
+    .row {display:flex; gap:1.2em;}
+    .col {flex:1;}
+    label {font-weight:600;display:block;margin:.5em 0 .2em;}
+    input, select, textarea {
+      width: 100%; padding: .9em; border-radius: 8px;
+      border: 1px solid #cdbb9e;
+      font-size: 1em;
+      margin-bottom: .5em;
+      background: #faf8f4;
+      color: #231f20;
+    }
+    input[type="date"] {color: #737272;}
+    button, .btn {
       background: #cdbb9e;
       color: #231f20;
       border: none;
+      padding: .9em 2.3em;
+      border-radius: 8px;
       font-weight: 700;
-      font-size: 1.12em;
-      letter-spacing: .10em;
+      font-size: 1em;
+      margin-top:.8em;
+      margin-bottom:.6em;
+      letter-spacing:.04em;
       cursor: pointer;
       box-shadow: 0 2px 8px #cdbb9e20;
       transition: background .15s;
+      display:inline-block;
     }
-    button[disabled] {
-      opacity: .6;
-      cursor: not-allowed;
+    button[disabled] {opacity:.5;}
+    .btn-danger {background: #be3c3c; color: #fff; margin-left:1em;}
+    .contract-list, .client-list {margin-top:1.2em;}
+    .list-item {
+      background: #f7f5f1;
+      border-radius: 12px;
+      margin-bottom: 1em;
+      padding: 1.2em 1.5em;
+      box-shadow: 0 1px 6px #0001;
     }
-    .logout {
-      float: right;
-      background: #fff;
-      color: #cdbb9e;
-      border: 2px solid #cdbb9e;
-      margin-top: -3.6em;
-      font-weight: 700;
-      font-size: .95em;
-      padding: 0.5em 1.5em;
+    .list-item-title {font-weight:700; font-size:1.14em; color:#231f20;}
+    .list-item small {color:#666;display:block;}
+    .contract-actions, .client-actions {margin-top:.8em;}
+    .contract-actions button, .client-actions button {
+      padding:.35em 1.1em; margin-right:.6em; border-radius:7px;
+      font-size:.97em;
     }
-    .client-list {margin-top: 2em;}
-    .client-item {
-      padding: .7em 0;
-      border-bottom: 1px solid #c3ced0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.1em;
-    }
-    .actions {
-      display: flex;
-      gap: 0.7em;
-      margin-top: .3em;
-    }
-    .actions button {
-      padding: 0.3em 0.7em;
-      font-size: .98em;
-      border-radius: 6px;
-      background: #231f20;
-      color: #fff;
-      border: 1px solid #cdbb9e;
-      box-shadow: none;
-    }
-    .actions button.delete {
-      background: #be3c3c;
-      border-color: #be3c3c;
-    }
-    @media(max-width:500px){
-      .container{padding:1em;}
-      .logo{max-width:62px;}
+    .contract-actions .btn-danger {background:#be3c3c;}
+    .switch {display:flex; align-items:center; gap:.5em; margin-top:.4em;}
+    .switch input {width:auto;}
+    .section-title {margin-bottom: 1.3em;}
+    .info {font-size:.99em; color:#756d5c; margin:.6em 0;}
+    .tag {background:#cdbb9e; color:#231f20; border-radius:5px; padding:.13em .7em; margin-left:.7em; font-size:.91em;}
+    @media(max-width:650px){
+      .main-content{padding:1em;}
+      .section{padding:1.1em;}
+      .logo{width:46px;height:46px;}
+      .sidebar{width:100px;}
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <!-- Coloca o teu ficheiro de logotipo na pasta e atualiza o src se precisares -->
-    <img src="2.png" class="logo" alt="THE WAY" />
-    <h2>Gestão de Clientes</h2>
-    <button id="logoutBtn" class="logout" style="display:none">Logout</button>
+  <div class="sidebar">
+    <div class="logo-box">
+      <img src="2.png" alt="THE WAY" class="logo" />
+      <div style="font-size:1.13em; font-weight:700;">THE WAY</div>
+    </div>
+    <nav>
+      <button id="nav-clientes" class="active" onclick="showSection('clientes')">Clientes</button>
+      <button id="nav-contratos" onclick="showSection('contratos')">Contratos</button>
+      <button id="nav-fornecedores" onclick="showSection('fornecedores')">Fornecedores</button>
+      <button id="nav-financeiras" onclick="showSection('financeiras')">Financeiras</button>
+    </nav>
+    <button id="logoutBtn" class="logout-btn" style="display:none">Logout</button>
   </div>
-  <div class="container">
-    <form id="loginForm">
-      <input class="input" type="email" id="email" placeholder="E-mail" required />
-      <input class="input" type="password" id="password" placeholder="Password" required minlength="6" />
-      <button type="submit">Entrar</button>
-    </form>
-    <div id="dashboard" style="display:none">
-      <h3>Clientes</h3>
-      <form id="addClientForm">
-        <input class="input" type="text" id="clientName" placeholder="Nome" required />
-        <input class="input" type="email" id="clientEmail" placeholder="Email" required />
-        <input class="input" type="tel" id="clientPhone" placeholder="Telefone" required />
-        <input class="input" type="text" id="clientAddress" placeholder="Morada" required />
-        <input class="input" type="date" id="clientBirth" placeholder="Data de Nascimento" required />
-        <button type="submit" id="addClientBtn">Adicionar Cliente</button>
+  <div class="main-content">
+    <!-- LOGIN -->
+    <div id="login-section" class="section" style="max-width:390px;margin:auto;">
+      <h2>Entrar</h2>
+      <form id="loginForm">
+        <label>Email</label>
+        <input class="input" type="email" id="email" required />
+        <label>Password</label>
+        <input class="input" type="password" id="password" required minlength="6" />
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+    <!-- CLIENTES -->
+    <div id="clientes-section" class="section" style="display:none;">
+      <h2 class="section-title">Ficha de Cliente</h2>
+      <form id="clientForm">
+        <div class="row">
+          <div class="col">
+            <label>Nome</label>
+            <input type="text" id="clientName" required />
+            <label>NIF</label>
+            <input type="text" id="clientNif" maxlength="9" />
+            <label>Data de Nascimento</label>
+            <input type="date" id="clientBirth" />
+            <label>Morada</label>
+            <input type="text" id="clientAddress" />
+            <label>Email</label>
+            <input type="email" id="clientEmail" />
+            <label>Telefone</label>
+            <input type="tel" id="clientPhone" />
+          </div>
+          <div class="col">
+            <label>Data de Entrada</label>
+            <input type="date" id="clientEntryDate" />
+            <label>Tipo</label>
+            <select id="clientType">
+              <option value="Particular">Particular</option>
+              <option value="Empresa">Empresa</option>
+            </select>
+            <label>Tipo de Serviço</label>
+            <select id="clientServiceType">
+              <option value="">Selecionar</option>
+              <option value="Crédito">Crédito</option>
+              <option value="Seguro">Seguro</option>
+              <option value="Consultoria">Consultoria</option>
+              <option value="Legalização">Legalização</option>
+            </select>
+            <label>Fonte de Captação</label>
+            <input type="text" id="clientSource" />
+            <label>Comercial Responsável</label>
+            <input type="text" id="clientManager" />
+            <label>RGPD Assinado?</label>
+            <select id="clientRgpd">
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+            <label>Observações</label>
+            <textarea id="clientNotes"></textarea>
+          </div>
+        </div>
+        <button type="submit" id="saveClientBtn">Guardar Cliente</button>
+        <button type="button" id="cancelEditClientBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
       </form>
       <div class="client-list" id="clientList"></div>
     </div>
+
+    <!-- CONTRATOS -->
+    <div id="contratos-section" class="section" style="display:none;">
+      <h2 class="section-title">Contratos</h2>
+      <form id="contractForm">
+        <div class="row">
+          <div class="col">
+            <label>Cliente</label>
+            <select id="contractClient" required></select>
+            <label>Tipo de Serviço</label>
+            <select id="contractType">
+              <option value="">Selecionar</option>
+              <option value="Crédito">Crédito</option>
+              <option value="Seguro">Seguro</option>
+              <option value="Consultoria">Consultoria</option>
+              <option value="Legalização">Legalização</option>
+            </select>
+            <label>Estado</label>
+            <select id="contractStatus">
+              <option value="Pendente">Pendente</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Concluído">Concluído</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+            <label>Data de Início</label>
+            <input type="date" id="contractStartDate" />
+          </div>
+          <div class="col">
+            <label>Financeira</label>
+            <select id="contractFinanceira"></select>
+            <label>Fornecedor</label>
+            <select id="contractFornecedor"></select>
+            <label>Comissão Financeira</label>
+            <input type="number" id="contractFinanceiraComissao" placeholder="€" min="0" />
+            <label>Comissão Fornecedor</label>
+            <input type="number" id="contractFornecedorComissao" placeholder="€" min="0" />
+            <label>Observações</label>
+            <textarea id="contractNotes"></textarea>
+          </div>
+        </div>
+        <button type="submit" id="saveContractBtn">Guardar Contrato</button>
+        <button type="button" id="cancelEditContractBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="contract-list" id="contractList"></div>
+    </div>
+
+    <!-- FORNECEDORES -->
+    <div id="fornecedores-section" class="section" style="display:none;">
+      <h2 class="section-title">Fornecedores</h2>
+      <form id="fornecedorForm">
+        <label>Nome</label>
+        <input type="text" id="fornecedorName" required />
+        <button type="submit" id="saveFornecedorBtn">Guardar Fornecedor</button>
+        <button type="button" id="cancelEditFornecedorBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="client-list" id="fornecedorList"></div>
+    </div>
+
+    <!-- FINANCEIRAS -->
+    <div id="financeiras-section" class="section" style="display:none;">
+      <h2 class="section-title">Financeiras</h2>
+      <form id="financeiraForm">
+        <label>Nome</label>
+        <input type="text" id="financeiraName" required />
+        <button type="submit" id="saveFinanceiraBtn">Guardar Financeira</button>
+        <button type="button" id="cancelEditFinanceiraBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="client-list" id="financeiraList"></div>
+    </div>
   </div>
-  <!-- Firebase SDKs -->
+
+  <!-- FIREBASE SDKS E APP SCRIPT -->
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
   <script>
     // ==== CONFIGURA O FIREBASE ====
     const firebaseConfig = {
-      apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw", 
+      apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw"
       authDomain: "tw25-1dbb3.firebaseapp.com",
       projectId: "tw25-1dbb3",
       storageBucket: "tw25-1dbb3.appspot.com",
@@ -149,44 +318,43 @@
       appId: "1:995776920444:web:7866264b9f4d74bedac2f9"
     };
     firebase.initializeApp(firebaseConfig);
-
-    // Só o teu e-mail pode ser admin:
     const ADMIN_EMAIL = "apscosta8@gmail.com";
-
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // Navegação entre secções
+    window.showSection = function(section) {
+      ['clientes', 'contratos', 'fornecedores', 'financeiras'].forEach(s => {
+        document.getElementById(s+'-section').style.display = (s === section) ? '' : 'none';
+        document.getElementById('nav-'+s).classList.toggle('active', s===section);
+      });
+    };
+
+    // LOGIN
+    const loginSection = document.getElementById('login-section');
     const loginForm = document.getElementById('loginForm');
-    const dashboard = document.getElementById('dashboard');
     const logoutBtn = document.getElementById('logoutBtn');
-    const addClientForm = document.getElementById('addClientForm');
-    const clientList = document.getElementById('clientList');
-    const addClientBtn = document.getElementById('addClientBtn');
-
-    function show(el) { el.style.display = '';}
-    function hide(el) { el.style.display = 'none';}
-
-    let editMode = false;
-    let editId = null;
-
-    function resetForm() {
-      addClientForm.reset();
-      editMode = false;
-      editId = null;
-      addClientBtn.textContent = "Adicionar Cliente";
-    }
-
-    // Login/Logout e proteção admin
+    const mainSections = [
+      document.getElementById('clientes-section'),
+      document.getElementById('contratos-section'),
+      document.getElementById('fornecedores-section'),
+      document.getElementById('financeiras-section')
+    ];
     auth.onAuthStateChanged(user => {
       if (user && user.email === ADMIN_EMAIL) {
-        hide(loginForm); show(dashboard); show(logoutBtn);
-        loadClients();
+        loginSection.style.display = 'none';
+        logoutBtn.style.display = '';
+        mainSections[0].style.display = '';
+        mainSections[1].style.display = 'none';
+        mainSections[2].style.display = 'none';
+        mainSections[3].style.display = 'none';
+        document.getElementById('nav-clientes').classList.add('active');
       } else {
-        show(loginForm); hide(dashboard); hide(logoutBtn);
-        loginForm.reset();
+        loginSection.style.display = '';
+        logoutBtn.style.display = 'none';
+        mainSections.forEach(sec => sec.style.display = 'none');
       }
     });
-
     loginForm.onsubmit = e => {
       e.preventDefault();
       auth.signInWithEmailAndPassword(
@@ -194,26 +362,33 @@
         document.getElementById('password').value
       ).catch(() => alert("Login falhou. Verifica os dados."));
     };
-
     logoutBtn.onclick = () => auth.signOut();
 
-    // CRUD de clientes (Firestore)
+    // ------------- CLIENTES ---------------
+    const clientForm = document.getElementById('clientForm');
+    const clientList = document.getElementById('clientList');
+    let clientEditId = null;
+
     function renderClient(doc) {
-      const data = doc.data();
-      const div = document.createElement('div');
-      div.className = 'client-item';
-      div.innerHTML = `
-        <b>${data.name}</b>
-        <span>Email: ${data.email}</span>
-        <span>Telefone: ${data.phone}</span>
-        <span>Morada: ${data.address}</span>
-        <span>Data Nascimento: ${data.birth || ''}</span>
-        <div class="actions">
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.name} <span class="tag">${d.clientType||''}</span></div>
+        <small>ID: ${doc.id}</small>
+        <small>NIF: ${d.nif||'-'} | Data Nasc: ${d.birth||'-'} | Tel: ${d.phone||'-'}</small>
+        <small>Morada: ${d.address||'-'}</small>
+        <small>Email: ${d.email||'-'}</small>
+        <small>Data Entrada: ${d.entryDate||'-'} | Fonte: ${d.source||'-'}</small>
+        <small>Serviço: ${d.serviceType||'-'} | Comercial: ${d.manager||'-'}</small>
+        <small>RGPD: ${d.rgpd||'-'}</small>
+        <div class="info">${d.notes||''}</div>
+        <div class="client-actions">
           <button onclick="editClient('${doc.id}')">Editar</button>
-          <button class="delete" onclick="deleteClient('${doc.id}')">Eliminar</button>
+          <button class="btn-danger" onclick="deleteClient('${doc.id}')">Eliminar</button>
         </div>
       `;
-      clientList.appendChild(div);
+      clientList.appendChild(el);
     }
 
     function loadClients() {
@@ -221,56 +396,370 @@
       db.collection('clientes').orderBy('name').get().then(snapshot => {
         snapshot.forEach(renderClient);
       });
+      loadContractClients();
     }
 
-    addClientForm.onsubmit = e => {
+    clientForm.onsubmit = e => {
       e.preventDefault();
-      const name = document.getElementById('clientName').value.trim();
-      const email = document.getElementById('clientEmail').value.trim();
-      const phone = document.getElementById('clientPhone').value.trim();
-      const address = document.getElementById('clientAddress').value.trim();
-      const birth = document.getElementById('clientBirth').value;
-
-      if (editMode && editId) {
-        db.collection('clientes').doc(editId).update({
-          name, email, phone, address, birth
-        }).then(() => {
-          resetForm();
+      const data = {
+        name: document.getElementById('clientName').value.trim(),
+        nif: document.getElementById('clientNif').value.trim(),
+        birth: document.getElementById('clientBirth').value,
+        address: document.getElementById('clientAddress').value.trim(),
+        email: document.getElementById('clientEmail').value.trim(),
+        phone: document.getElementById('clientPhone').value.trim(),
+        entryDate: document.getElementById('clientEntryDate').value,
+        clientType: document.getElementById('clientType').value,
+        serviceType: document.getElementById('clientServiceType').value,
+        source: document.getElementById('clientSource').value.trim(),
+        manager: document.getElementById('clientManager').value.trim(),
+        rgpd: document.getElementById('clientRgpd').value,
+        notes: document.getElementById('clientNotes').value.trim()
+      };
+      if (clientEditId) {
+        db.collection('clientes').doc(clientEditId).update(data).then(() => {
+          clientEditId = null;
+          clientForm.reset();
+          document.getElementById('saveClientBtn').textContent = 'Guardar Cliente';
+          document.getElementById('cancelEditClientBtn').style.display = 'none';
           loadClients();
         });
       } else {
-        db.collection('clientes').add({
-          name, email, phone, address, birth
-        }).then(() => {
-          resetForm();
+        db.collection('clientes').add(data).then(() => {
+          clientForm.reset();
           loadClients();
         });
       }
     };
 
-    // Editar cliente
     window.editClient = function(id) {
       db.collection('clientes').doc(id).get().then(doc => {
         if (doc.exists) {
-          const data = doc.data();
-          document.getElementById('clientName').value = data.name;
-          document.getElementById('clientEmail').value = data.email;
-          document.getElementById('clientPhone').value = data.phone;
-          document.getElementById('clientAddress').value = data.address;
-          document.getElementById('clientBirth').value = data.birth || '';
-          editMode = true;
-          editId = id;
-          addClientBtn.textContent = "Guardar Alterações";
+          const d = doc.data();
+          document.getElementById('clientName').value = d.name||'';
+          document.getElementById('clientNif').value = d.nif||'';
+          document.getElementById('clientBirth').value = d.birth||'';
+          document.getElementById('clientAddress').value = d.address||'';
+          document.getElementById('clientEmail').value = d.email||'';
+          document.getElementById('clientPhone').value = d.phone||'';
+          document.getElementById('clientEntryDate').value = d.entryDate||'';
+          document.getElementById('clientType').value = d.clientType||'Particular';
+          document.getElementById('clientServiceType').value = d.serviceType||'';
+          document.getElementById('clientSource').value = d.source||'';
+          document.getElementById('clientManager').value = d.manager||'';
+          document.getElementById('clientRgpd').value = d.rgpd||'Sim';
+          document.getElementById('clientNotes').value = d.notes||'';
+          clientEditId = id;
+          document.getElementById('saveClientBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditClientBtn').style.display = '';
         }
       });
     };
 
-    // Eliminar cliente
+    document.getElementById('cancelEditClientBtn').onclick = function() {
+      clientEditId = null;
+      clientForm.reset();
+      document.getElementById('saveClientBtn').textContent = 'Guardar Cliente';
+      document.getElementById('cancelEditClientBtn').style.display = 'none';
+    };
+
     window.deleteClient = function(id) {
       if (confirm("Tem a certeza que quer eliminar este cliente?")) {
         db.collection('clientes').doc(id).delete().then(loadClients);
       }
     };
+
+    // ------------- CONTRATOS ---------------
+    const contractForm = document.getElementById('contractForm');
+    const contractList = document.getElementById('contractList');
+    let contractEditId = null;
+
+    function loadContractClients() {
+      db.collection('clientes').orderBy('name').get().then(snapshot => {
+        let select = document.getElementById('contractClient');
+        select.innerHTML = '';
+        snapshot.forEach(doc => {
+          let d = doc.data();
+          let opt = document.createElement('option');
+          opt.value = doc.id;
+          opt.textContent = d.name + (d.nif ? ' (' + d.nif + ')' : '');
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function loadContractFornecedores() {
+      db.collection('fornecedores').orderBy('name').get().then(snapshot => {
+        let select = document.getElementById('contractFornecedor');
+        select.innerHTML = '<option value="">Nenhum</option>';
+        snapshot.forEach(doc => {
+          let d = doc.data();
+          let opt = document.createElement('option');
+          opt.value = doc.id;
+          opt.textContent = d.name;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function loadContractFinanceiras() {
+      db.collection('financeiras').orderBy('name').get().then(snapshot => {
+        let select = document.getElementById('contractFinanceira');
+        select.innerHTML = '<option value="">Nenhuma</option>';
+        snapshot.forEach(doc => {
+          let d = doc.data();
+          let opt = document.createElement('option');
+          opt.value = doc.id;
+          opt.textContent = d.name;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function renderContract(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.type || ''} - ${d.clientName || ''} <span class="tag">${d.status||''}</span></div>
+        <small>ID: ${doc.id}</small>
+        <small>Data Início: ${d.startDate||'-'} | Financeira: ${d.financeiraName||'-'} | Fornecedor: ${d.fornecedorName||'-'}</small>
+        <small>Comissão Financeira: €${d.financeiraComissao||'0'} | Comissão Fornecedor: €${d.fornecedorComissao||'0'}</small>
+        <div class="info">${d.notes||''}</div>
+        <div class="contract-actions">
+          <button onclick="editContract('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteContract('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      contractList.appendChild(el);
+    }
+
+    function loadContracts() {
+      contractList.innerHTML = '';
+      db.collection('contratos').orderBy('startDate', 'desc').get().then(snapshot => {
+        snapshot.forEach(renderContract);
+      });
+      loadContractClients();
+      loadContractFornecedores();
+      loadContractFinanceiras();
+    }
+
+    contractForm.onsubmit = e => {
+      e.preventDefault();
+      const clientId = document.getElementById('contractClient').value;
+      db.collection('clientes').doc(clientId).get().then(clientDoc => {
+        const clientName = clientDoc.exists ? clientDoc.data().name : '';
+        const data = {
+          clientId,
+          clientName,
+          type: document.getElementById('contractType').value,
+          status: document.getElementById('contractStatus').value,
+          startDate: document.getElementById('contractStartDate').value,
+          financeiraId: document.getElementById('contractFinanceira').value,
+          financeiraName: document.getElementById('contractFinanceira').options[document.getElementById('contractFinanceira').selectedIndex]?.textContent || '',
+          financeiraComissao: document.getElementById('contractFinanceiraComissao').value,
+          fornecedorId: document.getElementById('contractFornecedor').value,
+          fornecedorName: document.getElementById('contractFornecedor').options[document.getElementById('contractFornecedor').selectedIndex]?.textContent || '',
+          fornecedorComissao: document.getElementById('contractFornecedorComissao').value,
+          notes: document.getElementById('contractNotes').value.trim()
+        };
+        if (contractEditId) {
+          db.collection('contratos').doc(contractEditId).update(data).then(() => {
+            contractEditId = null;
+            contractForm.reset();
+            document.getElementById('saveContractBtn').textContent = 'Guardar Contrato';
+            document.getElementById('cancelEditContractBtn').style.display = 'none';
+            loadContracts();
+          });
+        } else {
+          db.collection('contratos').add(data).then(() => {
+            contractForm.reset();
+            loadContracts();
+          });
+        }
+      });
+    };
+
+    window.editContract = function(id) {
+      db.collection('contratos').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('contractClient').value = d.clientId||'';
+          document.getElementById('contractType').value = d.type||'';
+          document.getElementById('contractStatus').value = d.status||'Pendente';
+          document.getElementById('contractStartDate').value = d.startDate||'';
+          document.getElementById('contractFinanceira').value = d.financeiraId||'';
+          document.getElementById('contractFinanceiraComissao').value = d.financeiraComissao||'';
+          document.getElementById('contractFornecedor').value = d.fornecedorId||'';
+          document.getElementById('contractFornecedorComissao').value = d.fornecedorComissao||'';
+          document.getElementById('contractNotes').value = d.notes||'';
+          contractEditId = id;
+          document.getElementById('saveContractBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditContractBtn').style.display = '';
+        }
+      });
+    };
+
+    document.getElementById('cancelEditContractBtn').onclick = function() {
+      contractEditId = null;
+      contractForm.reset();
+      document.getElementById('saveContractBtn').textContent = 'Guardar Contrato';
+      document.getElementById('cancelEditContractBtn').style.display = 'none';
+    };
+
+    window.deleteContract = function(id) {
+      if (confirm("Tem a certeza que quer eliminar este contrato?")) {
+        db.collection('contratos').doc(id).delete().then(loadContracts);
+      }
+    };
+
+    // ---------- FORNECEDORES ----------
+    const fornecedorForm = document.getElementById('fornecedorForm');
+    const fornecedorList = document.getElementById('fornecedorList');
+    let fornecedorEditId = null;
+    function renderFornecedor(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.name}</div>
+        <div class="contract-actions">
+          <button onclick="editFornecedor('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteFornecedor('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      fornecedorList.appendChild(el);
+    }
+    function loadFornecedores() {
+      fornecedorList.innerHTML = '';
+      db.collection('fornecedores').orderBy('name').get().then(snapshot => {
+        snapshot.forEach(renderFornecedor);
+      });
+      loadContractFornecedores();
+    }
+    fornecedorForm.onsubmit = e => {
+      e.preventDefault();
+      const data = {name: document.getElementById('fornecedorName').value.trim()};
+      if (fornecedorEditId) {
+        db.collection('fornecedores').doc(fornecedorEditId).update(data).then(() => {
+          fornecedorEditId = null;
+          fornecedorForm.reset();
+          document.getElementById('saveFornecedorBtn').textContent = 'Guardar Fornecedor';
+          document.getElementById('cancelEditFornecedorBtn').style.display = 'none';
+          loadFornecedores();
+        });
+      } else {
+        db.collection('fornecedores').add(data).then(() => {
+          fornecedorForm.reset();
+          loadFornecedores();
+        });
+      }
+    };
+    window.editFornecedor = function(id) {
+      db.collection('fornecedores').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('fornecedorName').value = d.name||'';
+          fornecedorEditId = id;
+          document.getElementById('saveFornecedorBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditFornecedorBtn').style.display = '';
+        }
+      });
+    };
+    document.getElementById('cancelEditFornecedorBtn').onclick = function() {
+      fornecedorEditId = null;
+      fornecedorForm.reset();
+      document.getElementById('saveFornecedorBtn').textContent = 'Guardar Fornecedor';
+      document.getElementById('cancelEditFornecedorBtn').style.display = 'none';
+    };
+    window.deleteFornecedor = function(id) {
+      if (confirm("Tem a certeza que quer eliminar este fornecedor?")) {
+        db.collection('fornecedores').doc(id).delete().then(loadFornecedores);
+      }
+    };
+
+    // ---------- FINANCEIRAS ----------
+    const financeiraForm = document.getElementById('financeiraForm');
+    const financeiraList = document.getElementById('financeiraList');
+    let financeiraEditId = null;
+    function renderFinanceira(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.name}</div>
+        <div class="contract-actions">
+          <button onclick="editFinanceira('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteFinanceira('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      financeiraList.appendChild(el);
+    }
+    function loadFinanceiras() {
+      financeiraList.innerHTML = '';
+      db.collection('financeiras').orderBy('name').get().then(snapshot => {
+        snapshot.forEach(renderFinanceira);
+      });
+      loadContractFinanceiras();
+    }
+    financeiraForm.onsubmit = e => {
+      e.preventDefault();
+      const data = {name: document.getElementById('financeiraName').value.trim()};
+      if (financeiraEditId) {
+        db.collection('financeiras').doc(financeiraEditId).update(data).then(() => {
+          financeiraEditId = null;
+          financeiraForm.reset();
+          document.getElementById('saveFinanceiraBtn').textContent = 'Guardar Financeira';
+          document.getElementById('cancelEditFinanceiraBtn').style.display = 'none';
+          loadFinanceiras();
+        });
+      } else {
+        db.collection('financeiras').add(data).then(() => {
+          financeiraForm.reset();
+          loadFinanceiras();
+        });
+      }
+    };
+    window.editFinanceira = function(id) {
+      db.collection('financeiras').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('financeiraName').value = d.name||'';
+          financeiraEditId = id;
+          document.getElementById('saveFinanceiraBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditFinanceiraBtn').style.display = '';
+        }
+      });
+    };
+    document.getElementById('cancelEditFinanceiraBtn').onclick = function() {
+      financeiraEditId = null;
+      financeiraForm.reset();
+      document.getElementById('saveFinanceiraBtn').textContent = 'Guardar Financeira';
+      document.getElementById('cancelEditFinanceiraBtn').style.display = 'none';
+    };
+    window.deleteFinanceira = function(id) {
+      if (confirm("Tem a certeza que quer eliminar esta financeira?")) {
+        db.collection('financeiras').doc(id).delete().then(loadFinanceiras);
+      }
+    };
+
+    // ----------- LOAD DATA -----------
+    function loadAll() {
+      loadClients();
+      loadContracts();
+      loadFornecedores();
+      loadFinanceiras();
+    }
+    // Load ao login:
+    auth.onAuthStateChanged(user => {
+      if (user && user.email === ADMIN_EMAIL) setTimeout(loadAll,500);
+    });
+
+    // Navegação por clique
+    document.getElementById('nav-clientes').onclick = () => { showSection('clientes'); loadClients(); };
+    document.getElementById('nav-contratos').onclick = () => { showSection('contratos'); loadContracts(); };
+    document.getElementById('nav-fornecedores').onclick = () => { showSection('fornecedores'); loadFornecedores(); };
+    document.getElementById('nav-financeiras').onclick = () => { showSection('financeiras'); loadFinanceiras(); };
   </script>
 </body>
 </html>
