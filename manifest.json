@@ -1,0 +1,15 @@
+{
+  "name": "THE WAY Gestão",
+  "short_name": "THE WAY",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000C2D",
+  "icons": [
+    {
+      "src": "https://theway.com.pt/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
