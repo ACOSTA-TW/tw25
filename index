@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>THE WAY – Gestão</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000C2D"/>
+  <link rel="icon" type="image/png" href="https://theway.com.pt/favicon.png"/>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f6f8fa; color: #222; margin:0; }
+    .header { background: #000c2d; color: #fff; padding: 1.5em 1em; text-align:center; }
+    .container { max-width: 430px; margin: 2em auto; background: #fff; border-radius:20px; box-shadow: 0 4px 24px #0001; padding:2em; }
+    .logo { max-width: 80px; margin-bottom:1em;}
+    .input, button { width: 100%; padding: .8em; margin: .7em 0; border-radius: 8px; border: 1px solid #ddd;}
+    button { background: #000c2d; color: #fff; border:none; font-weight:bold; cursor:pointer; }
+    button[disabled] { opacity:.6; cursor:not-allowed; }
+    .dash, .client-list {margin-top:2em;}
+    .logout { float: right; background: #fff; color: #000c2d; border: 1px solid #000c2d; margin-top: -3.7em;}
+    .fab { position:fixed; right:18px; bottom:22px; background:#25d366; color:#fff; border:none; padding:1em 1.3em; border-radius:99px; font-size:1.5em; box-shadow:0 4px 16px #0002;}
+    .add-client-form {margin-top:2em;}
+    .client-item { padding:.7em 0; border-bottom:1px solid #eee;}
+    @media(max-width:500px){.container{padding:1em;} .logo{max-width:55px;} .fab{padding:0.7em 1em; font-size:1.2em;}}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://theway.com.pt/logotipo.png" class="logo" alt="THE WAY" />
+    <h2>Gestão THE WAY</h2>
+    <button id="logoutBtn" class="logout" style="display:none">Logout</button>
+  </div>
+  <div class="container">
+    <form id="loginForm">
+      <input class="input" type="email" id="email" placeholder="E-mail" required />
+      <input class="input" type="password" id="password" placeholder="Password" required minlength="6" />
+      <button type="submit">Entrar</button>
+    </form>
+
+    <div id="dashboard" style="display:none">
+      <h3>Dashboard</h3>
+      <div class="dash">
+        <span id="clientCount">0</span> clientes registados
+      </div>
+      <div class="client-list" id="clientList"></div>
+
+      <form class="add-client-form" id="addClientForm">
+        <h4>Adicionar Cliente</h4>
+        <input class="input" type="text" id="clientName" placeholder="Nome do Cliente" required />
+        <input class="input" type="email" id="clientEmail" placeholder="Email do Cliente" required />
+        <button type="submit">Adicionar</button>
+      </form>
+    </div>
+  </div>
+  <button class="fab" onclick="window.open('https://wa.me/351917012728', '_blank')">💬</button>
+
+  <!-- Manifest + Service Worker PWA -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+  <script>
+    // COLE AQUI O SEU BLOCO firebaseConfig
+    // Exemplo:
+    // const firebaseConfig = {
+    //   apiKey: "SUA_KEY",
+    //   authDomain: "xxx.firebaseapp.com",
+    //   projectId: "xxx",
+    //   ...
+    // };
+    // firebase.initializeApp(firebaseConfig);
+
+    // --- CÓDIGO ABAIXO DEPOIS DE COLOCAR firebaseConfig ---
+    let auth, db;
+    window.addEventListener('DOMContentLoaded', () => {
+      if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+        auth = firebase.auth();
+        db = firebase.firestore();
+
+        // LOGIN / LOGOUT
+        const loginForm = document.getElementById('loginForm');
+        const dashboard = document.getElementById('dashboard');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const addClientForm = document.getElementById('addClientForm');
+        const clientList = document.getElementById('clientList');
+        const clientCount = document.getElementById('clientCount');
+
+        function show(el) { el.style.display = '';}
+        function hide(el) { el.style.display = 'none';}
+        function clearInputs() {
+          loginForm.reset(); addClientForm.reset();
+        }
+
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            hide(loginForm); show(dashboard); show(logoutBtn);
+            loadClients();
+          } else {
+            show(loginForm); hide(dashboard); hide(logoutBtn);
+            clearInputs();
+          }
+        });
+
+        loginForm.onsubmit = e => {
+          e.preventDefault();
+          auth.signInWithEmailAndPassword(email.value, password.value)
+            .catch(() => alert("Login falhou. Verifica os dados."));
+        };
+
+        logoutBtn.onclick = () => auth.signOut();
+
+        // CLIENTES
+        function renderClient(doc) {
+          const div = document.createElement('div');
+          div.className = 'client-item';
+          div.innerHTML = `<b>${doc.data().name}</b> — ${doc.data().email}`;
+          clientList.appendChild(div);
+        }
+
+        function loadClients() {
+          clientList.innerHTML = '';
+          db.collection('clientes').orderBy('name').get().then(snapshot => {
+            clientCount.textContent = snapshot.size;
+            snapshot.forEach(renderClient);
+          });
+        }
+
+        addClientForm.onsubmit = e => {
+          e.preventDefault();
+          db.collection('clientes').add({
+            name: clientName.value.trim(),
+            email: clientEmail.value.trim(),
+            criadoEm: new Date()
+          }).then(() => {
+            loadClients();
+            addClientForm.reset();
+          });
+        };
+      }
+    });
+  </script>
+</body>
+</html>
