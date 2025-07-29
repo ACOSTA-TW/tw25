@@ -67,9 +67,9 @@
     // COLE AQUI O SEU BLOCO firebaseConfig
     // Exemplo:
     // const firebaseConfig = {
-    //   apiKey: "SUA_KEY",
-    //   authDomain: "xxx.firebaseapp.com",
-    //   projectId: "xxx",
+    //   apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw",
+    //   authDomain: "tw25-1dbb3.firebaseapp.com",
+    //   projectId: "tw25-1dbb3",
     //   ...
     // };
     // firebase.initializeApp(firebaseConfig);
