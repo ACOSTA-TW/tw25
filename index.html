@@ -2,155 +2,44 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
+  <title>THE WAY - Gestão Completa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THE WAY – Gestão de Clientes & Contratos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      background: #f7f5f1;
-      font-family: 'Montserrat', Arial, sans-serif;
-      color: #231f20;
-    }
+    body { margin:0; background:#f7f5f1; font-family:'Montserrat',Arial,sans-serif; color:#231f20;}
     .sidebar {
-      position: fixed;
-      left: 0; top: 0; bottom: 0;
-      width: 210px;
-      background: #231f20;
-      color: #cdbb9e;
-      padding: 0 1em;
-      box-shadow: 2px 0 18px #0002;
-      display: flex;
-      flex-direction: column;
-      z-index: 2;
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: 210px; background: #231f20; color: #cdbb9e;
+      padding: 0 1em; box-shadow: 2px 0 18px #0002;
+      display: flex; flex-direction: column; z-index: 2;
     }
-    .sidebar .logo-box {
-      text-align: center;
-      margin: 1.7em 0 1.2em;
-    }
-    .logo {
-      width: 78px; height: 78px; border-radius: 50%;
-      background: #fff;
-      border: 3px solid #cdbb9e;
-      padding: .7em;
-      margin-bottom: .5em;
-      box-shadow: 0 2px 12px #0002;
-    }
-    .sidebar nav {
-      flex: 1 1 auto;
-      display: flex; flex-direction: column;
-      gap: .8em;
-      margin-top: .5em;
-    }
-    .sidebar nav button {
-      background: none; border: none;
-      color: #cdbb9e;
-      font-size: 1.09em;
-      font-weight: 700;
-      text-align: left;
-      padding: .7em .4em .7em 1.3em;
-      border-radius: 9px;
-      cursor: pointer;
-      transition: background .15s;
-    }
-    .sidebar nav button.active, .sidebar nav button:hover {
-      background: #cdbb9e22;
-      color: #fff;
-    }
-    .logout-btn {
-      background: #fff;
-      color: #231f20;
-      border: 2px solid #cdbb9e;
-      border-radius: 7px;
-      padding: .6em 1.4em;
-      font-weight: 700;
-      margin: 1.1em auto 1.2em auto;
-      display: block;
-      cursor: pointer;
-      font-size: .98em;
-      box-shadow: 0 2px 8px #cdbb9e20;
-    }
-    .main-content {
-      margin-left: 210px;
-      padding: 2.5em 2em 2.2em 2.2em;
-      max-width: 980px;
-      min-height: 100vh;
-    }
-    @media(max-width:900px){
-      .main-content {margin-left:0; padding:1.2em;}
-      .sidebar{position:relative;width:100%;flex-direction:row;align-items:center;gap:1em;}
-      .sidebar nav{flex-direction:row;}
-    }
-    h1, h2, h3 {
-      color: #cdbb9e;
-      font-weight: 700;
-      margin-top: .5em;
-      letter-spacing:.06em;
-    }
-    .section {
-      background: #fff;
-      border-radius: 15px;
-      padding: 2em 1.3em;
-      box-shadow: 0 4px 24px #0001;
-      margin-bottom: 2em;
-    }
-    .row {display:flex; gap:1.2em;}
-    .col {flex:1;}
+    .sidebar .logo-box { text-align: center; margin: 1.7em 0 1.2em;}
+    .logo { width: 78px; height: 78px; border-radius: 50%; background: #fff; border: 3px solid #cdbb9e; padding: .7em; margin-bottom: .5em; box-shadow: 0 2px 12px #0002;}
+    .sidebar nav { flex: 1 1 auto; display: flex; flex-direction: column; gap: .8em; margin-top: .5em;}
+    .sidebar nav button { background: none; border: none; color: #cdbb9e; font-size: 1.09em; font-weight: 700; text-align: left; padding: .7em .4em .7em 1.3em; border-radius: 9px; cursor: pointer; transition: background .15s;}
+    .sidebar nav button.active, .sidebar nav button:hover { background: #cdbb9e22; color: #fff;}
+    .logout-btn { background: #fff; color: #231f20; border: 2px solid #cdbb9e; border-radius: 7px; padding: .6em 1.4em; font-weight: 700; margin: 1.1em auto 1.2em auto; display: block; cursor: pointer; font-size: .98em; box-shadow: 0 2px 8px #cdbb9e20;}
+    .main-content { margin-left: 210px; padding: 2.5em 2em 2.2em 2.2em; max-width: 1100px; min-height: 100vh;}
+    @media(max-width:900px){ .main-content {margin-left:0; padding:1.2em;} .sidebar{position:relative;width:100%;flex-direction:row;align-items:center;gap:1em;} .sidebar nav{flex-direction:row;} }
+    h1, h2, h3 { color: #cdbb9e; font-weight: 700; margin-top: .5em; letter-spacing:.06em;}
+    .section { background: #fff; border-radius: 15px; padding: 2em 1.3em; box-shadow: 0 4px 24px #0001; margin-bottom: 2em;}
+    .row {display:flex; gap:1.2em;} .col {flex:1;}
     label {font-weight:600;display:block;margin:.5em 0 .2em;}
-    input, select, textarea {
-      width: 100%; padding: .9em; border-radius: 8px;
-      border: 1px solid #cdbb9e;
-      font-size: 1em;
-      margin-bottom: .5em;
-      background: #faf8f4;
-      color: #231f20;
-    }
+    input, select, textarea { width: 100%; padding: .9em; border-radius: 8px; border: 1px solid #cdbb9e; font-size: 1em; margin-bottom: .5em; background: #faf8f4; color: #231f20;}
     input[type="date"] {color: #737272;}
-    button, .btn {
-      background: #cdbb9e;
-      color: #231f20;
-      border: none;
-      padding: .9em 2.3em;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 1em;
-      margin-top:.8em;
-      margin-bottom:.6em;
-      letter-spacing:.04em;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #cdbb9e20;
-      transition: background .15s;
-      display:inline-block;
-    }
+    button, .btn { background: #cdbb9e; color: #231f20; border: none; padding: .9em 2.3em; border-radius: 8px; font-weight: 700; font-size: 1em; margin-top:.8em; margin-bottom:.6em; letter-spacing:.04em; cursor: pointer; box-shadow: 0 2px 8px #cdbb9e20; transition: background .15s; display:inline-block;}
     button[disabled] {opacity:.5;}
     .btn-danger {background: #be3c3c; color: #fff; margin-left:1em;}
     .contract-list, .client-list {margin-top:1.2em;}
-    .list-item {
-      background: #f7f5f1;
-      border-radius: 12px;
-      margin-bottom: 1em;
-      padding: 1.2em 1.5em;
-      box-shadow: 0 1px 6px #0001;
-    }
+    .list-item { background: #f7f5f1; border-radius: 12px; margin-bottom: 1em; padding: 1.2em 1.5em; box-shadow: 0 1px 6px #0001;}
     .list-item-title {font-weight:700; font-size:1.14em; color:#231f20;}
     .list-item small {color:#666;display:block;}
     .contract-actions, .client-actions {margin-top:.8em;}
-    .contract-actions button, .client-actions button {
-      padding:.35em 1.1em; margin-right:.6em; border-radius:7px;
-      font-size:.97em;
-    }
+    .contract-actions button, .client-actions button { padding:.35em 1.1em; margin-right:.6em; border-radius:7px; font-size:.97em;}
     .contract-actions .btn-danger {background:#be3c3c;}
-    .switch {display:flex; align-items:center; gap:.5em; margin-top:.4em;}
-    .switch input {width:auto;}
     .section-title {margin-bottom: 1.3em;}
     .info {font-size:.99em; color:#756d5c; margin:.6em 0;}
     .tag {background:#cdbb9e; color:#231f20; border-radius:5px; padding:.13em .7em; margin-left:.7em; font-size:.91em;}
-    @media(max-width:650px){
-      .main-content{padding:1em;}
-      .section{padding:1.1em;}
-      .logo{width:46px;height:46px;}
-      .sidebar{width:100px;}
-    }
+    @media(max-width:650px){ .main-content{padding:1em;} .section{padding:1.1em;} .logo{width:46px;height:46px;} .sidebar{width:100px;} }
   </style>
 </head>
 <body>
@@ -178,6 +67,7 @@
         <input class="input" type="password" id="password" required minlength="6" />
         <button type="submit">Entrar</button>
       </form>
+      <div id="loginError" style="color: #be3c3c; margin-top:8px"></div>
     </div>
     <!-- CLIENTES -->
     <div id="clientes-section" class="section" style="display:none;">
@@ -303,26 +193,27 @@
     </div>
   </div>
 
-  <!-- FIREBASE SDKS E APP SCRIPT -->
+  <!-- FIREBASE SDKS + APP SCRIPT -->
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
   <script>
-    // ==== CONFIGURA O FIREBASE ====
+    // ==== EDITA SÓ AQUI ==== //
     const firebaseConfig = {
-      apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw"
+      apiKey: "A_TUA_API_KEY_AQUI", // <--- COLOCA AQUI!
       authDomain: "tw25-1dbb3.firebaseapp.com",
       projectId: "tw25-1dbb3",
       storageBucket: "tw25-1dbb3.appspot.com",
       messagingSenderId: "995776920444",
       appId: "1:995776920444:web:7866264b9f4d74bedac2f9"
     };
+    // ======================= //
+
     firebase.initializeApp(firebaseConfig);
     const ADMIN_EMAIL = "apscosta8@gmail.com";
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Navegação entre secções
     window.showSection = function(section) {
       ['clientes', 'contratos', 'fornecedores', 'financeiras'].forEach(s => {
         document.getElementById(s+'-section').style.display = (s === section) ? '' : 'none';
@@ -333,6 +224,7 @@
     // LOGIN
     const loginSection = document.getElementById('login-section');
     const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
     const logoutBtn = document.getElementById('logoutBtn');
     const mainSections = [
       document.getElementById('clientes-section'),
@@ -349,6 +241,7 @@
         mainSections[2].style.display = 'none';
         mainSections[3].style.display = 'none';
         document.getElementById('nav-clientes').classList.add('active');
+        loadAll();
       } else {
         loginSection.style.display = '';
         logoutBtn.style.display = 'none';
@@ -360,11 +253,11 @@
       auth.signInWithEmailAndPassword(
         document.getElementById('email').value,
         document.getElementById('password').value
-      ).catch(() => alert("Login falhou. Verifica os dados."));
+      ).catch(e => loginError.textContent = "Login falhou: " + (e.message || "Verifique os dados."));
     };
     logoutBtn.onclick = () => auth.signOut();
 
-    // ------------- CLIENTES ---------------
+    // CLIENTES
     const clientForm = document.getElementById('clientForm');
     const clientList = document.getElementById('clientList');
     let clientEditId = null;
@@ -469,7 +362,7 @@
       }
     };
 
-    // ------------- CONTRATOS ---------------
+    // CONTRATOS
     const contractForm = document.getElementById('contractForm');
     const contractList = document.getElementById('contractList');
     let contractEditId = null;
@@ -613,7 +506,7 @@
       }
     };
 
-    // ---------- FORNECEDORES ----------
+    // FORNECEDORES
     const fornecedorForm = document.getElementById('fornecedorForm');
     const fornecedorList = document.getElementById('fornecedorList');
     let fornecedorEditId = null;
@@ -678,7 +571,7 @@
       }
     };
 
-    // ---------- FINANCEIRAS ----------
+    // FINANCEIRAS
     const financeiraForm = document.getElementById('financeiraForm');
     const financeiraList = document.getElementById('financeiraList');
     let financeiraEditId = null;
@@ -750,16 +643,12 @@
       loadFornecedores();
       loadFinanceiras();
     }
-    // Load ao login:
-    auth.onAuthStateChanged(user => {
-      if (user && user.email === ADMIN_EMAIL) setTimeout(loadAll,500);
-    });
 
-    // Navegação por clique
     document.getElementById('nav-clientes').onclick = () => { showSection('clientes'); loadClients(); };
     document.getElementById('nav-contratos').onclick = () => { showSection('contratos'); loadContracts(); };
     document.getElementById('nav-fornecedores').onclick = () => { showSection('fornecedores'); loadFornecedores(); };
     document.getElementById('nav-financeiras').onclick = () => { showSection('financeiras'); loadFinanceiras(); };
+
   </script>
 </body>
 </html>
