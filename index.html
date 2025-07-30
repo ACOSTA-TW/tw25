@@ -2,281 +2,772 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>THE WAY - Gestão</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>THE WAY - Gestão Completa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Fonte Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', Arial, sans-serif; background: #f6f4f2; margin: 0; color: #222; }
-    header { background: #fff3e0; padding: 18px 0; text-align: center; border-bottom: 2px solid #e1d3b7; }
-    h1 { font-weight: 600; font-size: 1.5rem; color: #a4703a; letter-spacing: 2px; }
-    .container { max-width: 1000px; margin: 26px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 18px #0001; padding: 22px 14px 32px 14px; }
-    nav { margin-bottom: 18px; display: flex; gap: 10px; }
-    nav button { border: none; background: #f6f4f2; color: #a4703a; font-weight: bold; padding: 9px 16px; border-radius: 7px; cursor: pointer; }
-    nav button.active, nav button:hover { background: #a4703a; color: #fff; }
-    .dashboard { display: flex; gap: 18px; margin-bottom: 16px; flex-wrap: wrap;}
-    .card { background: #fffbf4; border: 1px solid #e1d3b7; border-radius: 10px; padding: 13px 17px; min-width: 120px; flex: 1; text-align: center; }
-    .card h2 { font-size: 2rem; margin: 0 0 2px; color: #ba882c;}
-    .card p { margin: 0; font-size: 0.95rem; color: #7d7056; }
-    .actions { margin-bottom: 8px; text-align: right;}
-    .actions button { background: #a4703a; color: #fff; border: none; padding: 9px 15px; border-radius: 7px; cursor: pointer; font-size: 0.96rem; margin-left: 7px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: #fff; }
-    th, td { border-bottom: 1px solid #e5ded6; padding: 9px 7px; text-align: left; font-size: 0.95rem; }
-    th { background: #fff3e0; color: #a4703a; font-weight: 600; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover { background: #f6f4f2; }
-    .btn-sm { padding: 2px 8px; border-radius: 5px; border: none; background: #f6f4f2; color: #a4703a; cursor: pointer; font-size: 0.93rem; margin-right: 2px; }
-    .btn-sm.edit { background: #f5e1b6;}
-    .btn-sm.del { background: #f9cfc5; color: #be2418;}
-    .modal-bg { display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background: #2227; align-items: center; justify-content: center; z-index: 100;}
-    .modal { background: #fff; border-radius: 12px; box-shadow: 0 10px 30px #0004; padding: 30px 32px; max-width: 380px; width: 95vw; position: relative; }
-    .modal-close { position: absolute; top: 11px; right: 14px; font-size: 1.3rem; background: none; border: none; cursor: pointer; color: #be2418;}
-    .modal label { display: block; margin-top: 12px; color: #a4703a;}
-    .modal input, .modal select, .modal textarea { width: 100%; margin-top: 4px; padding: 8px; font-size: 1rem; border-radius: 7px; border: 1px solid #e1d3b7; background: #fffbf4;}
-    .modal button[type="submit"] { margin-top: 15px; background: #a4703a; color: #fff; border: none; border-radius: 7px; padding: 10px 18px; font-size: 1rem; cursor: pointer; width: 100%;}
-    @media (max-width:700px) {
-      .container { padding: 4px 1px; }
-      .dashboard { flex-direction: column; gap: 10px;}
-      .modal { max-width:95vw; padding: 12px 5px;}
+    :root {
+      --color-light-grey: #C0C9CC;
+      --color-white: #FFFFFF;
+      --color-beige: #C8B89C;
+      --color-dark-black: #212121;
+    }
+    body {
+      margin: 0;
+      background: var(--color-white);
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--color-dark-black);
+    }
+    .sidebar {
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: 220px; background: var(--color-dark-black); color: var(--color-beige);
+      padding: 0 1.2em; box-shadow: 2px 0 18px #0002;
+      display: flex; flex-direction: column; z-index: 2;
+    }
+    .sidebar .logo-box { text-align: center; margin: 2.1em 0 1.5em;}
+    .logo {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: var(--color-white); border: 3px solid var(--color-beige);
+      padding: .6em; margin-bottom: .5em; box-shadow: 0 2px 10px #0002;
+    }
+    .sidebar nav {
+      flex: 1 1 auto; display: flex; flex-direction: column;
+      gap: 1em; margin-top: .5em;
+    }
+    .sidebar nav button {
+      background: none; border: none; color: var(--color-beige);
+      font-size: 1.11em; font-weight: 600; text-align: left;
+      padding: .7em 1em .7em 1.2em; border-radius: 10px; cursor: pointer;
+      transition: background .15s, color .15s;
+      letter-spacing: .03em;
+    }
+    .sidebar nav button.active,
+    .sidebar nav button:hover {
+      background: var(--color-beige);
+      color: var(--color-dark-black);
+    }
+    .logout-btn {
+      background: var(--color-white);
+      color: var(--color-dark-black);
+      border: 2px solid var(--color-beige);
+      border-radius: 8px;
+      padding: .7em 1.7em;
+      font-weight: 700;
+      margin: 1.3em auto 1.4em auto;
+      display: block;
+      cursor: pointer;
+      font-size: 1em;
+      box-shadow: 0 2px 8px #cdbb9e20;
+      transition: background .16s, color .15s;
+    }
+    .logout-btn:hover {
+      background: var(--color-beige);
+      color: var(--color-dark-black);
+      border-color: var(--color-dark-black);
+    }
+    .main-content {
+      margin-left: 220px; padding: 2.6em 2.3em 2.2em 2.3em;
+      max-width: 1200px; min-height: 100vh;
+      background: var(--color-white);
+    }
+    @media(max-width:900px){
+      .main-content {margin-left:0; padding:1.2em;}
+      .sidebar {position:relative;width:100%;flex-direction:row;align-items:center;gap:1em;}
+      .sidebar nav{flex-direction:row;}
+    }
+    h1, h2, h3 {
+      color: var(--color-dark-black); font-weight: 700; margin-top: .5em; letter-spacing:.06em;
+    }
+    .section {
+      background: var(--color-white);
+      border-radius: 18px;
+      padding: 2.2em 1.6em;
+      box-shadow: 0 4px 24px #C0C9CC22;
+      margin-bottom: 2.2em;
+      border: 1.5px solid var(--color-light-grey);
+    }
+    .row {display:flex; gap:1.2em;}
+    .col {flex:1;}
+    label {font-weight:600;display:block;margin:.5em 0 .2em;}
+    input, select, textarea {
+      width: 100%; padding: 1em;
+      border-radius: 9px;
+      border: 1.5px solid var(--color-light-grey);
+      font-size: 1em;
+      margin-bottom: .5em;
+      background: #F6F8F9;
+      color: var(--color-dark-black);
+      transition: border .16s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--color-beige);
+    }
+    input[type="date"] {color: #737272;}
+    button, .btn {
+      background: var(--color-beige); color: var(--color-dark-black);
+      border: none; padding: .9em 2.3em; border-radius: 9px;
+      font-weight: 700; font-size: 1em; margin-top:.8em; margin-bottom:.6em;
+      letter-spacing:.04em; cursor: pointer;
+      box-shadow: 0 2px 8px #C8B89C12; transition: background .15s;
+      display:inline-block;
+    }
+    button[disabled] {opacity:.5;}
+    .btn-danger {background: #E54A4A; color: #fff; margin-left:1em;}
+    .contract-list, .client-list {margin-top:1.2em;}
+    .list-item {
+      background: #F7F9FA;
+      border-radius: 15px;
+      margin-bottom: 1em;
+      padding: 1.25em 1.7em;
+      box-shadow: 0 1px 6px #C0C9CC33;
+      border: 1.1px solid var(--color-light-grey);
+    }
+    .list-item-title {font-weight:700; font-size:1.18em; color:var(--color-dark-black);}
+    .list-item small {color:#888;display:block;}
+    .contract-actions, .client-actions {margin-top:.8em;}
+    .contract-actions button, .client-actions button {
+      padding:.4em 1.1em;
+      margin-right:.7em;
+      border-radius:7px;
+      font-size:.97em;
+      background: var(--color-light-grey);
+      color: var(--color-dark-black);
+      border: 1px solid var(--color-beige);
+    }
+    .contract-actions .btn-danger, .client-actions .btn-danger {
+      background:#E54A4A;
+      color: #fff;
+      border: none;
+    }
+    .section-title {margin-bottom: 1.3em;}
+    .info {font-size:1em; color:#756d5c; margin:.7em 0;}
+    .tag {
+      background: var(--color-beige);
+      color: var(--color-dark-black);
+      border-radius:7px;
+      padding:.16em .9em;
+      margin-left:.7em;
+      font-size:.95em;
+      font-weight: 600;
+      letter-spacing: .01em;
+    }
+    @media(max-width:650px){
+      .main-content{padding:1em;}
+      .section{padding:1.1em;}
+      .logo{width:46px;height:46px;}
+      .sidebar{width:100px;}
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>THE WAY Gestão</h1>
-  </header>
-  <div class="container">
-    <div class="dashboard" id="dashboard"></div>
+  <div class="sidebar">
+    <div class="logo-box">
+      <img src="2.png" alt="THE WAY" class="logo" />
+      <div style="font-size:1.13em; font-weight:700;">THE WAY</div>
+    </div>
     <nav>
-      <button id="btnClientes" class="active">Clientes</button>
-      <button id="btnContratos">Contratos</button>
-      <button id="btnPendentes">Pendentes</button>
+      <button id="nav-clientes" class="active" onclick="showSection('clientes')">Clientes</button>
+      <button id="nav-contratos" onclick="showSection('contratos')">Contratos</button>
+      <button id="nav-fornecedores" onclick="showSection('fornecedores')">Fornecedores</button>
+      <button id="nav-financeiras" onclick="showSection('financeiras')">Financeiras</button>
     </nav>
-    <div class="actions" id="actions"></div>
-    <div id="mainArea"></div>
+    <button id="logoutBtn" class="logout-btn" style="display:none">Logout</button>
   </div>
-  <div class="modal-bg" id="modalBg">
-    <form class="modal" id="modalForm">
-      <button class="modal-close" id="closeModal" type="button">&times;</button>
-      <div id="modalFields"></div>
-      <button type="submit" id="modalSubmitBtn">Guardar</button>
-    </form>
-  </div>
-  <script type="module">
-    // FIREBASE SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+  <div class="main-content">
+    <!-- LOGIN -->
+    <div id="login-section" class="section" style="max-width:390px;margin:auto;">
+      <h2>Entrar</h2>
+      <form id="loginForm">
+        <label>Email</label>
+        <input class="input" type="email" id="email" required />
+        <label>Password</label>
+        <input class="input" type="password" id="password" required minlength="6" />
+        <button type="submit">Entrar</button>
+      </form>
+      <div id="loginError" style="color: #be3c3c; margin-top:8px"></div>
+    </div>
+    <!-- CLIENTES -->
+    <div id="clientes-section" class="section" style="display:none;">
+      <h2 class="section-title">Ficha de Cliente</h2>
+      <form id="clientForm">
+        <div class="row">
+          <div class="col">
+            <label>Nome</label>
+            <input type="text" id="clientName" required />
+            <label>NIF</label>
+            <input type="text" id="clientNif" maxlength="9" />
+            <label>Data de Nascimento</label>
+            <input type="date" id="clientBirth" />
+            <label>Morada</label>
+            <input type="text" id="clientAddress" />
+            <label>Email</label>
+            <input type="email" id="clientEmail" />
+            <label>Telefone</label>
+            <input type="tel" id="clientPhone" />
+          </div>
+          <div class="col">
+            <label>Data de Entrada</label>
+            <input type="date" id="clientEntryDate" />
+            <label>Tipo</label>
+            <select id="clientType">
+              <option value="Particular">Particular</option>
+              <option value="Empresa">Empresa</option>
+            </select>
+            <label>Tipo de Serviço</label>
+            <select id="clientServiceType">
+              <option value="">Selecionar</option>
+              <option value="Crédito">Crédito</option>
+              <option value="Seguro">Seguro</option>
+              <option value="Consultoria">Consultoria</option>
+              <option value="Legalização">Legalização</option>
+            </select>
+            <label>Fonte de Captação</label>
+            <input type="text" id="clientSource" />
+            <label>Comercial Responsável</label>
+            <input type="text" id="clientManager" />
+            <label>RGPD Assinado?</label>
+            <select id="clientRgpd">
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+            <label>Observações</label>
+            <textarea id="clientNotes"></textarea>
+          </div>
+        </div>
+        <button type="submit" id="saveClientBtn">Guardar Cliente</button>
+        <button type="button" id="cancelEditClientBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="client-list" id="clientList"></div>
+    </div>
 
+    <!-- CONTRATOS -->
+    <div id="contratos-section" class="section" style="display:none;">
+      <h2 class="section-title">Contratos</h2>
+      <form id="contractForm">
+        <div class="row">
+          <div class="col">
+            <label>Cliente</label>
+            <select id="contractClient" required></select>
+            <label>Tipo de Serviço</label>
+            <select id="contractType">
+              <option value="">Selecionar</option>
+              <option value="Crédito">Crédito</option>
+              <option value="Seguro">Seguro</option>
+              <option value="Consultoria">Consultoria</option>
+              <option value="Legalização">Legalização</option>
+            </select>
+            <label>Estado</label>
+            <select id="contractStatus">
+              <option value="Pendente">Pendente</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Concluído">Concluído</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+            <label>Data de Início</label>
+            <input type="date" id="contractStartDate" />
+          </div>
+          <div class="col">
+            <label>Financeira</label>
+            <select id="contractFinanceira"></select>
+            <label>Fornecedor</label>
+            <select id="contractFornecedor"></select>
+            <label>Comissão Financeira</label>
+            <input type="number" id="contractFinanceiraComissao" placeholder="€" min="0" />
+            <label>Comissão Fornecedor</label>
+            <input type="number" id="contractFornecedorComissao" placeholder="€" min="0" />
+            <label>Observações</label>
+            <textarea id="contractNotes"></textarea>
+          </div>
+        </div>
+        <button type="submit" id="saveContractBtn">Guardar Contrato</button>
+        <button type="button" id="cancelEditContractBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="contract-list" id="contractList"></div>
+    </div>
+
+    <!-- FORNECEDORES -->
+    <div id="fornecedores-section" class="section" style="display:none;">
+      <h2 class="section-title">Fornecedores</h2>
+      <form id="fornecedorForm">
+        <label>Nome</label>
+        <input type="text" id="fornecedorName" required />
+        <button type="submit" id="saveFornecedorBtn">Guardar Fornecedor</button>
+        <button type="button" id="cancelEditFornecedorBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="client-list" id="fornecedorList"></div>
+    </div>
+
+    <!-- FINANCEIRAS -->
+    <div id="financeiras-section" class="section" style="display:none;">
+      <h2 class="section-title">Financeiras</h2>
+      <form id="financeiraForm">
+        <label>Nome</label>
+        <input type="text" id="financeiraName" required />
+        <button type="submit" id="saveFinanceiraBtn">Guardar Financeira</button>
+        <button type="button" id="cancelEditFinanceiraBtn" style="display:none;margin-left:1.4em;">Cancelar</button>
+      </form>
+      <div class="client-list" id="financeiraList"></div>
+    </div>
+  </div>
+
+  <!-- FIREBASE SDKS + APP SCRIPT -->
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+  <script>
+    // ==== EDITA SÓ AQUI ==== //
     const firebaseConfig = {
-      apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw",
+        apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw",
       authDomain: "tw25-1dbb3.firebaseapp.com",
       projectId: "tw25-1dbb3",
-      storageBucket: "tw25-1dbb3.firebasestorage.app",
+      storageBucket: "tw25-1dbb3.appspot.com",
       messagingSenderId: "995776920444",
       appId: "1:995776920444:web:7866264b9f4d74bedac2f9"
     };
-    // ===============================================
+    // ======================= //
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    firebase.initializeApp(firebaseConfig);
+    const ADMIN_EMAIL = "apscosta8@gmail.com";
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    // --- Helpers básicos ---
-    function el(id){ return document.getElementById(id); }
-    function $(q){ return document.querySelector(q);}
-    function setActiveTab(tab){
-      btnClientes.classList.remove('active'); btnContratos.classList.remove('active'); btnPendentes.classList.remove('active');
-      if(tab==="clientes") btnClientes.classList.add('active');
-      if(tab==="contratos") btnContratos.classList.add('active');
-      if(tab==="pendentes") btnPendentes.classList.add('active');
-    }
-
-    // =========== DASHBOARD ===========
-    async function loadDashboard(){
-      const cs = await getDocs(collection(db, "clientes"));
-      const ks = await getDocs(collection(db, "contratos"));
-      const ps = await getDocs(collection(db, "pendentes"));
-      el("dashboard").innerHTML = `
-        <div class="card"><h2>${cs.size}</h2><p>Clientes</p></div>
-        <div class="card"><h2>${ks.size}</h2><p>Contratos</p></div>
-        <div class="card"><h2>${ps.size}</h2><p>Pendentes</p></div>
-      `;
-    }
-
-    // =========== CLIENTES ===========
-    async function loadClientes(){
-      setActiveTab("clientes");
-      loadDashboard();
-      el("actions").innerHTML = `<button onclick="openClienteModal()">+ Cliente</button>`;
-      const snap = await getDocs(collection(db, "clientes"));
-      let html = `<table><tr><th>Nome</th><th>NIF</th><th>Morada</th><th>Data Nasc.</th><th>Tel.</th><th>Email</th><th>Ações</th></tr>`;
-      snap.forEach(docu=>{
-        const d = docu.data();
-        html += `<tr>
-          <td>${d.nome||""}</td>
-          <td>${d.nif||""}</td>
-          <td>${d.morada||""}</td>
-          <td>${d.dataNascimento||""}</td>
-          <td><a href="tel:${d.telefone||""}">${d.telefone||""}</a></td>
-          <td><a href="mailto:${d.email||""}">${d.email||""}</a></td>
-          <td>
-            <button class="btn-sm edit" onclick="openClienteModal('${docu.id}', true)">Editar</button>
-            <button class="btn-sm del" onclick="delCliente('${docu.id}')">Apagar</button>
-          </td>
-        </tr>`;
+    window.showSection = function(section) {
+      ['clientes', 'contratos', 'fornecedores', 'financeiras'].forEach(s => {
+        document.getElementById(s+'-section').style.display = (s === section) ? '' : 'none';
+        document.getElementById('nav-'+s).classList.toggle('active', s===section);
       });
-      html += `</table>`;
-      el("mainArea").innerHTML = html;
-    }
+    };
 
-    // =========== CONTRATOS ===========
-    async function loadContratos(){
-      setActiveTab("contratos");
-      loadDashboard();
-      el("actions").innerHTML = `<button onclick="openContratoModal()">+ Contrato</button>`;
-      const snap = await getDocs(collection(db, "contratos"));
-      let html = `<table><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Data</th><th>Comercial</th><th>Pendente?</th><th>Ações</th></tr>`;
-      snap.forEach(docu=>{
-        const d = docu.data();
-        html += `<tr>
-          <td>${d.clienteNome||""}</td>
-          <td>${d.tipo||""}</td>
-          <td>${d.valor||""}</td>
-          <td>${d.data||""}</td>
-          <td>${d.comercial||"Andreia Costa"}</td>
-          <td>${d.pendente?"Sim":"Não"}</td>
-          <td>
-            <button class="btn-sm edit" onclick="openContratoModal('${docu.id}', true)">Editar</button>
-            <button class="btn-sm del" onclick="delContrato('${docu.id}')">Apagar</button>
-          </td>
-        </tr>`;
-      });
-      html += `</table>`;
-      el("mainArea").innerHTML = html;
-    }
-
-    // =========== PENDENTES ===========
-    async function loadPendentes(){
-      setActiveTab("pendentes");
-      loadDashboard();
-      const snap = await getDocs(collection(db, "pendentes"));
-      let html = `<table><tr><th>Contrato</th><th>Documento</th><th>Estado</th></tr>`;
-      snap.forEach(docu=>{
-        const d = docu.data();
-        html += `<tr>
-          <td>${d.contrato||""}</td>
-          <td>${d.doc||""}</td>
-          <td>${d.resolvido?"Resolvido":"Pendente"}</td>
-        </tr>`;
-      });
-      html += `</table>`;
-      el("actions").innerHTML = "";
-      el("mainArea").innerHTML = html;
-    }
-
-    // =========== MODAIS ===========
-    window.openClienteModal = async function(id, edit=false){
-      el("modalBg").style.display = "flex";
-      let d = {nome:"",nif:"",morada:"",dataNascimento:"",telefone:"",email:""};
-      if(edit) {
-        const snap = await getDocs(collection(db,"clientes"));
-        snap.forEach(docu=>{ if(docu.id===id) d=docu.data(); });
+    // LOGIN
+    const loginSection = document.getElementById('login-section');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const mainSections = [
+      document.getElementById('clientes-section'),
+      document.getElementById('contratos-section'),
+      document.getElementById('fornecedores-section'),
+      document.getElementById('financeiras-section')
+    ];
+    auth.onAuthStateChanged(user => {
+      if (user && user.email === ADMIN_EMAIL) {
+        loginSection.style.display = 'none';
+        logoutBtn.style.display = '';
+        mainSections[0].style.display = '';
+        mainSections[1].style.display = 'none';
+        mainSections[2].style.display = 'none';
+        mainSections[3].style.display = 'none';
+        document.getElementById('nav-clientes').classList.add('active');
+        loadAll();
+      } else {
+        loginSection.style.display = '';
+        logoutBtn.style.display = 'none';
+        mainSections.forEach(sec => sec.style.display = 'none');
       }
-      el("modalFields").innerHTML = `
-        <label>Nome<input value="${d.nome||""}" id="f_nome"></label>
-        <label>NIF<input value="${d.nif||""}" id="f_nif"></label>
-        <label>Morada<input value="${d.morada||""}" id="f_morada"></label>
-        <label>Data Nasc.<input type="date" value="${d.dataNascimento||""}" id="f_dataNascimento"></label>
-        <label>Telefone<input value="${d.telefone||""}" id="f_telefone"></label>
-        <label>Email<input type="email" value="${d.email||""}" id="f_email"></label>
+    });
+    loginForm.onsubmit = e => {
+      e.preventDefault();
+      auth.signInWithEmailAndPassword(
+        document.getElementById('email').value,
+        document.getElementById('password').value
+      ).catch(e => loginError.textContent = "Login falhou: " + (e.message || "Verifique os dados."));
+    };
+    logoutBtn.onclick = () => auth.signOut();
+
+    // CLIENTES
+    const clientForm = document.getElementById('clientForm');
+    const clientList = document.getElementById('clientList');
+    let clientEditId = null;
+
+    function renderClient(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.name} <span class="tag">${d.clientType||''}</span></div>
+        <small>ID: ${doc.id}</small>
+        <small>NIF: ${d.nif||'-'} | Data Nasc: ${d.birth||'-'} | Tel: ${d.phone||'-'}</small>
+        <small>Morada: ${d.address||'-'}</small>
+        <small>Email: ${d.email||'-'}</small>
+        <small>Data Entrada: ${d.entryDate||'-'} | Fonte: ${d.source||'-'}</small>
+        <small>Serviço: ${d.serviceType||'-'} | Comercial: ${d.manager||'-'}</small>
+        <small>RGPD: ${d.rgpd||'-'}</small>
+        <div class="info">${d.notes||''}</div>
+        <div class="client-actions">
+          <button onclick="editClient('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteClient('${doc.id}')">Eliminar</button>
+        </div>
       `;
-      el("modalSubmitBtn").onclick = async function(ev){
-        ev.preventDefault();
-        let novo = {
-          nome: el("f_nome").value, nif: el("f_nif").value, morada: el("f_morada").value,
-          dataNascimento: el("f_dataNascimento").value, telefone: el("f_telefone").value, email: el("f_email").value
-        };
-        if(edit) {
-          // Atualizar
-          const snap = await getDocs(collection(db,"clientes"));
-          snap.forEach(async docu=>{ if(docu.id===id) await updateDoc(doc(db,"clientes",id), novo); });
-        } else {
-          // Novo
-          await addDoc(collection(db,"clientes"), novo);
-        }
-        el("modalBg").style.display = "none";
-        loadClientes();
+      clientList.appendChild(el);
+    }
+
+    function loadClients() {
+      clientList.innerHTML = '';
+      db.collection('clientes').orderBy('name').get().then(snapshot => {
+        snapshot.forEach(renderClient);
+      });
+      loadContractClients();
+    }
+
+    clientForm.onsubmit = e => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('clientName').value.trim(),
+        nif: document.getElementById('clientNif').value.trim(),
+        birth: document.getElementById('clientBirth').value,
+        address: document.getElementById('clientAddress').value.trim(),
+        email: document.getElementById('clientEmail').value.trim(),
+        phone: document.getElementById('clientPhone').value.trim(),
+        entryDate: document.getElementById('clientEntryDate').value,
+        clientType: document.getElementById('clientType').value,
+        serviceType: document.getElementById('clientServiceType').value,
+        source: document.getElementById('clientSource').value.trim(),
+        manager: document.getElementById('clientManager').value.trim(),
+        rgpd: document.getElementById('clientRgpd').value,
+        notes: document.getElementById('clientNotes').value.trim()
       };
+      if (clientEditId) {
+        db.collection('clientes').doc(clientEditId).update(data).then(() => {
+          clientEditId = null;
+          clientForm.reset();
+          document.getElementById('saveClientBtn').textContent = 'Guardar Cliente';
+          document.getElementById('cancelEditClientBtn').style.display = 'none';
+          loadClients();
+        });
+      } else {
+        db.collection('clientes').add(data).then(() => {
+          clientForm.reset();
+          loadClients();
+        });
+      }
     };
 
-    window.openContratoModal = async function(id, edit=false){
-      el("modalBg").style.display = "flex";
-      let d = {clienteNome:"",tipo:"",valor:"",data:"",comercial:"Andreia Costa",pendente:false};
-      if(edit) {
-        const snap = await getDocs(collection(db,"contratos"));
-        snap.forEach(docu=>{ if(docu.id===id) d=docu.data(); });
-      }
-      el("modalFields").innerHTML = `
-        <label>Cliente<input value="${d.clienteNome||""}" id="f_clienteNome"></label>
-        <label>Tipo
-          <select id="f_tipo">
-            <option value="Crédito Habitação" ${d.tipo==="Crédito Habitação"?"selected":""}>Crédito Habitação</option>
-            <option value="Crédito Automóvel" ${d.tipo==="Crédito Automóvel"?"selected":""}>Crédito Automóvel</option>
-            <option value="Crédito ao Consumo" ${d.tipo==="Crédito ao Consumo"?"selected":""}>Crédito ao Consumo</option>
-            <option value="Seguro Automóvel" ${d.tipo==="Seguro Automóvel"?"selected":""}>Seguro Automóvel</option>
-            <option value="Seguro Vida" ${d.tipo==="Seguro Vida"?"selected":""}>Seguro Vida</option>
-          </select>
-        </label>
-        <label>Valor<input value="${d.valor||""}" id="f_valor"></label>
-        <label>Data<input type="date" value="${d.data||""}" id="f_data"></label>
-        <label>Comercial<input value="${d.comercial||"Andreia Costa"}" id="f_comercial"></label>
-        <label>Pendente
-          <select id="f_pendente">
-            <option value="false" ${d.pendente===false?"selected":""}>Não</option>
-            <option value="true" ${d.pendente===true?"selected":""}>Sim</option>
-          </select>
-        </label>
-      `;
-      el("modalSubmitBtn").onclick = async function(ev){
-        ev.preventDefault();
-        let novo = {
-          clienteNome: el("f_clienteNome").value, tipo: el("f_tipo").value, valor: el("f_valor").value,
-          data: el("f_data").value, comercial: el("f_comercial").value, pendente: el("f_pendente").value==="true"
-        };
-        if(edit) {
-          const snap = await getDocs(collection(db,"contratos"));
-          snap.forEach(async docu=>{ if(docu.id===id) await updateDoc(doc(db,"contratos",id), novo); });
-        } else {
-          await addDoc(collection(db,"contratos"), novo);
+    window.editClient = function(id) {
+      db.collection('clientes').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('clientName').value = d.name||'';
+          document.getElementById('clientNif').value = d.nif||'';
+          document.getElementById('clientBirth').value = d.birth||'';
+          document.getElementById('clientAddress').value = d.address||'';
+          document.getElementById('clientEmail').value = d.email||'';
+          document.getElementById('clientPhone').value = d.phone||'';
+          document.getElementById('clientEntryDate').value = d.entryDate||'';
+          document.getElementById('clientType').value = d.clientType||'Particular';
+          document.getElementById('clientServiceType').value = d.serviceType||'';
+          document.getElementById('clientSource').value = d.source||'';
+          document.getElementById('clientManager').value = d.manager||'';
+          document.getElementById('clientRgpd').value = d.rgpd||'Sim';
+          document.getElementById('clientNotes').value = d.notes||'';
+          clientEditId = id;
+          document.getElementById('saveClientBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditClientBtn').style.display = '';
         }
-        el("modalBg").style.display = "none";
-        loadContratos();
-      };
+      });
     };
 
-    window.delCliente = async function(id){
-      if(confirm("Apagar cliente?")) {
-        await deleteDoc(doc(db,"clientes",id));
-        loadClientes();
+    document.getElementById('cancelEditClientBtn').onclick = function() {
+      clientEditId = null;
+      clientForm.reset();
+      document.getElementById('saveClientBtn').textContent = 'Guardar Cliente';
+      document.getElementById('cancelEditClientBtn').style.display = 'none';
+    };
+
+    window.deleteClient = function(id) {
+      if (confirm("Tem a certeza que quer eliminar este cliente?")) {
+        db.collection('clientes').doc(id).delete().then(loadClients);
       }
     };
-    window.delContrato = async function(id){
-      if(confirm("Apagar contrato?")) {
-        await deleteDoc(doc(db,"contratos",id));
-        loadContratos();
+
+    // CONTRATOS
+    const contractForm = document.getElementById('contractForm');
+    const contractList = document.getElementById('contractList');
+    let contractEditId = null;
+
+    function loadContractClients() {
+      db.collection('clientes').orderBy('name').get().then(snapshot => {
+        let select = document.getElementById('contractClient');
+        select.innerHTML = '';
+        snapshot.forEach(doc => {
+          let d = doc.data();
+          let opt = document.createElement('option');
+          opt.value = doc.id;
+          opt.textContent = d.name + (d.nif ? ' (' + d.nif + ')' : '');
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function loadContractFornecedores() {
+      db.collection('fornecedores').orderBy('name').get().then(snapshot => {
+        let select = document.getElementById('contractFornecedor');
+        select.innerHTML = '<option value="">Nenhum</option>';
+        snapshot.forEach(doc => {
+          let d = doc.data();
+          let opt = document.createElement('option');
+          opt.value = doc.id;
+          opt.textContent = d.name;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function loadContractFinanceiras() {
+      db.collection('financeiras').orderBy('name').get().then(snapshot => {
+        let select = document.getElementById('contractFinanceira');
+        select.innerHTML = '<option value="">Nenhuma</option>';
+        snapshot.forEach(doc => {
+          let d = doc.data();
+          let opt = document.createElement('option');
+          opt.value = doc.id;
+          opt.textContent = d.name;
+          select.appendChild(opt);
+        });
+      });
+    }
+
+    function renderContract(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.type || ''} - ${d.clientName || ''} <span class="tag">${d.status||''}</span></div>
+        <small>ID: ${doc.id}</small>
+        <small>Data Início: ${d.startDate||'-'} | Financeira: ${d.financeiraName||'-'} | Fornecedor: ${d.fornecedorName||'-'}</small>
+        <small>Comissão Financeira: €${d.financeiraComissao||'0'} | Comissão Fornecedor: €${d.fornecedorComissao||'0'}</small>
+        <div class="info">${d.notes||''}</div>
+        <div class="contract-actions">
+          <button onclick="editContract('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteContract('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      contractList.appendChild(el);
+    }
+
+    function loadContracts() {
+      contractList.innerHTML = '';
+      db.collection('contratos').orderBy('startDate', 'desc').get().then(snapshot => {
+        snapshot.forEach(renderContract);
+      });
+      loadContractClients();
+      loadContractFornecedores();
+      loadContractFinanceiras();
+    }
+
+    contractForm.onsubmit = e => {
+      e.preventDefault();
+      const clientId = document.getElementById('contractClient').value;
+      db.collection('clientes').doc(clientId).get().then(clientDoc => {
+        const clientName = clientDoc.exists ? clientDoc.data().name : '';
+        const data = {
+          clientId,
+          clientName,
+          type: document.getElementById('contractType').value,
+          status: document.getElementById('contractStatus').value,
+          startDate: document.getElementById('contractStartDate').value,
+          financeiraId: document.getElementById('contractFinanceira').value,
+          financeiraName: document.getElementById('contractFinanceira').options[document.getElementById('contractFinanceira').selectedIndex]?.textContent || '',
+          financeiraComissao: document.getElementById('contractFinanceiraComissao').value,
+          fornecedorId: document.getElementById('contractFornecedor').value,
+          fornecedorName: document.getElementById('contractFornecedor').options[document.getElementById('contractFornecedor').selectedIndex]?.textContent || '',
+          fornecedorComissao: document.getElementById('contractFornecedorComissao').value,
+          notes: document.getElementById('contractNotes').value.trim()
+        };
+        if (contractEditId) {
+          db.collection('contratos').doc(contractEditId).update(data).then(() => {
+            contractEditId = null;
+            contractForm.reset();
+            document.getElementById('saveContractBtn').textContent = 'Guardar Contrato';
+            document.getElementById('cancelEditContractBtn').style.display = 'none';
+            loadContracts();
+          });
+        } else {
+          db.collection('contratos').add(data).then(() => {
+            contractForm.reset();
+            loadContracts();
+          });
+        }
+      });
+    };
+
+    window.editContract = function(id) {
+      db.collection('contratos').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('contractClient').value = d.clientId||'';
+          document.getElementById('contractType').value = d.type||'';
+          document.getElementById('contractStatus').value = d.status||'Pendente';
+          document.getElementById('contractStartDate').value = d.startDate||'';
+          document.getElementById('contractFinanceira').value = d.financeiraId||'';
+          document.getElementById('contractFinanceiraComissao').value = d.financeiraComissao||'';
+          document.getElementById('contractFornecedor').value = d.fornecedorId||'';
+          document.getElementById('contractFornecedorComissao').value = d.fornecedorComissao||'';
+          document.getElementById('contractNotes').value = d.notes||'';
+          contractEditId = id;
+          document.getElementById('saveContractBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditContractBtn').style.display = '';
+        }
+      });
+    };
+
+    document.getElementById('cancelEditContractBtn').onclick = function() {
+      contractEditId = null;
+      contractForm.reset();
+      document.getElementById('saveContractBtn').textContent = 'Guardar Contrato';
+      document.getElementById('cancelEditContractBtn').style.display = 'none';
+    };
+
+    window.deleteContract = function(id) {
+      if (confirm("Tem a certeza que quer eliminar este contrato?")) {
+        db.collection('contratos').doc(id).delete().then(loadContracts);
       }
     };
 
-    // Fechar modal
-    el("closeModal").onclick = ()=>el("modalBg").style.display="none";
+    // FORNECEDORES
+    const fornecedorForm = document.getElementById('fornecedorForm');
+    const fornecedorList = document.getElementById('fornecedorList');
+    let fornecedorEditId = null;
+    function renderFornecedor(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.name}</div>
+        <div class="contract-actions">
+          <button onclick="editFornecedor('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteFornecedor('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      fornecedorList.appendChild(el);
+    }
+    function loadFornecedores() {
+      fornecedorList.innerHTML = '';
+      db.collection('fornecedores').orderBy('name').get().then(snapshot => {
+        snapshot.forEach(renderFornecedor);
+      });
+      loadContractFornecedores();
+    }
+    fornecedorForm.onsubmit = e => {
+      e.preventDefault();
+      const data = {name: document.getElementById('fornecedorName').value.trim()};
+      if (fornecedorEditId) {
+        db.collection('fornecedores').doc(fornecedorEditId).update(data).then(() => {
+          fornecedorEditId = null;
+          fornecedorForm.reset();
+          document.getElementById('saveFornecedorBtn').textContent = 'Guardar Fornecedor';
+          document.getElementById('cancelEditFornecedorBtn').style.display = 'none';
+          loadFornecedores();
+        });
+      } else {
+        db.collection('fornecedores').add(data).then(() => {
+          fornecedorForm.reset();
+          loadFornecedores();
+        });
+      }
+    };
+    window.editFornecedor = function(id) {
+      db.collection('fornecedores').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('fornecedorName').value = d.name||'';
+          fornecedorEditId = id;
+          document.getElementById('saveFornecedorBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditFornecedorBtn').style.display = '';
+        }
+      });
+    };
+    document.getElementById('cancelEditFornecedorBtn').onclick = function() {
+      fornecedorEditId = null;
+      fornecedorForm.reset();
+      document.getElementById('saveFornecedorBtn').textContent = 'Guardar Fornecedor';
+      document.getElementById('cancelEditFornecedorBtn').style.display = 'none';
+    };
+    window.deleteFornecedor = function(id) {
+      if (confirm("Tem a certeza que quer eliminar este fornecedor?")) {
+        db.collection('fornecedores').doc(id).delete().then(loadFornecedores);
+      }
+    };
 
-    // NAVIGATION
-    btnClientes.onclick = loadClientes;
-    btnContratos.onclick = loadContratos;
-    btnPendentes.onclick = loadPendentes;
+    // FINANCEIRAS
+    const financeiraForm = document.getElementById('financeiraForm');
+    const financeiraList = document.getElementById('financeiraList');
+    let financeiraEditId = null;
+    function renderFinanceira(doc) {
+      const d = doc.data();
+      let el = document.createElement('div');
+      el.className = 'list-item';
+      el.innerHTML = `
+        <div class="list-item-title">${d.name}</div>
+        <div class="contract-actions">
+          <button onclick="editFinanceira('${doc.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteFinanceira('${doc.id}')">Eliminar</button>
+        </div>
+      `;
+      financeiraList.appendChild(el);
+    }
+    function loadFinanceiras() {
+      financeiraList.innerHTML = '';
+      db.collection('financeiras').orderBy('name').get().then(snapshot => {
+        snapshot.forEach(renderFinanceira);
+      });
+      loadContractFinanceiras();
+    }
+    financeiraForm.onsubmit = e => {
+      e.preventDefault();
+      const data = {name: document.getElementById('financeiraName').value.trim()};
+      if (financeiraEditId) {
+        db.collection('financeiras').doc(financeiraEditId).update(data).then(() => {
+          financeiraEditId = null;
+          financeiraForm.reset();
+          document.getElementById('saveFinanceiraBtn').textContent = 'Guardar Financeira';
+          document.getElementById('cancelEditFinanceiraBtn').style.display = 'none';
+          loadFinanceiras();
+        });
+      } else {
+        db.collection('financeiras').add(data).then(() => {
+          financeiraForm.reset();
+          loadFinanceiras();
+        });
+      }
+    };
+    window.editFinanceira = function(id) {
+      db.collection('financeiras').doc(id).get().then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          document.getElementById('financeiraName').value = d.name||'';
+          financeiraEditId = id;
+          document.getElementById('saveFinanceiraBtn').textContent = 'Guardar Alterações';
+          document.getElementById('cancelEditFinanceiraBtn').style.display = '';
+        }
+      });
+    };
+    document.getElementById('cancelEditFinanceiraBtn').onclick = function() {
+      financeiraEditId = null;
+      financeiraForm.reset();
+      document.getElementById('saveFinanceiraBtn').textContent = 'Guardar Financeira';
+      document.getElementById('cancelEditFinanceiraBtn').style.display = 'none';
+    };
+    window.deleteFinanceira = function(id) {
+      if (confirm("Tem a certeza que quer eliminar esta financeira?")) {
+        db.collection('financeiras').doc(id).delete().then(loadFinanceiras);
+      }
+    };
 
-    // Inicial
-    loadClientes();
+    // ----------- LOAD DATA -----------
+    function loadAll() {
+      loadClients();
+      loadContracts();
+      loadFornecedores();
+      loadFinanceiras();
+    }
+
+    document.getElementById('nav-clientes').onclick = () => { showSection('clientes'); loadClients(); };
+    document.getElementById('nav-contratos').onclick = () => { showSection('contratos'); loadContracts(); };
+    document.getElementById('nav-fornecedores').onclick = () => { showSection('fornecedores'); loadFornecedores(); };
+    document.getElementById('nav-financeiras').onclick = () => { showSection('financeiras'); loadFinanceiras(); };
 
   </script>
 </body>
 </html>
-
