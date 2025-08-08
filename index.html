@@ -2,17 +2,14 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>THE WAY - Gestão Completa</title>
+  <title>THE WAY - Gestão Completa (Corrigido)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonte Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Ícones Phosphor -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --color-primary: #c8b89c; /* Beige */
+      --color-primary: #c8b89c;
       --color-primary-dark: #b5a589;
       --color-secondary: #6c757d;
       --color-background: #f8f7f4;
@@ -24,214 +21,76 @@
       --color-success: #198754;
       --color-warning: #ffc107;
     }
-    body {
-      margin: 0;
-      background: var(--color-background);
-      font-family: 'Inter', Arial, sans-serif;
-      color: var(--color-text-primary);
-      font-size: 15px;
-    }
-    .sidebar {
-      position: fixed; left: 0; top: 0; bottom: 0;
-      width: 240px; background: var(--color-surface); color: var(--color-text-primary);
-      padding: 1.2em; box-shadow: 2px 0 18px #0000000a;
-      display: flex; flex-direction: column; z-index: 100;
-      box-sizing: border-box;
-      border-right: 1px solid var(--color-border);
-    }
+    body { margin: 0; background: var(--color-background); font-family: 'Inter', Arial, sans-serif; color: var(--color-text-primary); font-size: 15px; }
+    .sidebar { position: fixed; left:0; top:0; bottom:0; width: 240px; background: var(--color-surface); color:#000; padding: 1.2em; box-shadow:2px 0 18px #0000000a; display:flex; flex-direction:column; z-index:100; border-right: 1px solid var(--color-border); }
     .sidebar .logo-box { text-align: center; margin: 1.5em 0 2em;}
-    .logo {
-      font-size: 1.5em;
-      font-weight: 700;
-    }
-    .sidebar nav {
-      flex: 1 1 auto; display: flex; flex-direction: column;
-      gap: .7em; margin-top: .5em;
-    }
-    .sidebar nav button {
-      background: none; border: none; color: var(--color-text-secondary);
-      font-size: 1.05em; font-weight: 500; text-align: left;
-      padding: .8em 1em; border-radius: 8px; cursor: pointer;
-      transition: background .2s, color .2s;
-      letter-spacing: .02em;
-      display: flex; align-items: center; gap: .8em;
-    }
-    .sidebar nav button i { font-size: 1.3em; }
-    .sidebar nav button.active,
-    .sidebar nav button:hover {
-      background: var(--color-primary);
-      color: var(--color-surface);
-    }
-    .logout-btn {
-      background: var(--color-primary); color: var(--color-surface);
-      border: none; border-radius: 8px;
-      padding: .7em 1.7em; font-weight: 700;
-      margin: 1.3em 0 .5em 0; display: block;
-      cursor: pointer; font-size: 1em;
-      transition: background .16s;
-    }
+    .logo { font-size: 1.5em; font-weight: 700; }
+    .sidebar nav { flex:1 1 auto; display:flex; flex-direction:column; gap:.7em; margin-top:.5em; }
+    .sidebar nav button { background:none; border:none; color:var(--color-text-secondary); font-size:1.05em; font-weight:500; text-align:left; padding:.8em 1em; border-radius:8px; cursor:pointer; transition:background .2s, color .2s; display:flex; align-items:center; gap:.8em; }
+    .sidebar nav button i { font-size:1.3em; }
+    .sidebar nav button.active, .sidebar nav button:hover { background:var(--color-primary); color:#fff; }
+    .logout-btn { background:var(--color-primary); color:#fff; border:none; border-radius:8px; padding:.7em 1.7em; font-weight:700; margin:1.3em 0 .5em 0; cursor:pointer; font-size:1em; }
     .logout-btn:hover { background: var(--color-primary-dark); }
-    .main-container { margin-left: 240px; padding: 2em; }
-    .main-content { display: none; }
-    .main-content.active { display: block; }
-    .section-header {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 1.5em; flex-wrap: wrap; gap: 1em;
-    }
-    .section-header h2 {
-        margin: 0; font-size: 1.8em; display: flex; align-items: center; gap: .5em;
-    }
-    .header-actions { display: flex; gap: 1em; align-items: center; }
-    .search-bar {
-        padding: .8em 1em; border-radius: 8px; border: 1.5px solid var(--color-border);
-        font-size: 1em; width: 250px; background: var(--color-surface);
-    }
-    .btn-primary {
-        background: var(--color-primary); color: var(--color-surface);
-        border: none; padding: .8em 1.5em; border-radius: 8px;
-        font-weight: 600; font-size: 1em; cursor: pointer;
-        transition: background .2s; display: flex; align-items: center; gap: .5em;
-    }
+    .main-container { margin-left:240px; padding:2em; }
+    .main-content { display:none; }
+    .main-content.active { display:block; }
+    .section-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5em; flex-wrap:wrap; gap:1em; }
+    .section-header h2 { margin:0; font-size:1.8em; display:flex; align-items:center; gap:.5em; }
+    .header-actions { display:flex; gap:1em; align-items:center; }
+    .search-bar { padding:.8em 1em; border-radius:8px; border:1.5px solid var(--color-border); font-size:1em; width:250px; background:#fff; }
+    .btn-primary { background:var(--color-primary); color:#fff; border:none; padding:.8em 1.5em; border-radius:8px; font-weight:600; font-size:1em; cursor:pointer; display:flex; align-items:center; gap:.5em; }
     .btn-primary:hover { background: var(--color-primary-dark); }
-    
-    /* Table Styles */
-    .table-container {
-        background: var(--color-surface); border-radius: 12px;
-        padding: 1.5em; box-shadow: 0 4px 20px #0000000a;
-        overflow-x: auto;
-    }
-    .data-table { width: 100%; border-collapse: collapse; }
-    .data-table th, .data-table td {
-        padding: 1em; text-align: left;
-        border-bottom: 1px solid var(--color-border); vertical-align: middle;
-    }
-    .data-table th {
-        font-weight: 600; font-size: .85em; color: var(--color-text-secondary);
-        text-transform: uppercase; letter-spacing: .05em;
-    }
-    .data-table td { font-size: .95em; }
-    .data-table tbody tr:last-child td { border-bottom: none; }
-    .actions-cell { white-space: nowrap; }
-    .actions-cell button {
-      background: none; border: none; cursor: pointer;
-      padding: .5em; color: var(--color-text-secondary); transition: color .2s;
-    }
-    .actions-cell button:hover { color: var(--color-primary); }
-    .actions-cell button.btn-danger:hover { color: var(--color-danger); }
-    .actions-cell i { font-size: 1.3em; }
-
-    /* Modal Styles */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.5); display: none;
-        align-items: center; justify-content: center;
-        z-index: 1000; padding: 1em;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal-box {
-        background: var(--color-surface); padding: 2em;
-        border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        width: 100%; max-width: 800px;
-        max-height: 90vh; overflow-y: auto;
-    }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5em; }
-    .modal-header h3 { margin: 0; font-size: 1.5em; }
-    .modal-header .close-btn { background: none; border: none; font-size: 1.8em; cursor: pointer; color: var(--color-text-secondary); }
-    .modal-body .row {display:flex; flex-wrap: wrap; gap:1.5em;}
-    .modal-body .col {flex:1; min-width: 250px;}
-    .modal-body label {font-weight:600;display:block;margin-bottom:.5em; font-size: .9em;}
-    .modal-body input, .modal-body select, .modal-body textarea {
-      width: 100%; padding: .8em; border-radius: 8px;
-      border: 1.5px solid var(--color-border); font-size: 1em;
-      margin-bottom: 1em; background: var(--color-background);
-      color: var(--color-text-primary); transition: border .16s;
-      box-sizing: border-box;
-    }
-    .modal-footer { margin-top: 2em; text-align: right; }
-    .modal-footer button { padding: .8em 2em; }
-    .modal-footer .btn-secondary { background: var(--color-border); color: var(--color-text-primary); margin-right: 1em; }
-
-    /* Details Modal Specifics */
-    #detailsModalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
-    #detailsModalBody h4 { margin-top: 1.5em; margin-bottom: .5em; border-bottom: 1px solid var(--color-border); padding-bottom: .5em; }
-    #interactionHistory, #contractInteractionHistory { max-height: 200px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 1em; }
-    .interaction-item { border-bottom: 1px solid var(--color-border); padding: .8em 0; }
-    .interaction-item:last-child { border-bottom: none; }
-    .interaction-item .date { font-size: .8em; color: var(--color-text-secondary); margin-bottom: .3em; }
-    #interactionForm, #contractInteractionForm { margin-top: 1em; }
-    #documentList { list-style: none; padding: 0; }
-    #documentList li { display: flex; justify-content: space-between; align-items: center; padding: .5em; border-radius: 6px; }
-    #documentList li:hover { background-color: var(--color-background); }
-
-    /* Dashboard Styles */
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
-    .kpi-card { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
-    .kpi-card .title { font-size: .9em; color: var(--color-text-secondary); margin-bottom: .5em; }
-    .kpi-card .value { font-size: 2.2em; font-weight: 700; }
-    .kpi-card .subtitle { font-size: .8em; color: var(--color-success); }
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
-    .chart-container, .tasks-container { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
-    .tasks-list .task-item { display: flex; justify-content: space-between; align-items: center; padding: .8em 0; border-bottom: 1px solid var(--color-border); cursor: pointer; transition: background-color .2s; }
-    .tasks-list .task-item:hover { background-color: var(--color-background); }
-    .tasks-list .task-item:last-child { border-bottom: none; }
-    .task-item .title { font-weight: 600; }
-    .task-item .deadline { font-size: .9em; color: var(--color-danger); }
-    .task-item .urgency-indicator { font-size: 1.5em; color: var(--color-warning); }
-    
-    /* Tabs for Partners Module */
-    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: 1.5em; }
-    .tabs button {
-        background: none; border: none; padding: 1em 1.5em; cursor: pointer;
-        font-size: 1em; font-weight: 500; color: var(--color-text-secondary);
-        border-bottom: 3px solid transparent;
-    }
-    .tabs button.active {
-        color: var(--color-primary);
-        border-bottom-color: var(--color-primary);
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Dynamic Form Sections */
-    .service-details { display: none; margin-top: 1.5em; border-top: 1px solid var(--color-border); padding-top: 1.5em; }
-    .checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .5em; }
-    .checklist label { font-weight: 400; display: flex; align-items: center; gap: .5em; }
-
-    /* Login Styles */
-    #login-container {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: var(--color-background);
-        display: flex; align-items: center; justify-content: center; z-index: 2000;
-    }
-    #login-section {
-        background: var(--color-surface); padding: 3em; border-radius: 15px;
-        box-shadow: 0 10px 30px #0000001a; width: 100%; max-width: 400px;
-    }
-
-    @media(max-width:1200px){
-        .dashboard-grid { grid-template-columns: 1fr; }
-    }
+    .table-container { background:#fff; border-radius:12px; padding:1.5em; box-shadow:0 4px 20px #0000000a; overflow-x:auto; }
+    .data-table { width:100%; border-collapse:collapse; }
+    .data-table th, .data-table td { padding:1em; text-align:left; border-bottom:1px solid var(--color-border); vertical-align:middle; }
+    .data-table th { font-weight:600; font-size:.85em; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.05em; }
+    .data-table td { font-size:.95em; }
+    .actions-cell { white-space:nowrap; }
+    .actions-cell button { background:none; border:none; cursor:pointer; padding:.5em; color:var(--color-text-secondary); }
+    .actions-cell button:hover { color:var(--color-primary); }
+    .actions-cell button.btn-danger:hover { color:var(--color-danger); }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:1000; padding:1em; }
+    .modal-overlay.active { display:flex; }
+    .modal-box { background:#fff; padding:2em; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1); width:100%; max-width:900px; max-height:90vh; overflow-y:auto; }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5em; }
+    .modal-header h3 { margin:0; font-size:1.5em; }
+    .modal-header .close-btn { background:none; border:none; font-size:1.8em; cursor:pointer; color:var(--color-text-secondary); }
+    .modal-body .row { display:flex; flex-wrap:wrap; gap:1.5em; }
+    .modal-body .col { flex:1; min-width:240px; }
+    .modal-body label { font-weight:600; display:block; margin-bottom:.5em; font-size:.9em; }
+    .modal-body input, .modal-body select, .modal-body textarea { width:100%; padding:.8em; border-radius:8px; border:1.5px solid var(--color-border); font-size:1em; margin-bottom:1em; background:var(--color-background); color:var(--color-text-primary); }
+    .modal-footer { margin-top:2em; text-align:right; }
+    .modal-footer .btn-secondary { background: var(--color-border); color:#000; border:none; padding:.8em 2em; border-radius:8px; margin-right:1em; }
+    .kpi-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1.5em; margin-bottom:2em; }
+    .kpi-card { background:#fff; border-radius:12px; padding:1.5em; box-shadow:0 4px 20px #0000000a; }
+    .kpi-card .title { font-size:.9em; color:var(--color-text-secondary); margin-bottom:.5em; }
+    .kpi-card .value { font-size:2.2em; font-weight:700; }
+    .kpi-card .subtitle { font-size:.8em; color:var(--color-success); }
+    .dashboard-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap:1.5em; margin-bottom:2em; }
+    .chart-container, .tasks-container { background:#fff; border-radius:12px; padding:1.5em; box-shadow:0 4px 20px #0000000a; }
+    .tasks-list .task-item { display:flex; justify-content:space-between; align-items:center; padding:.8em 0; border-bottom:1px solid var(--color-border); cursor:pointer; }
+    .tasks-list .task-item:last-child { border-bottom:none; }
+    .tabs { display:flex; border-bottom:1px solid var(--color-border); margin-bottom:1.5em; }
+    .tabs button { background:none; border:none; padding:1em 1.5em; cursor:pointer; font-size:1em; font-weight:500; color:var(--color-text-secondary); border-bottom:3px solid transparent; }
+    .tabs button.active { color:var(--color-primary); border-bottom-color:var(--color-primary); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .service-details { display:none; margin-top:1.5em; border-top:1px solid var(--color-border); padding-top:1.5em; }
+    #login-container { position:fixed; inset:0; background:var(--color-background); display:flex; align-items:center; justify-content:center; z-index:2000; }
+    #login-section { background:#fff; padding:3em; border-radius:15px; box-shadow:0 10px 30px #0000001a; width:100%; max-width:400px; }
     @media(max-width:900px){
-      .main-container {margin-left:0; padding: 1em; padding-bottom: 80px;}
-      #detailsModalBody .details-grid { grid-template-columns: 1fr; }
-      .sidebar {
-          position: fixed; bottom: 0; top: auto; width: 100%; height: auto;
-          flex-direction:row; align-items:center; gap: .5em;
-          flex-wrap: nowrap; overflow-x: auto; padding: .5em;
-          border-top: 1px solid var(--color-border); background: var(--color-surface);
-      }
-      .sidebar .logo-box { display: none; }
-      .sidebar nav{ flex-direction:row; justify-content: space-around; width: 100%;}
-      .sidebar nav button { flex-direction: column; gap: .2em; font-size: .8em; padding: .5em; flex: 1; justify-content: center;}
-      .sidebar nav button span { font-size: .9em; }
-      .sidebar nav button i { font-size: 1.5em; }
-      .logout-btn { display: none; }
+      .main-container { margin-left:0; padding:1em; padding-bottom:80px; }
+      .sidebar { position:fixed; bottom:0; top:auto; width:100%; height:auto; flex-direction:row; align-items:center; gap:.5em; overflow-x:auto; padding:.5em; border-top:1px solid var(--color-border); }
+      .sidebar .logo-box { display:none; }
+      .sidebar nav { flex-direction:row; justify-content:space-around; width:100%; }
+      .sidebar nav button { flex-direction:column; gap:.2em; font-size:.8em; padding:.5em; flex:1; justify-content:center; }
+      .sidebar nav button i { font-size:1.5em; }
+      .logout-btn { display:none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ECRÃ DE LOGIN -->
   <div id="login-container">
     <div id="login-section">
       <h2>Entrar</h2>
@@ -240,73 +99,43 @@
         <input class="input" type="email" id="email" required />
         <label>Password</label>
         <input class="input" type="password" id="password" required minlength="6" />
-        <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
+        <button type="submit" class="btn-primary" style="width:100%;">Entrar</button>
       </form>
       <div id="loginError" style="color: var(--color-danger); margin-top:1em; text-align: center;"></div>
     </div>
   </div>
 
-  <!-- ESTRUTURA PRINCIPAL (escondida até ao login) -->
-  <div id="app-container" style="display: none;">
+  <div id="app-container" style="display:none;">
     <div class="sidebar">
-      <div class="logo-box">
-        <div class="logo">THE WAY</div>
-      </div>
+      <div class="logo-box"><div class="logo">THE WAY</div></div>
       <nav>
-        <button id="nav-dashboard" onclick="showSection('dashboard')"><i class="ph-fill ph-squares-four"></i> <span>Dashboard</span></button>
-        <button id="nav-clientes" onclick="showSection('clientes')"><i class="ph-fill ph-users"></i> <span>Gestão de Clientes</span></button>
-        <button id="nav-contratos" onclick="showSection('contratos')"><i class="ph-fill ph-file-text"></i> <span>Gestão de Contratos</span></button>
-        <button id="nav-parceiros" onclick="showSection('parceiros')"><i class="ph-fill ph-handshake"></i> <span>Parceiros</span></button>
-        <button id="nav-tarefas" onclick="showSection('tarefas')"><i class="ph-fill ph-list-checks"></i> <span>Tarefas / Pendentes</span></button>
-        <button id="nav-comercial" onclick="showSection('comercial')"><i class="ph-fill ph-briefcase"></i> <span>Gestão Comercial</span></button>
-        <button id="nav-financeira" onclick="showSection('financeira')"><i class="ph-fill ph-bank"></i> <span>Gestão Financeira</span></button>
-        <button id="nav-relatorios" onclick="showSection('relatorios')"><i class="ph-fill ph-chart-bar"></i> <span>Relatórios</span></button>
+        <button id="nav-dashboard" onclick="showSection('dashboard')"><i class="ph-fill ph-squares-four"></i><span>Dashboard</span></button>
+        <button id="nav-clientes" onclick="showSection('clientes')"><i class="ph-fill ph-users"></i><span>Gestão de Clientes</span></button>
+        <button id="nav-contratos" onclick="showSection('contratos')"><i class="ph-fill ph-file-text"></i><span>Gestão de Contratos</span></button>
+        <button id="nav-parceiros" onclick="showSection('parceiros')"><i class="ph-fill ph-handshake"></i><span>Parceiros</span></button>
+        <button id="nav-tarefas" onclick="showSection('tarefas')"><i class="ph-fill ph-list-checks"></i><span>Tarefas</span></button>
+        <button id="nav-comercial" onclick="showSection('comercial')"><i class="ph-fill ph-briefcase"></i><span>Gestão Comercial</span></button>
+        <button id="nav-financeira" onclick="showSection('financeira')"><i class="ph-fill ph-bank"></i><span>Gestão Financeira</span></button>
+        <button id="nav-relatorios" onclick="showSection('relatorios')"><i class="ph-fill ph-chart-bar"></i><span>Relatórios</span></button>
       </nav>
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
 
     <div class="main-container">
-      <!-- Dashboard -->
       <div id="dashboard-section" class="main-content">
-          <div class="section-header">
-              <h2>Dashboard</h2>
-              <div id="dashboard-update-time"></div>
-          </div>
-          <div class="kpi-grid">
-              <div class="kpi-card">
-                  <div class="title">Volume Total Crédito</div>
-                  <div class="value" id="kpi-credit-volume">€0</div>
-                  <div class="subtitle" id="kpi-credit-subtitle">+0% vs mês anterior</div>
-              </div>
-              <div class="kpi-card">
-                  <div class="title">Seguros Fechados</div>
-                  <div class="value" id="kpi-closed-insurances">0</div>
-                  <div class="subtitle" id="kpi-insurance-volume">Volume: €0</div>
-              </div>
-              <div class="kpi-card">
-                  <div class="title">Pendentes Ativos</div>
-                  <div class="value" id="kpi-pending-tasks">0</div>
-                  <div class="subtitle" style="color: var(--color-danger)">Requer atenção imediata</div>
-              </div>
-              <div class="kpi-card">
-                  <div class="title">Taxa Resolução</div>
-                  <div class="value" id="kpi-resolution-rate">0%</div>
-                  <div class="subtitle">Tarefas concluídas</div>
-              </div>
-          </div>
-          <div class="dashboard-grid">
-              <div class="chart-container">
-                  <h4>Volume de Crédito</h4>
-                  <canvas id="creditChart"></canvas>
-              </div>
-              <div class="tasks-container">
-                  <h4>Gestão de Tarefas</h4>
-                  <div id="dashboardTasksList" class="tasks-list"></div>
-              </div>
-          </div>
+        <div class="section-header"><h2>Dashboard</h2><div id="dashboard-update-time"></div></div>
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="title">Volume Total Crédito</div><div class="value" id="kpi-credit-volume">€0</div><div class="subtitle" id="kpi-credit-subtitle">+0% vs mês anterior</div></div>
+          <div class="kpi-card"><div class="title">Seguros Fechados</div><div class="value" id="kpi-closed-insurances">0</div><div class="subtitle" id="kpi-insurance-volume">Volume: €0</div></div>
+          <div class="kpi-card"><div class="title">Pendentes Ativos</div><div class="value" id="kpi-pending-tasks">0</div><div class="subtitle" style="color: var(--color-danger)">Requer atenção imediata</div></div>
+          <div class="kpi-card"><div class="title">Taxa Resolução</div><div class="value" id="kpi-resolution-rate">0%</div><div class="subtitle">Tarefas concluídas</div></div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="chart-container"><h4>Volume de Crédito</h4><canvas id="creditChart"></canvas></div>
+          <div class="tasks-container"><h4>Gestão de Tarefas</h4><div id="dashboardTasksList" class="tasks-list"></div></div>
+        </div>
       </div>
 
-      <!-- Clientes -->
       <div id="clientes-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-users"></i>Gestão de Clientes</h2>
@@ -316,14 +145,13 @@
           </div>
         </div>
         <div class="table-container">
-            <table class="data-table" id="clientTable">
-                <thead><tr><th>ID</th><th>Nome</th><th>NIF</th><th>Tipo</th><th>Comercial</th><th>RGPD</th><th>Ações</th></tr></thead>
-                <tbody></tbody>
-            </table>
+          <table class="data-table" id="clientTable">
+            <thead><tr><th>ID</th><th>Nome</th><th>NIF</th><th>Tipo</th><th>Comercial</th><th>RGPD</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
-      
-      <!-- Contratos -->
+
       <div id="contratos-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-file-text"></i>Gestão de Contratos</h2>
@@ -333,79 +161,70 @@
           </div>
         </div>
         <div class="table-container">
-            <table class="data-table" id="contractTable">
-                <thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Estado</th><th>Data de Início</th><th>Ações</th></tr></thead>
-                <tbody></tbody>
-            </table>
+          <table class="data-table" id="contractTable">
+            <thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Estado</th><th>Data de Início</th><th>Comercial</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Tarefas -->
-       <div id="tarefas-section" class="main-content">
+      <div id="tarefas-section" class="main-content">
         <div class="section-header">
-          <h2><i class="ph ph-list-checks"></i>Tarefas / Pendentes</h2>
+          <h2><i class="ph ph-list-checks"></i>Tarefas</h2>
           <div class="header-actions">
-            <button class="btn-primary" onclick="openFormModal('tarefa')"><i class="ph ph-plus"></i> Adicionar Nova Tarefa</button>
+            <button class="btn-primary" onclick="openFormModal('tarefa')"><i class="ph ph-plus"></i> Adicionar Tarefa</button>
           </div>
         </div>
         <div class="table-container">
-            <table class="data-table" id="tasksTable">
-                <thead><tr><th>Título</th><th>Responsável</th><th>Prazo</th><th>Prioridade</th><th>Estado</th><th>Ações</th></tr></thead>
-                <tbody></tbody>
-            </table>
+          <table class="data-table" id="tasksTable">
+            <thead><tr><th>Título</th><th>Responsável</th><th>Prazo</th><th>Prioridade</th><th>Estado</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Parceiros -->
       <div id="parceiros-section" class="main-content">
-          <div class="section-header">
-              <h2><i class="ph ph-handshake"></i>Parceiros</h2>
+        <div class="section-header"><h2><i class="ph ph-handshake"></i>Parceiros</h2></div>
+        <div class="tabs">
+          <button class="active" onclick="openPartnerTab(event, 'fornecedores')">Fornecedores</button>
+          <button onclick="openPartnerTab(event, 'financeiras')">Financeiras</button>
+          <button onclick="openPartnerTab(event, 'seguradoras')">Seguradoras</button>
+        </div>
+        <div id="fornecedores" class="tab-content active">
+          <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+            <button class="btn-primary" onclick="openFormModal('fornecedor')"><i class="ph ph-plus"></i> Adicionar Fornecedor</button>
           </div>
-          <div class="tabs">
-              <button class="active" onclick="openPartnerTab(event, 'fornecedores')">Fornecedores</button>
-              <button onclick="openPartnerTab(event, 'financeiras')">Financeiras</button>
-              <button onclick="openPartnerTab(event, 'seguradoras')">Seguradoras</button>
+          <div class="table-container">
+            <table class="data-table" id="fornecedoresTable">
+              <thead><tr><th>Nome</th><th>Equipamento</th><th>Contacto</th><th>Email</th><th>Ações</th></tr></thead>
+              <tbody></tbody>
+            </table>
           </div>
-
-          <!-- Tab Fornecedores -->
-          <div id="fornecedores" class="tab-content active">
-              <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
-                  <button class="btn-primary" onclick="openFormModal('fornecedor')"><i class="ph ph-plus"></i> Adicionar Fornecedor</button>
-              </div>
-              <div class="table-container">
-                  <table class="data-table" id="fornecedoresTable">
-                      <thead><tr><th>Nome</th><th>Equipamento</th><th>Contacto</th><th>Email</th><th>Ações</th></tr></thead>
-                      <tbody></tbody>
-                  </table>
-              </div>
+        </div>
+        <div id="financeiras" class="tab-content">
+          <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+            <button class="btn-primary" onclick="openFormModal('financeira')"><i class="ph ph-plus"></i> Adicionar Financeira</button>
           </div>
-          <!-- Tab Financeiras -->
-          <div id="financeiras" class="tab-content">
-              <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
-                  <button class="btn-primary" onclick="openFormModal('financeira')"><i class="ph ph-plus"></i> Adicionar Financeira</button>
-              </div>
-               <div class="table-container">
-                  <table class="data-table" id="financeirasTable">
-                      <thead><tr><th>Nome</th><th>Nome Comercial</th><th>Contacto</th><th>Email Comercial</th><th>Email Comissões</th><th>Ações</th></tr></thead>
-                      <tbody></tbody>
-                  </table>
-              </div>
+          <div class="table-container">
+            <table class="data-table" id="financeirasTable">
+              <thead><tr><th>Nome</th><th>Nome Comercial</th><th>Contacto</th><th>Email Comercial</th><th>Email Comissões</th><th>Ações</th></tr></thead>
+              <tbody></tbody>
+            </table>
           </div>
-          <!-- Tab Seguradoras -->
-          <div id="seguradoras" class="tab-content">
-               <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
-                  <button class="btn-primary" onclick="openFormModal('seguradora')"><i class="ph ph-plus"></i> Adicionar Seguradora</button>
-              </div>
-              <div class="table-container">
-                  <table class="data-table" id="seguradorasTable">
-                      <thead><tr><th>Nome</th><th>Nome Comercial</th><th>Contacto</th><th>Email Comercial</th><th>Ações</th></tr></thead>
-                      <tbody></tbody>
-                  </table>
-              </div>
+        </div>
+        <div id="seguradoras" class="tab-content">
+          <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+            <button class="btn-primary" onclick="openFormModal('seguradora')"><i class="ph ph-plus"></i> Adicionar Seguradora</button>
           </div>
+          <div class="table-container">
+            <table class="data-table" id="seguradorasTable">
+              <thead><tr><th>Nome</th><th>Nome Comercial</th><th>Contacto</th><th>Email Comercial</th><th>Ações</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      
-      <!-- Gestão Comercial -->
+
       <div id="comercial-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-briefcase"></i>Gestão de Equipa</h2>
@@ -414,19 +233,19 @@
           </div>
         </div>
         <div class="table-container">
-            <table class="data-table" id="comerciaisTable">
-                <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>IBAN</th><th>Estado</th><th>Ações</th></tr></thead>
-                <tbody></tbody>
-            </table>
+          <table class="data-table" id="comerciaisTable">
+            <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>IBAN</th><th>Estado</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
+
       <div id="financeira-section" class="main-content"><div class="section-header"><h2><i class="ph ph-bank"></i>Gestão Financeira</h2></div><p>Em desenvolvimento.</p></div>
       <div id="relatorios-section" class="main-content"><div class="section-header"><h2><i class="ph ph-chart-bar"></i>Relatórios</h2></div><p>Em desenvolvimento.</p></div>
 
     </div>
   </div>
 
-  <!-- MODAIS -->
   <div id="formModal" class="modal-overlay">
     <div class="modal-box"><div class="modal-header"><h3 id="formModalTitle"></h3><button class="close-btn" onclick="closeFormModal()">&times;</button></div><div id="formModalBody" class="modal-body"></div></div>
   </div>
@@ -437,7 +256,6 @@
     <div class="modal-box" style="max-width: 400px;"><p id="confirmModalText"></p><div class="modal-footer" style="text-align: center;"><button id="confirmModalNo" class="btn-secondary">Não</button><button id="confirmModalYes" class="btn-primary">Sim</button></div></div>
   </div>
 
-  <!-- FIREBASE SDKS -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -451,12 +269,10 @@
       messagingSenderId: "995776920444",
       appId: "1:995776920444:web:7866264b9f4d74bedac2f9"
     };
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- LÓGICA DA APLICAÇÃO ---
     auth.onAuthStateChanged(user => {
       const loginContainer = document.getElementById('login-container');
       const appContainer = document.getElementById('app-container');
@@ -476,495 +292,533 @@
       document.getElementById('loginError').textContent = '';
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      auth.signInWithEmailAndPassword(email, password)
-        .catch(err => {
-            document.getElementById('loginError').textContent = "Login falhou. Verifique os seus dados.";
-        });
+      auth.signInWithEmailAndPassword(email, password).catch(err => {
+        document.getElementById('loginError').textContent = "Login falhou. Verifique os seus dados.";
+      });
     };
     document.getElementById('logoutBtn').onclick = () => auth.signOut();
 
     function showSection(sectionId) {
-        document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
-        document.getElementById(sectionId + '-section').classList.add('active');
-        document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
-        document.getElementById('nav-' + sectionId).classList.add('active');
-        if (sectionId === 'dashboard') {
-            loadDashboardData();
-        }
+      document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId + '-section').classList.add('active');
+      document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById('nav-' + sectionId).classList.add('active');
+      if (sectionId === 'dashboard') { loadDashboardData(); }
     }
 
-    function loadAllData() {
-        loadClients();
-        loadContracts();
-        loadTasks();
-        loadPartners();
-        loadComerciais();
-        loadDashboardData();
+    async function loadAllData() {
+      loadClients();
+      loadContracts();
+      loadTasks();
+      loadPartners();
+      loadComerciais();
+      loadDashboardData();
     }
 
-    // --- MODAIS ---
     const formModal = document.getElementById('formModal');
     const detailsModal = document.getElementById('detailsModal');
     let currentFormSubmitHandler = null;
 
     function openFormModal(type, id = null) {
-        document.getElementById('formModalTitle').textContent = `${id ? 'Editar' : 'Adicionar'} ${type.charAt(0).toUpperCase() + type.slice(1)}`;
-        const formModalBody = document.getElementById('formModalBody');
-        formModalBody.innerHTML = ''; 
-        
-        let formHTML = '';
+      document.getElementById('formModalTitle').textContent = \`\${id ? 'Editar' : 'Adicionar'} \${type.charAt(0).toUpperCase() + type.slice(1)}\`;
+      const formModalBody = document.getElementById('formModalBody');
+      formModalBody.innerHTML = '';
+
+      let formHTML = '';
+      switch(type) {
+        case 'cliente': formHTML = getClientFormHTML(); break;
+        case 'contrato': formHTML = getContractFormHTML(); break;
+        case 'tarefa': formHTML = getTaskFormHTML(); break;
+        case 'fornecedor': formHTML = getFornecedorFormHTML(); break;
+        case 'financeira': formHTML = getFinanceiraFormHTML(); break;
+        case 'seguradora': formHTML = getSeguradoraFormHTML(); break;
+        case 'comercial': formHTML = getComercialFormHTML(); break;
+      }
+      formModalBody.innerHTML = formHTML;
+
+      if (id) {
+        if (type === 'cliente') populateClientForm(id);
+        if (type === 'contrato') loadContractDropdowns(() => populateContractForm(id));
+        if (type === 'tarefa') { loadClientsForDropdown('taskClient'); loadContractsForDropdown('taskContract'); populateTaskForm(id); }
+        if (type === 'fornecedor') populatePartnerForm('fornecedores', id);
+        if (type === 'financeira') populatePartnerForm('financeiras', id);
+        if (type === 'seguradora') populatePartnerForm('seguradoras', id);
+        if (type === 'comercial') populateComercialForm(id);
+      } else {
+        if (type === 'cliente') document.getElementById('clientCreationDate').value = new Date().toISOString().split('T')[0];
+        if (type === 'contrato') loadContractDropdowns();
+        if (type === 'tarefa') { loadClientsForDropdown('taskClient'); loadContractsForDropdown('taskContract'); }
+      }
+
+      const form = formModalBody.querySelector('form');
+      currentFormSubmitHandler = (e) => {
+        e.preventDefault();
         switch(type) {
-            case 'cliente': formHTML = getClientFormHTML(); break;
-            case 'contrato': formHTML = getContractFormHTML(); break;
-            case 'tarefa': formHTML = getTaskFormHTML(); break;
-            case 'fornecedor': formHTML = getFornecedorFormHTML(); break;
-            case 'financeira': formHTML = getFinanceiraFormHTML(); break;
-            case 'seguradora': formHTML = getSeguradoraFormHTML(); break;
-            case 'comercial': formHTML = getComercialFormHTML(); break;
+          case 'cliente': handleClientFormSubmit(id); break;
+          case 'contrato': handleContractFormSubmit(id); break;
+          case 'tarefa': handleTaskFormSubmit(id); break;
+          case 'fornecedor': handlePartnerFormSubmit('fornecedores', id); break;
+          case 'financeira': handlePartnerFormSubmit('financeiras', id); break;
+          case 'seguradora': handlePartnerFormSubmit('seguradoras', id); break;
+          case 'comercial': handleComercialFormSubmit(id); break;
         }
-        formModalBody.innerHTML = formHTML;
-
-        // Pós-renderização
-        if (id) {
-            if (type === 'cliente') populateClientForm(id);
-            if (type === 'contrato') loadContractDropdowns(() => populateContractForm(id));
-            if (type === 'tarefa') populateTaskForm(id);
-            if (type === 'fornecedor') populatePartnerForm('fornecedores', id);
-            if (type === 'financeira') populatePartnerForm('financeiras', id);
-            if (type === 'seguradora') populatePartnerForm('seguradoras', id);
-            if (type === 'comercial') populateComercialForm(id);
-        } else {
-            if (type === 'cliente') document.getElementById('clientCreationDate').value = new Date().toISOString().split('T')[0];
-            if (type === 'contrato') loadContractDropdowns();
-            if (type === 'tarefa') {
-                loadClientsForDropdown('taskClient');
-                loadContractsForDropdown('taskContract');
-            }
-        }
-        
-        const form = formModalBody.querySelector('form');
-        currentFormSubmitHandler = (e) => {
-            e.preventDefault();
-            switch(type) {
-                case 'cliente': handleClientFormSubmit(id); break;
-                case 'contrato': handleContractFormSubmit(id); break;
-                case 'tarefa': handleTaskFormSubmit(id); break;
-                case 'fornecedor': handlePartnerFormSubmit('fornecedores', id); break;
-                case 'financeira': handlePartnerFormSubmit('financeiras', id); break;
-                case 'seguradora': handlePartnerFormSubmit('seguradoras', id); break;
-                case 'comercial': handleComercialFormSubmit(id); break;
-            }
-        };
-        form.addEventListener('submit', currentFormSubmitHandler);
-        formModal.classList.add('active');
+      };
+      form.addEventListener('submit', currentFormSubmitHandler);
+      formModal.classList.add('active');
     }
-
     function closeFormModal() {
-        const form = document.getElementById('formModalBody').querySelector('form');
-        if (form && currentFormSubmitHandler) {
-            form.removeEventListener('submit', currentFormSubmitHandler);
-        }
-        formModal.classList.remove('active');
+      const form = document.getElementById('formModalBody').querySelector('form');
+      if (form && currentFormSubmitHandler) form.removeEventListener('submit', currentFormSubmitHandler);
+      currentFormSubmitHandler = null;
+      formModal.classList.remove('active');
     }
-    
+
     async function openDetailsModal(type, id) {
-        const detailsModalTitle = document.getElementById('detailsModalTitle');
-        const detailsModalBody = document.getElementById('detailsModalBody');
-        detailsModalBody.innerHTML = 'A carregar...';
-        detailsModal.classList.add('active');
+      const detailsModalTitle = document.getElementById('detailsModalTitle');
+      const detailsModalBody = document.getElementById('detailsModalBody');
+      detailsModalBody.innerHTML = 'A carregar...';
+      detailsModal.classList.add('active');
 
-        if (type === 'cliente') {
-            const doc = await db.collection('clientes').doc(id).get();
-            if (doc.exists) {
-                const d = doc.data();
-                detailsModalTitle.textContent = `Detalhes de: ${d.name}`;
-                detailsModalBody.innerHTML = `
-                    <div class="details-grid">
-                        <div>
-                            <h4>Dados Pessoais e Comerciais</h4>
-                            <p><strong>Nome:</strong> ${d.name || '-'}</p><p><strong>Email:</strong> ${d.email || '-'}</p><p><strong>Telefone:</strong> ${d.phone || '-'}</p><p><strong>NIF:</strong> ${d.nif || '-'}</p><p><strong>Morada:</strong> ${d.address || '-'}</p><p><strong>Código Postal:</strong> ${d.postalCode || '-'}</p><p><strong>Localidade:</strong> ${d.city || '-'}</p>
-                        </div>
-                        <div>
-                            <h4>Documentos Associados</h4>
-                            <p><i>(Funcionalidade de upload a ser implementada)</i></p>
-                        </div>
-                    </div>
-                    <h4>Contratos Associados</h4>
-                    <div id="associatedContracts">A carregar contratos...</div>
-                    <h4>Histórico de Interações</h4>
-                    <div id="interactionHistory"></div>
-                    <form id="interactionForm">
-                        <label>Adicionar Nova Interação</label>
-                        <textarea id="newInteractionNote" rows="3" required></textarea>
-                        <div class="modal-footer" style="margin-top: 1em; padding: 0;"><button type="submit" class="btn-primary">Adicionar</button></div>
-                    </form>
-                `;
-                
-                loadAssociatedContracts(id);
-                loadInteractions('clientes', id, 'interactionHistory');
-
-                document.getElementById('interactionForm').onsubmit = (e) => {
-                    e.preventDefault();
-                    const note = document.getElementById('newInteractionNote').value;
-                    handleInteractionSubmit('clientes', id, note, 'interactionHistory');
-                    document.getElementById('newInteractionNote').value = '';
-                };
-            }
-        } else if (type === 'contrato') {
-            const doc = await db.collection('contratos').doc(id).get();
-            if (doc.exists) {
-                const d = doc.data();
-                detailsModalTitle.textContent = `Detalhes do Contrato: ${d.type}`;
-                detailsModalBody.innerHTML = `
-                    <div class="details-grid">
-                        <div>
-                             <h4>Informação do Contrato</h4>
-                            <p><strong>Cliente:</strong> ${d.clientName || '-'}</p>
-                            <p><strong>Tipo de Serviço:</strong> ${d.type || '-'}</p>
-                            <p><strong>Valor:</strong> €${d.value || '0.00'}</p>
-                            <p><strong>Estado:</strong> ${d.status || '-'}</p>
-                            <p><strong>Data de Início:</strong> ${d.startDate || '-'}</p>
-                            <hr>
-                            <h4>Observações</h4>
-                            <p>${d.notes || 'Nenhuma observação.'}</p>
-                        </div>
-                        <div>
-                            <h4>Documentos da Proposta</h4>
-                            <ul id="documentList"></ul>
-                            <input type="file" id="fileUpload" style="display: none;" onchange="handleFileSelect(this.files)">
-                            <button class="btn-primary" style="margin-top: 1em;" onclick="document.getElementById('fileUpload').click();">Carregar Ficheiro</button>
-                        </div>
-                    </div>
-
-                    <h4>Histórico de Interações do Contrato</h4>
-                    <div id="contractInteractionHistory"></div>
-                     <form id="contractInteractionForm">
-                        <label>Adicionar Nova Interação</label>
-                        <textarea id="newContractInteractionNote" rows="3" required></textarea>
-                        <div class="modal-footer" style="margin-top: 1em; padding: 0;"><button type="submit" class="btn-primary">Adicionar</button></div>
-                    </form>
-                `;
-                loadInteractions('contratos', id, 'contractInteractionHistory');
-                document.getElementById('contractInteractionForm').onsubmit = (e) => {
-                    e.preventDefault();
-                    const note = document.getElementById('newContractInteractionNote').value;
-                    handleInteractionSubmit('contratos', id, note, 'contractInteractionHistory');
-                    document.getElementById('newContractInteractionNote').value = '';
-                };
-            }
+      if (type === 'cliente') {
+        const doc = await db.collection('clientes').doc(id).get();
+        if (doc.exists) {
+          const d = doc.data();
+          detailsModalTitle.textContent = \`Detalhes de: \${d.name}\`;
+          detailsModalBody.innerHTML = `
+            <div class="details-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2em;">
+              <div>
+                <h4>Dados Pessoais e Comerciais</h4>
+                <p><strong>Nome:</strong> ${d.name || '-'}</p>
+                <p><strong>Email:</strong> ${d.email || '-'}</p>
+                <p><strong>Telefone:</strong> ${d.phone || '-'}</p>
+                <p><strong>NIF:</strong> ${d.nif || '-'}</p>
+                <p><strong>Morada:</strong> ${d.address || '-'}</p>
+                <p><strong>Código Postal:</strong> ${d.postalCode || '-'}</p>
+                <p><strong>Localidade:</strong> ${d.city || '-'}</p>
+              </div>
+              <div>
+                <h4>Documentos Associados</h4>
+                <p><i>(Upload real a implementar)</i></p>
+              </div>
+            </div>
+            <h4>Contratos Associados</h4>
+            <div id="associatedContracts">A carregar contratos...</div>
+            <h4>Histórico de Interações</h4>
+            <div id="interactionHistory"></div>
+            <form id="interactionForm">
+              <label>Adicionar Nova Interação</label>
+              <textarea id="newInteractionNote" rows="3" required></textarea>
+              <div class="modal-footer" style="margin-top: 1em; padding: 0;"><button type="submit" class="btn-primary">Adicionar</button></div>
+            </form>
+          `;
+          loadAssociatedContracts(id);
+          loadInteractions('clientes', id, 'interactionHistory');
+          document.getElementById('interactionForm').onsubmit = (e) => {
+            e.preventDefault();
+            const note = document.getElementById('newInteractionNote').value;
+            handleInteractionSubmit('clientes', id, note, 'interactionHistory');
+            document.getElementById('newInteractionNote').value = '';
+          };
         }
+      } else if (type === 'contrato') {
+        const doc = await db.collection('contratos').doc(id).get();
+        if (doc.exists) {
+          const d = doc.data();
+          detailsModalTitle.textContent = \`Detalhes do Contrato: \${d.type}\`;
+          detailsModalBody.innerHTML = `
+            <div class="details-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2em;">
+              <div>
+                <h4>Informação do Contrato</h4>
+                <p><strong>Cliente:</strong> ${d.clientName || '-'}</p>
+                <p><strong>Tipo de Serviço:</strong> ${d.type || '-'}</p>
+                <p><strong>Valor:</strong> €${d.value || '0.00'}</p>
+                <p><strong>Estado:</strong> ${d.status || '-'}</p>
+                <p><strong>Data de Início:</strong> ${d.startDate || '-'}</p>
+                <p><strong>Comercial:</strong> ${d.commercialName || '-'}</p>
+                <hr>
+                <h4>Observações</h4>
+                <p>${d.notes || 'Nenhuma observação.'}</p>
+              </div>
+              <div>
+                <h4>Documentos da Proposta</h4>
+                <ul id="documentList"></ul>
+                <input type="file" id="fileUpload" style="display: none;" onchange="handleFileSelect(this.files)">
+                <button class="btn-primary" style="margin-top: 1em;" onclick="document.getElementById('fileUpload').click();">Carregar Ficheiro</button>
+              </div>
+            </div>
+            <h4>Histórico de Interações do Contrato</h4>
+            <div id="contractInteractionHistory"></div>
+            <form id="contractInteractionForm">
+              <label>Adicionar Nova Interação</label>
+              <textarea id="newContractInteractionNote" rows="3" required></textarea>
+              <div class="modal-footer" style="margin-top: 1em; padding: 0;"><button type="submit" class="btn-primary">Adicionar</button></div>
+            </form>
+          `;
+          loadInteractions('contratos', id, 'contractInteractionHistory');
+          document.getElementById('contractInteractionForm').onsubmit = (e) => {
+            e.preventDefault();
+            const note = document.getElementById('newContractInteractionNote').value;
+            handleInteractionSubmit('contratos', id, note, 'contractInteractionHistory');
+            document.getElementById('newContractInteractionNote').value = '';
+          };
+        }
+      }
     }
-
     function closeDetailsModal() { detailsModal.classList.remove('active'); }
 
     const confirmModal = document.getElementById('confirmModal');
     let confirmCallback = null;
     function showConfirmModal(message, callback) {
-        document.getElementById('confirmModalText').textContent = message;
-        confirmCallback = callback;
-        confirmModal.classList.add('active');
+      document.getElementById('confirmModalText').textContent = message;
+      confirmCallback = callback;
+      confirmModal.classList.add('active');
     }
-    document.getElementById('confirmModalYes').onclick = () => {
-        if (confirmCallback) confirmCallback();
-        confirmModal.classList.remove('active');
-    };
+    document.getElementById('confirmModalYes').onclick = () => { if (confirmCallback) confirmCallback(); confirmModal.classList.remove('active'); };
     document.getElementById('confirmModalNo').onclick = () => { confirmModal.classList.remove('active'); };
 
-    // --- DASHBOARD ---
+    // DASHBOARD
     let creditChartInstance = null;
     async function loadDashboardData() {
-        const now = new Date();
-        document.getElementById('dashboard-update-time').textContent = `Última atualização: hoje às ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const now = new Date();
+      document.getElementById('dashboard-update-time').textContent = \`Última atualização: hoje às \${now.getHours()}:\${String(now.getMinutes()).padStart(2, '0')}\`;
+      const contractsSnapshot = await db.collection('contratos').get();
+      let creditVolume = 0; let closedInsurances = 0;
+      contractsSnapshot.forEach(doc => {
+        const contract = doc.data();
+        if (contract.type === 'Crédito' && contract.value) creditVolume += parseFloat(contract.value);
+        if (contract.type === 'Seguro' && contract.status === 'Concluído') closedInsurances++;
+      });
+      document.getElementById('kpi-credit-volume').textContent = \`€\${creditVolume.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}\`;
+      document.getElementById('kpi-closed-insurances').textContent = closedInsurances;
+      const tasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
+      document.getElementById('kpi-pending-tasks').textContent = tasksSnapshot.size;
+      const allTasksSnapshot = await db.collection('tarefas').get();
+      const completedTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Concluído').get();
+      const resolutionRate = allTasksSnapshot.size > 0 ? Math.round((completedTasksSnapshot.size / allTasksSnapshot.size) * 100) : 0;
+      document.getElementById('kpi-resolution-rate').textContent = \`\${resolutionRate}%\`;
 
-        // KPIs
-        const contractsSnapshot = await db.collection('contratos').get();
-        let creditVolume = 0;
-        let closedInsurances = 0;
-        contractsSnapshot.forEach(doc => {
-            const contract = doc.data();
-            if (contract.type === 'Crédito' && contract.value) {
-                creditVolume += parseFloat(contract.value);
-            }
-            if (contract.type === 'Seguro' && contract.status === 'Concluído') {
-                closedInsurances++;
-            }
+      const dashboardTasksList = document.getElementById('dashboardTasksList');
+      dashboardTasksList.innerHTML = '';
+      const recentTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
+      let tasks = [];
+      recentTasksSnapshot.forEach(doc => tasks.push({id: doc.id, ...doc.data()}));
+      tasks.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+      tasks = tasks.slice(0, 5);
+      if (tasks.length === 0) {
+        dashboardTasksList.innerHTML = '<p>Nenhuma tarefa pendente.</p>';
+      } else {
+        tasks.forEach(task => {
+          const item = document.createElement('div'); item.className = 'task-item'; item.onclick = () => showSection('tarefas');
+          let urgencyIndicator = '';
+          if (task.dueDate) {
+            const dueDate = new Date(task.dueDate); const today = new Date(); today.setHours(0,0,0,0);
+            const diffTime = dueDate - today; const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays <= 3 && diffDays >= 0) urgencyIndicator = \`<i class="ph-fill ph-warning-circle" title="Prazo termina em \${diffDays+1} dias!"></i>\`;
+          }
+          item.innerHTML = \`<div><div class="title">\${task.title}</div><div class="deadline">Prazo: \${task.dueDate || 'N/D'}</div></div>\${urgencyIndicator}\`;
+          dashboardTasksList.appendChild(item);
         });
-        document.getElementById('kpi-credit-volume').textContent = `€${creditVolume.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        document.getElementById('kpi-closed-insurances').textContent = closedInsurances;
+      }
 
-        const tasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
-        document.getElementById('kpi-pending-tasks').textContent = tasksSnapshot.size;
-        
-        const allTasksSnapshot = await db.collection('tarefas').get();
-        const completedTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Concluído').get();
-        const resolutionRate = allTasksSnapshot.size > 0 ? Math.round((completedTasksSnapshot.size / allTasksSnapshot.size) * 100) : 0;
-        document.getElementById('kpi-resolution-rate').textContent = `${resolutionRate}%`;
-
-        // Lista de Tarefas
-        const dashboardTasksList = document.getElementById('dashboardTasksList');
-        dashboardTasksList.innerHTML = '';
-        const recentTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
-        
-        let tasks = [];
-        recentTasksSnapshot.forEach(doc => tasks.push({id: doc.id, ...doc.data()}));
-        
-        tasks.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
-        tasks = tasks.slice(0, 5);
-
-        if (tasks.length === 0) {
-            dashboardTasksList.innerHTML = '<p>Nenhuma tarefa pendente.</p>';
-        } else {
-            tasks.forEach(task => {
-                const item = document.createElement('div');
-                item.className = 'task-item';
-                item.onclick = () => showSection('tarefas');
-                
-                let urgencyIndicator = '';
-                if (task.dueDate) {
-                    const dueDate = new Date(task.dueDate);
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
-                    const diffTime = dueDate - today;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    if (diffDays <= 3 && diffDays >= 0) {
-                        urgencyIndicator = `<i class="ph-fill ph-warning-circle urgency-indicator" title="Prazo termina em ${diffDays+1} dias!"></i>`;
-                    }
-                }
-
-                item.innerHTML = `<div><div class="title">${task.title}</div><div class="deadline">Prazo: ${task.dueDate || 'N/D'}</div></div>${urgencyIndicator}`;
-                dashboardTasksList.appendChild(item);
-            });
-        }
-        
-        // Gráfico (com dados de exemplo)
-        const ctx = document.getElementById('creditChart').getContext('2d');
-        if(creditChartInstance) creditChartInstance.destroy();
-        creditChartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                datasets: [{
-                    label: 'Volume de Crédito',
-                    data: [350000, 400000, 380000, 420000, 450000, 466500],
-                    backgroundColor: 'rgba(200, 184, 156, 0.7)',
-                    borderColor: 'rgba(200, 184, 156, 1)',
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            },
-            options: { responsive: true, scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-        });
+      const ctx = document.getElementById('creditChart').getContext('2d');
+      if(creditChartInstance) creditChartInstance.destroy();
+      creditChartInstance = new Chart(ctx, { type:'bar', data:{ labels:['Jan','Fev','Mar','Abr','Mai','Jun'], datasets:[{ label:'Volume de Crédito', data:[350000,400000,380000,420000,450000,466500], backgroundColor:'rgba(200,184,156,0.7)', borderColor:'rgba(200,184,156,1)', borderWidth:1, borderRadius:5 }] }, options:{ responsive:true, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{ display:false } } } });
     }
 
-    // --- PARCEIROS ---
+    // PARCEIROS
     function openPartnerTab(evt, tabName) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        evt.currentTarget.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
     }
-
     async function loadPartners() {
-        loadPartnerData('fornecedores');
-        loadPartnerData('financeiras');
-        loadPartnerData('seguradoras');
+      loadPartnerData('fornecedores');
+      loadPartnerData('financeiras');
+      loadPartnerData('seguradoras');
     }
-    
     async function loadPartnerData(type) {
-        const tableBody = document.getElementById(`${type}Table`).querySelector('tbody');
-        tableBody.innerHTML = '';
-        const snapshot = await db.collection(type).orderBy('name').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            const row = tableBody.insertRow();
-            let cells = '';
-            if (type === 'fornecedores') {
-                cells = `<td>${d.name}</td><td>${d.equipment}</td><td>${d.contactPerson}</td><td>${d.email}</td>`;
-            } else if (type === 'financeiras') {
-                cells = `<td>${d.name}</td><td>${d.commercialName}</td><td>${d.commercialContact}</td><td>${d.commercialEmail}</td><td>${d.commissionEmail}</td>`;
-            } else if (type === 'seguradoras') {
-                cells = `<td>${d.name}</td><td>${d.commercialName}</td><td>${d.commercialContact}</td><td>${d.commercialEmail}</td>`;
-            }
-            row.innerHTML = `${cells}<td class="actions-cell"><button onclick="openFormModal('${type.slice(0, -1)}', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button><button class="btn-danger" onclick="deleteItem('${type}', '${doc.id}', '${d.name}', loadPartners)" title="Eliminar"><i class="ph ph-trash"></i></button></td>`;
-        });
-    }
-    
-    async function handlePartnerFormSubmit(type, id) {
-        let data = {};
-        if (type === 'fornecedores') {
-            data = {
-                name: document.getElementById('partnerName').value, nif: document.getElementById('partnerNif').value, iban: document.getElementById('partnerIban').value, address: document.getElementById('partnerAddress').value, postalCode: document.getElementById('partnerPostalCode').value, city: document.getElementById('partnerCity').value, phone: document.getElementById('partnerPhone').value, email: document.getElementById('partnerEmail').value, cae: document.getElementById('partnerCae').value, capital: document.getElementById('partnerCapital').value, contactPerson: document.getElementById('partnerContactPerson').value, equipment: document.getElementById('partnerEquipment').value
-            };
-        } else if (type === 'financeiras') {
-            data = {
-                name: document.getElementById('partnerName').value, address: document.getElementById('partnerAddress').value, nif: document.getElementById('partnerNif').value, commercialName: document.getElementById('partnerCommercialName').value, commercialDob: document.getElementById('partnerCommercialDob').value, commercialContact: document.getElementById('partnerCommercialContact').value, commercialEmail: document.getElementById('partnerCommercialEmail').value, commissionEmail: document.getElementById('partnerCommissionEmail').value
-            };
-        } else if (type === 'seguradoras') {
-            data = {
-                name: document.getElementById('partnerName').value, address: document.getElementById('partnerAddress').value, nif: document.getElementById('partnerNif').value, commercialName: document.getElementById('partnerCommercialName').value, commercialDob: document.getElementById('partnerCommercialDob').value, commercialContact: document.getElementById('partnerCommercialContact').value, commercialEmail: document.getElementById('partnerCommercialEmail').value
-            };
-        }
-        
-        const action = id ? db.collection(type).doc(id).update(data) : db.collection(type).add(data);
-        await action;
-        closeFormModal();
-        loadPartners();
-    }
-    
-    async function populatePartnerForm(type, id) {
-        const doc = await db.collection(type).doc(id).get();
-        if(!doc.exists) return;
+      const tableBody = document.getElementById(\`\${type}Table\`).querySelector('tbody');
+      tableBody.innerHTML = '';
+      const snapshot = await db.collection(type).orderBy('name').get();
+      snapshot.forEach(doc => {
         const d = doc.data();
+        const row = tableBody.insertRow();
+        let cells = '';
         if (type === 'fornecedores') {
-            document.getElementById('partnerName').value = d.name || ''; document.getElementById('partnerNif').value = d.nif || ''; document.getElementById('partnerIban').value = d.iban || ''; document.getElementById('partnerAddress').value = d.address || ''; document.getElementById('partnerPostalCode').value = d.postalCode || ''; document.getElementById('partnerCity').value = d.city || ''; document.getElementById('partnerPhone').value = d.phone || ''; document.getElementById('partnerEmail').value = d.email || ''; document.getElementById('partnerCae').value = d.cae || ''; document.getElementById('partnerCapital').value = d.capital || ''; document.getElementById('partnerContactPerson').value = d.contactPerson || ''; document.getElementById('partnerEquipment').value = d.equipment || '';
+          cells = \`<td>\${d.name}</td><td>\${d.equipment || '-'}</td><td>\${d.contactPerson || '-'}</td><td>\${d.email || '-'}</td>\`;
         } else if (type === 'financeiras') {
-            document.getElementById('partnerName').value = d.name || ''; document.getElementById('partnerAddress').value = d.address || ''; document.getElementById('partnerNif').value = d.nif || ''; document.getElementById('partnerCommercialName').value = d.commercialName || ''; document.getElementById('partnerCommercialDob').value = d.commercialDob || ''; document.getElementById('partnerCommercialContact').value = d.commercialContact || ''; document.getElementById('partnerCommercialEmail').value = d.commercialEmail || ''; document.getElementById('partnerCommissionEmail').value = d.commissionEmail || '';
+          cells = \`<td>\${d.name}</td><td>\${d.commercialName || '-'}</td><td>\${d.commercialContact || '-'}</td><td>\${d.commercialEmail || '-'}</td><td>\${d.commissionEmail || '-'}</td>\`;
         } else if (type === 'seguradoras') {
-            document.getElementById('partnerName').value = d.name || ''; document.getElementById('partnerAddress').value = d.address || ''; document.getElementById('partnerNif').value = d.nif || ''; document.getElementById('partnerCommercialName').value = d.commercialName || ''; document.getElementById('partnerCommercialDob').value = d.commercialDob || ''; document.getElementById('partnerCommercialContact').value = d.commercialContact || ''; document.getElementById('partnerCommercialEmail').value = d.commercialEmail || '';
+          cells = \`<td>\${d.name}</td><td>\${d.commercialName || '-'}</td><td>\${d.commercialContact || '-'}</td><td>\${d.commercialEmail || '-'}</td>\`;
         }
+        row.innerHTML = \`\${cells}<td class="actions-cell"><button onclick="openFormModal('\${type.slice(0, -1)}', '\${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button><button class="btn-danger" onclick="deleteItem('\${type}', '\${doc.id}', '\${d.name}', loadPartners)" title="Eliminar"><i class="ph ph-trash"></i></button></td>\`;
+      });
     }
+    async function handlePartnerFormSubmit(type, id) {
+      let data = {};
+      if (type === 'fornecedores') {
+        data = { name: v('partnerName'), nif: v('partnerNif'), iban: v('partnerIban'), address: v('partnerAddress'), postalCode: v('partnerPostalCode'), city: v('partnerCity'), phone: v('partnerPhone'), email: v('partnerEmail'), cae: v('partnerCae'), capital: v('partnerCapital'), contactPerson: v('partnerContactPerson'), equipment: v('partnerEquipment') };
+      } else if (type === 'financeiras') {
+        data = { name: v('partnerName'), address: v('partnerAddress'), nif: v('partnerNif'), commercialName: v('partnerCommercialName'), commercialDob: v('partnerCommercialDob'), commercialContact: v('partnerCommercialContact'), commercialEmail: v('partnerCommercialEmail'), commissionEmail: v('partnerCommissionEmail') };
+      } else if (type === 'seguradoras') {
+        data = { name: v('partnerName'), address: v('partnerAddress'), nif: v('partnerNif'), commercialName: v('partnerCommercialName'), commercialDob: v('partnerCommercialDob'), commercialContact: v('partnerCommercialContact'), commercialEmail: v('partnerCommercialEmail') };
+      }
+      const action = id ? db.collection(type).doc(id).update(data) : db.collection(type).add(data);
+      await action; closeFormModal(); loadPartners();
+    }
+    async function populatePartnerForm(type, id) {
+      const doc = await db.collection(type).doc(id).get(); if(!doc.exists) return;
+      const d = doc.data();
+      Object.entries(d).forEach(([k,val]) => { const el = document.getElementById(mapPartnerFieldId(k)); if (el) el.value = val; });
+    }
+    function mapPartnerFieldId(key){ const map = { name:'partnerName', address:'partnerAddress', nif:'partnerNif', iban:'partnerIban', postalCode:'partnerPostalCode', city:'partnerCity', phone:'partnerPhone', email:'partnerEmail', cae:'partnerCae', capital:'partnerCapital', contactPerson:'partnerContactPerson', equipment:'partnerEquipment', commercialName:'partnerCommercialName', commercialDob:'partnerCommercialDob', commercialContact:'partnerCommercialContact', commercialEmail:'partnerCommercialEmail', commissionEmail:'partnerCommissionEmail' }; return map[key] || key; }
 
-    // --- TAREFAS ---
+    // TAREFAS
     async function loadTasks() {
-        const tableBody = document.getElementById('tasksTable').querySelector('tbody');
-        tableBody.innerHTML = '';
-        const snapshot = await db.collection('tarefas').orderBy('dueDate').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${d.title}</td>
-                <td>${d.owner || '-'}</td>
-                <td>${d.dueDate || '-'}</td>
-                <td>${d.priority || '-'}</td>
-                <td>${d.status || '-'}</td>
-                <td class="actions-cell">
-                    ${d.status !== 'Concluído' ? `<button onclick="completeTask('${doc.id}', '${d.title}')" title="Concluir Tarefa"><i class="ph ph-check-circle"></i></button>` : ''}
-                    <button onclick="openFormModal('tarefa', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('tarefas', '${doc.id}', '${d.title}', loadTasks)" title="Eliminar"><i class="ph ph-trash"></i></button>
-                </td>
-            `;
-        });
+      const tableBody = document.getElementById('tasksTable').querySelector('tbody');
+      tableBody.innerHTML = '';
+      const snapshot = await db.collection('tarefas').orderBy('dueDate').get();
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const row = tableBody.insertRow();
+        row.innerHTML = \`
+          <td>\${d.title}</td>
+          <td>\${d.owner || '-'}</td>
+          <td>\${d.dueDate || '-'}</td>
+          <td>\${d.priority || '-'}</td>
+          <td>\${d.status || '-'}</td>
+          <td class="actions-cell">
+            \${d.status !== 'Concluído' ? \`<button onclick="completeTask('\${doc.id}', '\${d.title}')" title="Concluir Tarefa"><i class="ph ph-check-circle"></i></button>\` : ''}
+            <button onclick="openFormModal('tarefa', '\${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+            <button class="btn-danger" onclick="deleteItem('tarefas', '\${doc.id}', '\${d.title}', loadTasks)" title="Eliminar"><i class="ph ph-trash"></i></button>
+          </td>\`;
+      });
     }
-    
     async function completeTask(id, title) {
-        const today = new Date().toISOString().split('T')[0];
-        await db.collection('tarefas').doc(id).update({
-            status: 'Concluído',
-            completionDate: today
-        });
-        
-        const taskDoc = await db.collection('tarefas').doc(id).get();
-        const taskData = taskDoc.data();
-        const note = `Tarefa '${title}' foi concluída.`;
-        
-        if (taskData.clientId) { handleInteractionSubmit('clientes', taskData.clientId, note); }
-        if (taskData.contractId) { handleInteractionSubmit('contratos', taskData.contractId, note); }
-        
-        loadTasks();
-        loadDashboardData();
+      const today = new Date().toISOString().split('T')[0];
+      await db.collection('tarefas').doc(id).update({ status:'Concluído', completionDate: today });
+      const taskDoc = await db.collection('tarefas').doc(id).get();
+      const taskData = taskDoc.data();
+      const note = \`Tarefa '\${title}' foi concluída.\`;
+      if (taskData.clientId) { handleInteractionSubmit('clientes', taskData.clientId, note); }
+      if (taskData.contractId) { handleInteractionSubmit('contratos', taskData.contractId, note); }
+      loadTasks(); loadDashboardData();
     }
 
-    // --- Funções de ajuda e genéricas ---
-    function getClientFormHTML() { return `<form id="clientForm"><div class="row"><div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div><div class="col"><label>Email</label><input type="email" id="clientEmail" /></div></div><div class="row"><div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div><div class="col"><label>NIF</label><input type="text" id="clientNif" maxlength="9" /></div></div><label>Morada</label><input type="text" id="clientAddress" /><div class="row"><div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div><div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div></div><div class="row"><div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div><div class="col"><label>Comercial Responsável</label><input type="text" id="clientManager" /></div></div><div class="row"><div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div><div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div></div><label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleClientFormSubmit(id) { const data = { name: document.getElementById('clientName').value.trim(), email: document.getElementById('clientEmail').value.trim(), phone: document.getElementById('clientPhone').value.trim(), nif: document.getElementById('clientNif').value.trim(), address: document.getElementById('clientAddress').value.trim(), postalCode: document.getElementById('clientPostalCode').value.trim(), city: document.getElementById('clientCity').value.trim(), serviceType: document.getElementById('clientServiceType').value, manager: document.getElementById('clientManager').value.trim(), rgpd: document.getElementById('clientRgpd').value, creationDate: document.getElementById('clientCreationDate').value, internalNotes: document.getElementById('clientInternalNotes').value.trim(), clientType: 'Particular' }; const action = id ? db.collection('clientes').doc(id).update(data) : db.collection('clientes').add(data); await action; closeFormModal(); loadClients(); loadDashboardData(); }
-    async function populateClientForm(id) { const doc = await db.collection('clientes').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('clientName').value = d.name || ''; document.getElementById('clientEmail').value = d.email || ''; document.getElementById('clientPhone').value = d.phone || ''; document.getElementById('clientNif').value = d.nif || ''; document.getElementById('clientAddress').value = d.address || ''; document.getElementById('clientPostalCode').value = d.postalCode || ''; document.getElementById('clientCity').value = d.city || ''; document.getElementById('clientServiceType').value = d.serviceType || ''; document.getElementById('clientManager').value = d.manager || ''; document.getElementById('clientRgpd').value = d.rgpd || 'Não'; document.getElementById('clientCreationDate').value = d.creationDate || ''; document.getElementById('clientInternalNotes').value = d.internalNotes || ''; } }
-    function getContractFormHTML() { return `<form id="contractForm"> <div class="row"> <div class="col"><label>Cliente*</label><select id="contractClient" required></select></div> <div class="col"><label>Data do Contrato</label><input type="date" id="contractDate"></div> <div class="col"><label>Comercial*</label><select id="contractCommercial" required></select></div> </div> <label>Tipo de Serviço*</label> <select id="contractServiceType" onchange="handleContractTypeChange(this.value)" required> <option value="">Selecione Tipo de Serviço</option> <option value="Crédito">Crédito</option> <option value="Seguro">Seguro</option> <option value="Legalização Automóvel">Legalização Automóvel</option> <option value="Consultoria Financeira">Consultoria Financeira</option> </select> <div id="detailsCredito" class="service-details"><h4>Detalhes do Crédito</h4><!-- ... Campos do crédito aqui ... --></div> <div id="detailsSeguro" class="service-details"><h4>Detalhes do Seguro</h4><!-- ... Campos do seguro aqui ... --></div> <div id="detailsLegalizacao" class="service-details"><h4>Detalhes da Legalização</h4><!-- ... Campos da legalização aqui ... --></div> <div id="detailsConsultoria" class="service-details"><h4>Detalhes da Consultoria</h4><!-- ... Campos da consultoria aqui ... --></div> <div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleContractFormSubmit(id) { const clientSelect = document.getElementById('contractClient'); const data = { clientId: clientSelect.value, clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '', type: document.getElementById('contractType').value, value: document.getElementById('contractValue').value, status: document.getElementById('contractStatus').value, startDate: document.getElementById('contractStartDate').value, notes: document.getElementById('contractNotes').value.trim() }; const action = id ? db.collection('contratos').doc(id).update(data) : db.collection('contratos').add(data); await action; closeFormModal(); loadContracts(); loadDashboardData(); }
-    async function populateContractForm(id) { const doc = await db.collection('contratos').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('contractClient').value = d.clientId || ''; document.getElementById('contractType').value = d.type || ''; document.getElementById('contractValue').value = d.value || ''; document.getElementById('contractStatus').value = d.status || 'Pendente'; document.getElementById('contractStartDate').value = d.startDate || ''; document.getElementById('contractNotes').value = d.notes || ''; } }
-    async function loadContractDropdowns(callback) { const select = document.getElementById('contractClient'); if (!select) return; select.innerHTML = '<option value="">Selecione um Cliente</option>'; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += `<option value="${doc.id}">${d.name}</option>`; }); if (callback) callback(); }
-    async function loadAssociatedContracts(clientId) { const container = document.getElementById('associatedContracts'); container.innerHTML = ''; const snapshot = await db.collection('contratos').where('clientId', '==', clientId).get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhum contrato associado.</p>'; return; } let html = '<ul style="list-style: none; padding: 0;">'; snapshot.forEach(doc => { const d = doc.data(); html += `<li style="margin-bottom: .5em;">${d.type} - Estado: ${d.status} (Início: ${d.startDate})</li>`; }); html += '</ul>'; container.innerHTML = html; }
-    function getTaskFormHTML() { return `<form id="taskForm"><label>Título da tarefa</label><input type="text" id="taskTitle" required /><label>Descrição</label><textarea id="taskDescription" rows="3"></textarea><div class="row"><div class="col"><label>Responsável</label><input type="text" id="taskOwner" /></div><div class="col"><label>Prazo</label><input type="date" id="taskDueDate" /></div></div><div class="row"><div class="col"><label>Prioridade</label><select id="taskPriority"><option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option></select></div><div class="col"><label>Estado</label><select id="taskStatus"><option value="Pendente">Pendente</option><option value="Em Andamento">Em Andamento</option><option value="Concluído">Concluído</option></select></div></div><div class="row"><div class="col"><label>Associar a Cliente (Opcional)</label><select id="taskClient"><option value="">Nenhum</option></select></div><div class="col"><label>Associar a Contrato (Opcional)</label><select id="taskContract"><option value="">Nenhum</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleTaskFormSubmit(id) { const data = { title: document.getElementById('taskTitle').value.trim(), description: document.getElementById('taskDescription').value.trim(), owner: document.getElementById('taskOwner').value.trim(), dueDate: document.getElementById('taskDueDate').value, priority: document.getElementById('taskPriority').value, status: document.getElementById('taskStatus').value, clientId: document.getElementById('taskClient').value, contractId: document.getElementById('taskContract').value, }; const action = id ? db.collection('tarefas').doc(id).update(data) : db.collection('tarefas').add(data); await action; const note = `Tarefa '${data.title}' foi ${id ? 'atualizada' : 'criada'} com estado '${data.status}'.`; if (data.clientId) { handleInteractionSubmit('clientes', data.clientId, note); } if (data.contractId) { handleInteractionSubmit('contratos', data.contractId, note); } closeFormModal(); loadTasks(); loadDashboardData(); }
-    async function populateTaskForm(id) { const doc = await db.collection('tarefas').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('taskTitle').value = d.title || ''; document.getElementById('taskDescription').value = d.description || ''; document.getElementById('taskOwner').value = d.owner || ''; document.getElementById('taskDueDate').value = d.dueDate || ''; document.getElementById('taskPriority').value = d.priority || 'Média'; document.getElementById('taskStatus').value = d.status || 'Pendente'; document.getElementById('taskClient').value = d.clientId || ''; document.getElementById('taskContract').value = d.contractId || ''; } }
-    async function loadClientsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; }); }
-    async function loadContractsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; const snapshot = await db.collection('contratos').orderBy('clientName').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += `<option value="${doc.id}">${d.type} - ${d.clientName}</option>`; }); }
-    function handleFileSelect(files) { const list = document.getElementById('documentList'); if (!list || files.length === 0) return; const file = files[0]; list.innerHTML += `<li><span>${file.name}</span><button class="btn-danger" style="padding: .2em .5em; font-size: .8em;">X</button></li>`; /* Lógica de upload real iria aqui */ }
-    function deleteItem(collection, id, name, callback) { showConfirmModal(`Tem a certeza que quer eliminar "${name}"?`, async () => { await db.collection(collection).doc(id).delete(); callback(); loadDashboardData(); }); }
-    function getFornecedorFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome</label><input id="partnerName" required></div><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>IBAN</label><input id="partnerIban"></div></div><div class="row"><div class="col"><label>Morada</label><input id="partnerAddress"></div><div class="col"><label>Código Postal</label><input id="partnerPostalCode"></div><div class="col"><label>Localidade</label><input id="partnerCity"></div></div><div class="row"><div class="col"><label>Telefone</label><input id="partnerPhone"></div><div class="col"><label>Email</label><input id="partnerEmail" type="email"></div><div class="col"><label>CAE</label><input id="partnerCae"></div></div><div class="row"><div class="col"><label>Capital Social</label><input id="partnerCapital" type="number"></div><div class="col"><label>Pessoa a Contactar</label><input id="partnerContactPerson"></div><div class="col"><label>Equipamento</label><select id="partnerEquipment"><option>AUTO</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    function getFinanceiraFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Financeira</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div></div><div class="row"><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div><div class="col"><label>Email Comissões</label><input id="partnerCommissionEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    function getSeguradoraFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Seguradora</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleInteractionSubmit(collection, docId, note, elementId) { if (!note.trim()) return; await db.collection(collection).doc(docId).collection('interactions').add({ note: note, timestamp: firebase.firestore.FieldValue.serverTimestamp() }); if(elementId) { loadInteractions(collection, docId, elementId); } }
-    async function loadInteractions(collection, docId, elementId) { const container = document.getElementById(elementId); container.innerHTML = ''; const snapshot = await db.collection(collection).doc(docId).collection('interactions').orderBy('timestamp', 'desc').get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhuma interação registada.</p>'; return; } snapshot.forEach(doc => { const d = doc.data(); const date = d.timestamp ? d.timestamp.toDate().toLocaleString('pt-PT') : 'Data inválida'; const item = document.createElement('div'); item.className = 'interaction-item'; item.innerHTML = `<div class="date">${date}</div><div>${d.note}</div>`; container.appendChild(item); }); }
-    function handleContractTypeChange(value) {
-        document.querySelectorAll('.service-details').forEach(div => div.style.display = 'none');
-        if (value === 'Crédito') document.getElementById('detailsCredito').style.display = 'block';
-        if (value === 'Seguro') document.getElementById('detailsSeguro').style.display = 'block';
-        if (value === 'Legalização Automóvel') document.getElementById('detailsLegalizacao').style.display = 'block';
-        if (value === 'Consultoria Financeira') document.getElementById('detailsConsultoria').style.display = 'block';
+    // CLIENTES
+    function getClientFormHTML() {
+      return \`<form id="clientForm"><div class="row"><div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div><div class="col"><label>Email</label><input type="email" id="clientEmail" /></div></div><div class="row"><div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div><div class="col"><label>NIF</label><input type="text" id="clientNif" maxlength="9" /></div></div><label>Morada</label><input type="text" id="clientAddress" /><div class="row"><div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div><div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div></div><div class="row"><div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div><div class="col"><label>Comercial Responsável</label><input type="text" id="clientManager" /></div></div><div class="row"><div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div><div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div></div><label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>\`;
+    }
+    async function handleClientFormSubmit(id) {
+      const data = { name: v('clientName'), email: v('clientEmail'), phone: v('clientPhone'), nif: v('clientNif'), address: v('clientAddress'), postalCode: v('clientPostalCode'), city: v('clientCity'), serviceType: v('clientServiceType'), manager: v('clientManager'), rgpd: v('clientRgpd'), creationDate: v('clientCreationDate'), internalNotes: v('clientInternalNotes'), clientType: 'Particular' };
+      const action = id ? db.collection('clientes').doc(id).update(data) : db.collection('clientes').add(data);
+      await action; closeFormModal(); loadClients(); loadDashboardData();
+    }
+    async function populateClientForm(id) {
+      const doc = await db.collection('clientes').doc(id).get(); if (!doc.exists) return;
+      const d = doc.data();
+      setv('clientName', d.name); setv('clientEmail', d.email); setv('clientPhone', d.phone); setv('clientNif', d.nif); setv('clientAddress', d.address); setv('clientPostalCode', d.postalCode); setv('clientCity', d.city); setv('clientServiceType', d.serviceType); setv('clientManager', d.manager); setv('clientRgpd', d.rgpd || 'Não'); setv('clientCreationDate', d.creationDate); setv('clientInternalNotes', d.internalNotes);
     }
     async function loadClients() {
-        const tableBody = document.getElementById('clientTable').querySelector('tbody');
-        tableBody.innerHTML = '';
-        const snapshot = await db.collection('clientes').orderBy('name').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${doc.id.substring(0, 6)}...</td>
-                <td>${d.name || '-'}</td>
-                <td>${d.nif || '-'}</td>
-                <td>${d.clientType || 'Particular'}</td>
-                <td>${d.manager || '-'}</td>
-                <td>${d.rgpd || '-'}</td>
-                <td class="actions-cell">
-                    <button onclick="openDetailsModal('cliente', '${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
-                    <button onclick="openFormModal('cliente', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('clientes', '${doc.id}', '${d.name}', loadClients)" title="Eliminar"><i class="ph ph-trash"></i></button>
-                </td>
-            `;
-        });
-    }
-    async function loadContracts() {
-        const tableBody = document.getElementById('contractTable').querySelector('tbody');
-        tableBody.innerHTML = '';
-        const snapshot = await db.collection('contratos').orderBy('startDate', 'desc').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${d.clientName || '-'}</td>
-                <td>${d.type || '-'}</td>
-                <td>€${parseFloat(d.value || 0).toLocaleString('pt-PT')}</td>
-                <td>${d.status || '-'}</td>
-                <td>${d.startDate || '-'}</td>
-                <td class="actions-cell">
-                    <button onclick="openDetailsModal('contrato', '${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
-                    <button onclick="openFormModal('contrato', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('contratos', '${doc.id}', 'este contrato', loadContracts)" title="Eliminar"><i class="ph ph-trash"></i></button>
-                </td>
-            `;
-        });
-    }
-    function getComercialFormHTML() { return `<form id="comercialForm"><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email</label><input id="comercialEmail" type="email" required></div></div><div class="row"><div class="col"><label>Telefone</label><input id="comercialPhone"></div><div class="col"><label>NIF</label><input id="comercialNif"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div></div><div class="row"><div class="col"><label>Data de Início</label><input id="comercialStartDate" type="date"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`;}
-    async function handleComercialFormSubmit(id) { const data = { firstName: document.getElementById('comercialFirstName').value, lastName: document.getElementById('comercialLastName').value, email: document.getElementById('comercialEmail').value, phone: document.getElementById('comercialPhone').value, nif: document.getElementById('comercialNif').value, iban: document.getElementById('comercialIban').value, startDate: document.getElementById('comercialStartDate').value, status: document.getElementById('comercialStatus').value, }; const action = id ? db.collection('comerciais').doc(id).update(data) : db.collection('comerciais').add(data); await action; closeFormModal(); loadComerciais();}
-    async function populateComercialForm(id) { const doc = await db.collection('comerciais').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('comercialFirstName').value = d.firstName || ''; document.getElementById('comercialLastName').value = d.lastName || ''; document.getElementById('comercialEmail').value = d.email || ''; document.getElementById('comercialPhone').value = d.phone || ''; document.getElementById('comercialNif').value = d.nif || ''; document.getElementById('comercialIban').value = d.iban || ''; document.getElementById('comercialStartDate').value = d.startDate || ''; document.getElementById('comercialStatus').value = d.status || 'Ativo'; } }
-    async function loadComerciais() {
-        const tableBody = document.getElementById('comerciaisTable').querySelector('tbody');
-        tableBody.innerHTML = '';
-        const snapshot = await db.collection('comerciais').orderBy('firstName').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${d.firstName} ${d.lastName}</td>
-                <td>${d.email || '-'}</td>
-                <td>${d.phone || '-'}</td>
-                <td>${d.iban || '-'}</td>
-                <td>${d.status || '-'}</td>
-                <td class="actions-cell">
-                    <button onclick="toggleComercialStatus('${doc.id}', '${d.status}')">${d.status === 'Ativo' ? 'Desativar' : 'Ativar'}</button>
-                    <button onclick="openFormModal('comercial', '${doc.id}')">EDITAR</button>
-                </td>
-            `;
-        });
-    }
-    async function toggleComercialStatus(id, currentStatus) {
-        const newStatus = currentStatus === 'Ativo' ? 'Inativo' : 'Ativo';
-        await db.collection('comerciais').doc(id).update({ status: newStatus });
-        loadComerciais();
+      const tableBody = document.getElementById('clientTable').querySelector('tbody');
+      tableBody.innerHTML = '';
+      const snapshot = await db.collection('clientes').orderBy('name').get();
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const row = tableBody.insertRow();
+        row.innerHTML = \`
+          <td>\${doc.id.substring(0,6)}...</td>
+          <td>\${d.name || '-'}</td>
+          <td>\${d.nif || '-'}</td>
+          <td>\${d.clientType || 'Particular'}</td>
+          <td>\${d.manager || '-'}</td>
+          <td>\${d.rgpd || '-'}</td>
+          <td class="actions-cell">
+            <button onclick="openDetailsModal('cliente', '\${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+            <button onclick="openFormModal('cliente', '\${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+            <button class="btn-danger" onclick="deleteItem('clientes', '\${doc.id}', '\${d.name}', loadClients)" title="Eliminar"><i class="ph ph-trash"></i></button>
+          </td>\`;
+      });
     }
 
+    // CONTRATOS (corrigido)
+    function getContractFormHTML() {
+      return \`
+      <form id="contractForm">
+        <div class="row">
+          <div class="col">
+            <label>Cliente*</label>
+            <select id="contractClient" required></select>
+          </div>
+          <div class="col">
+            <label>Comercial*</label>
+            <select id="contractCommercial" required></select>
+          </div>
+          <div class="col">
+            <label>Data de Início</label>
+            <input type="date" id="contractStartDate">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Tipo de Serviço*</label>
+            <select id="contractType" onchange="handleContractTypeChange(this.value)" required>
+              <option value="">Selecione</option>
+              <option value="Crédito">Crédito</option>
+              <option value="Seguro">Seguro</option>
+              <option value="Legalização Automóvel">Legalização Automóvel</option>
+              <option value="Consultoria Financeira">Consultoria Financeira</option>
+            </select>
+          </div>
+          <div class="col">
+            <label>Valor (€)</label>
+            <input type="number" id="contractValue" step="0.01" min="0" placeholder="0,00">
+          </div>
+          <div class="col">
+            <label>Estado</label>
+            <select id="contractStatus">
+              <option value="Pendente">Pendente</option>
+              <option value="Em Análise">Em Análise</option>
+              <option value="Aprovado">Aprovado</option>
+              <option value="Concluído">Concluído</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="detailsCredito" class="service-details">
+          <h4>Detalhes do Crédito</h4>
+          <div class="row">
+            <div class="col"><label>Financeira</label><select id="creditFinanceira"></select></div>
+            <div class="col"><label>Fornecedor</label><select id="creditFornecedor"></select></div>
+            <div class="col"><label>Prazo (meses)</label><input type="number" id="creditPrazo" min="1"></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Comissão Financeira (€)</label><input type="number" id="creditComissaoFinanceira" step="0.01" min="0"></div>
+            <div class="col"><label>% Comissão ao Fornecedor</label><input type="number" id="creditComissaoFornecedorPerc" step="0.01" min="0" max="100"></div>
+          </div>
+        </div>
+
+        <div id="detailsSeguro" class="service-details"><h4>Detalhes do Seguro</h4><p><i>(Campos específicos depois.)</i></p></div>
+        <div id="detailsLegalizacao" class="service-details"><h4>Detalhes da Legalização</h4><p><i>(Campos específicos depois.)</i></p></div>
+        <div id="detailsConsultoria" class="service-details"><h4>Detalhes da Consultoria</h4><p><i>(Campos específicos depois.)</i></p></div>
+
+        <label>Observações</label>
+        <textarea id="contractNotes" rows="3"></textarea>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar</button>
+        </div>
+      </form>\`;
+    }
+    async function handleContractFormSubmit(id) {
+      const clientSelect = document.getElementById('contractClient');
+      const commercialSelect = document.getElementById('contractCommercial');
+      const data = {
+        clientId: clientSelect.value,
+        clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '',
+        commercialId: commercialSelect.value,
+        commercialName: commercialSelect.options[commercialSelect.selectedIndex]?.text || '',
+        type: v('contractType'),
+        value: v('contractValue'),
+        status: v('contractStatus'),
+        startDate: v('contractStartDate'),
+        notes: v('contractNotes')
+      };
+      const action = id ? db.collection('contratos').doc(id).update(data) : db.collection('contratos').add(data);
+      await action; closeFormModal(); loadContracts(); loadDashboardData();
+    }
+    async function populateContractForm(id) {
+      const doc = await db.collection('contratos').doc(id).get(); if (!doc.exists) return;
+      const d = doc.data();
+      setv('contractType', d.type); setv('contractValue', d.value); setv('contractStatus', d.status || 'Pendente'); setv('contractStartDate', d.startDate); setv('contractNotes', d.notes);
+      setTimeout(() => { setv('contractClient', d.clientId); setv('contractCommercial', d.commercialId); }, 0);
+    }
+    async function loadContractDropdowns(callback) {
+      // Clientes
+      const clientSel = document.getElementById('contractClient'); if (clientSel){ clientSel.innerHTML = '<option value="">Selecione um Cliente</option>'; const s1 = await db.collection('clientes').orderBy('name').get(); s1.forEach(doc => { const d = doc.data(); clientSel.innerHTML += \`<option value="\${doc.id}">\${d.name}</option>\`; }); }
+      // Comerciais
+      const commSel = document.getElementById('contractCommercial'); if (commSel){ commSel.innerHTML = '<option value="">Selecione o Comercial</option>'; const s2 = await db.collection('comerciais').orderBy('firstName').get(); s2.forEach(doc => { const d = doc.data(); const name = [d.firstName, d.lastName].filter(Boolean).join(' '); commSel.innerHTML += \`<option value="\${doc.id}">\${name || '—'}</option>\`; }); }
+      // Auxiliares crédito
+      const finSel = document.getElementById('creditFinanceira'); if (finSel){ finSel.innerHTML = '<option value="">(opcional)</option>'; const s3 = await db.collection('financeiras').orderBy('name').get(); s3.forEach(doc => { finSel.innerHTML += \`<option value="\${doc.id}">\${doc.data().name}</option>\`; }); }
+      const fornSel = document.getElementById('creditFornecedor'); if (fornSel){ fornSel.innerHTML = '<option value="">(opcional)</option>'; const s4 = await db.collection('fornecedores').orderBy('name').get(); s4.forEach(doc => { fornSel.innerHTML += \`<option value="\${doc.id}">\${doc.data().name}</option>\`; }); }
+      if (callback) callback();
+    }
+    function handleContractTypeChange(value) {
+      document.querySelectorAll('.service-details').forEach(div => div.style.display = 'none');
+      if (value === 'Crédito') document.getElementById('detailsCredito').style.display = 'block';
+      if (value === 'Seguro') document.getElementById('detailsSeguro').style.display = 'block';
+      if (value === 'Legalização Automóvel') document.getElementById('detailsLegalizacao').style.display = 'block';
+      if (value === 'Consultoria Financeira') document.getElementById('detailsConsultoria').style.display = 'block';
+    }
+    async function loadAssociatedContracts(clientId) {
+      const container = document.getElementById('associatedContracts'); if (!container) return;
+      container.innerHTML = '';
+      const snapshot = await db.collection('contratos').where('clientId', '==', clientId).get();
+      if (snapshot.empty) { container.innerHTML = '<p>Nenhum contrato associado.</p>'; return; }
+      let html = '<ul style="list-style:none; padding:0;">';
+      snapshot.forEach(doc => { const d = doc.data(); html += \`<li style="margin-bottom:.5em;">\${d.type} - Estado: \${d.status} (Início: \${d.startDate || '—'})</li>\`; });
+      html += '</ul>'; container.innerHTML = html;
+    }
+    async function loadContracts() {
+      const tableBody = document.getElementById('contractTable').querySelector('tbody');
+      tableBody.innerHTML = '';
+      const snapshot = await db.collection('contratos').orderBy('startDate', 'desc').get();
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        const row = tableBody.insertRow();
+        row.innerHTML = \`
+          <td>\${d.clientName || '-'}</td>
+          <td>\${d.type || '-'}</td>
+          <td>€\${parseFloat(d.value || 0).toLocaleString('pt-PT')}</td>
+          <td>\${d.status || '-'}</td>
+          <td>\${d.startDate || '-'}</td>
+          <td>\${d.commercialName || '-'}</td>
+          <td class="actions-cell">
+            <button onclick="openDetailsModal('contrato', '\${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+            <button onclick="openFormModal('contrato', '\${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+            <button class="btn-danger" onclick="deleteItem('contratos', '\${doc.id}', 'este contrato', loadContracts)" title="Eliminar"><i class="ph ph-trash"></i></button>
+          </td>\`;
+      });
+    }
+
+    // COMERCIAL
+    function getComercialFormHTML() { return \`<form id="comercialForm"><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email</label><input id="comercialEmail" type="email" required></div><div class="col"><label>Telefone</label><input id="comercialPhone"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>\`; }
+    async function handleComercialFormSubmit(id) { const data = { firstName:v('comercialFirstName'), lastName:v('comercialLastName'), email:v('comercialEmail'), phone:v('comercialPhone'), iban:v('comercialIban'), status:v('comercialStatus') }; const action = id ? db.collection('comerciais').doc(id).update(data) : db.collection('comerciais').add(data); await action; closeFormModal(); loadComerciais(); }
+    async function populateComercialForm(id) { const doc = await db.collection('comerciais').doc(id).get(); if (!doc.exists) return; const d = doc.data(); setv('comercialFirstName', d.firstName); setv('comercialLastName', d.lastName); setv('comercialEmail', d.email); setv('comercialPhone', d.phone); setv('comercialIban', d.iban); setv('comercialStatus', d.status); }
+    async function loadComerciais() { const tableBody = document.getElementById('comerciaisTable').querySelector('tbody'); tableBody.innerHTML = ''; const snapshot = await db.collection('comerciais').orderBy('firstName').get(); snapshot.forEach(doc => { const d = doc.data(); const row = tableBody.insertRow(); const name = [d.firstName, d.lastName].filter(Boolean).join(' '); row.innerHTML = \`<td>\${name}</td><td>\${d.email || '-'}</td><td>\${d.phone || '-'}</td><td>\${d.iban || '-'}</td><td>\${d.status || '-'}</td><td class="actions-cell"><button onclick="openFormModal('comercial', '\${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button><button class="btn-danger" onclick="deleteItem('comerciais', '\${doc.id}', name, loadComerciais)" title="Eliminar"><i class="ph ph-trash"></i></button></td>\`; }); }
+
+    // TAREFA form
+    function getTaskFormHTML() { return \`<form id="taskForm"><label>Título</label><input type="text" id="taskTitle" required /><label>Descrição</label><textarea id="taskDescription" rows="3"></textarea><div class="row"><div class="col"><label>Responsável</label><input type="text" id="taskOwner" /></div><div class="col"><label>Prazo</label><input type="date" id="taskDueDate" /></div></div><div class="row"><div class="col"><label>Prioridade</label><select id="taskPriority"><option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option></select></div><div class="col"><label>Estado</label><select id="taskStatus"><option value="Pendente">Pendente</option><option value="Em Andamento">Em Andamento</option><option value="Concluído">Concluído</option></select></div></div><div class="row"><div class="col"><label>Associar a Cliente (Opcional)</label><select id="taskClient"><option value="">Nenhum</option></select></div><div class="col"><label>Associar a Contrato (Opcional)</label><select id="taskContract"><option value="">Nenhum</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>\`; }
+    async function handleTaskFormSubmit(id) { const data = { title:v('taskTitle'), description:v('taskDescription'), owner:v('taskOwner'), dueDate:v('taskDueDate'), priority:v('taskPriority'), status:v('taskStatus'), clientId:v('taskClient'), contractId:v('taskContract') }; const action = id ? db.collection('tarefas').doc(id).update(data) : db.collection('tarefas').add(data); await action; const note = \`Tarefa '\${data.title}' foi \${id ? 'atualizada' : 'criada'} com estado '\${data.status}'.\`; if (data.clientId) { handleInteractionSubmit('clientes', data.clientId, note); } if (data.contractId) { handleInteractionSubmit('contratos', data.contractId, note); } closeFormModal(); loadTasks(); loadDashboardData(); }
+    async function populateTaskForm(id) { const doc = await db.collection('tarefas').doc(id).get(); if (!doc.exists) return; const d = doc.data(); setv('taskTitle', d.title); setv('taskDescription', d.description); setv('taskOwner', d.owner); setv('taskDueDate', d.dueDate); setv('taskPriority', d.priority || 'Média'); setv('taskStatus', d.status || 'Pendente'); setv('taskClient', d.clientId || ''); setv('taskContract', d.contractId || ''); }
+    async function loadClientsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { select.innerHTML += \`<option value="\${doc.id}">\${doc.data().name}</option>\`; }); }
+    async function loadContractsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; const snapshot = await db.collection('contratos').orderBy('clientName').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += \`<option value="\${doc.id}">\${d.type} - \${d.clientName}</option>\`; }); }
+
+    // Interações
+    async function handleInteractionSubmit(collection, docId, note, elementId) { if (!note || !note.trim()) return; await db.collection(collection).doc(docId).collection('interactions').add({ note: note, timestamp: firebase.firestore.FieldValue.serverTimestamp() }); if(elementId) { loadInteractions(collection, docId, elementId); } }
+    async function loadInteractions(collection, docId, elementId) { const container = document.getElementById(elementId); if (!container) return; container.innerHTML=''; const snapshot = await db.collection(collection).doc(docId).collection('interactions').orderBy('timestamp', 'desc').get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhuma interação registada.</p>'; return; } snapshot.forEach(doc => { const d = doc.data(); const date = d.timestamp ? d.timestamp.toDate().toLocaleString('pt-PT') : 'Data inválida'; const div = document.createElement('div'); div.className='interaction-item'; div.innerHTML = \`<div class="date">\${date}</div><div>\${d.note}</div>\`; container.appendChild(div); }); }
+
+    // Forms Parceiros
+    function getFornecedorFormHTML() { return \`<form id="partnerForm"><div class="row"><div class="col"><label>Nome</label><input id="partnerName" required></div><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>IBAN</label><input id="partnerIban"></div></div><div class="row"><div class="col"><label>Morada</label><input id="partnerAddress"></div><div class="col"><label>Código Postal</label><input id="partnerPostalCode"></div><div class="col"><label>Localidade</label><input id="partnerCity"></div></div><div class="row"><div class="col"><label>Telefone</label><input id="partnerPhone"></div><div class="col"><label>Email</label><input id="partnerEmail" type="email"></div><div class="col"><label>CAE</label><input id="partnerCae"></div></div><div class="row"><div class="col"><label>Capital Social</label><input id="partnerCapital" type="number"></div><div class="col"><label>Pessoa a Contactar</label><input id="partnerContactPerson"></div><div class="col"><label>Equipamento</label><select id="partnerEquipment"><option>AUTO</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>\`; }
+    function getFinanceiraFormHTML() { return \`<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Financeira</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div></div><div class="row"><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div><div class="col"><label>Email Comissões</label><input id="partnerCommissionEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>\`; }
+    function getSeguradoraFormHTML() { return \`<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Seguradora</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>\`; }
+
+    function handleFileSelect(files) {
+      const list = document.getElementById('documentList'); if (!list || files.length === 0) return;
+      const file = files[0];
+      list.innerHTML += \`<li><span>\${file.name}</span><button class="btn-danger" style="padding:.2em .5em; font-size:.8em;">X</button></li>\`;
+    }
+    function deleteItem(collection, id, name, callback) {
+      showConfirmModal(\`Tem a certeza que quer eliminar "\${name}"?\`, async () => { await db.collection(collection).doc(id).delete(); callback(); loadDashboardData(); });
+    }
+
+    // Helpers
+    function v(id){ const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+    function setv(id, value){ const el = document.getElementById(id); if (el) el.value = value || ''; }
   </script>
 </body>
 </html>
