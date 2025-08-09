@@ -162,15 +162,19 @@
     #documentList { list-style: none; padding: 0; }
     #documentList li { display: flex; justify-content: space-between; align-items: center; padding: .5em; border-radius: 6px; }
     #documentList li:hover { background-color: var(--color-background); }
+    #milestonesList .milestone-item { display: flex; align-items: center; gap: .8em; padding: .5em 0;}
+    #milestonesList .milestone-item label { margin-bottom: 0; font-weight: 500; }
+    #milestonesList .milestone-item.completed label { text-decoration: line-through; color: var(--color-text-secondary); }
 
-    /* Dashboard Styles */
+
+    /* Dashboard & Reports Styles */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
     .kpi-card { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
     .kpi-card .title { font-size: .9em; color: var(--color-text-secondary); margin-bottom: .5em; }
     .kpi-card .value { font-size: 2.2em; font-weight: 700; }
     .kpi-card .subtitle { font-size: .8em; color: var(--color-success); }
-    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
-    .chart-container, .tasks-container { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
+    .dashboard-grid, .reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
+    .chart-container, .tasks-container, .report-widget, .document-tracking-container { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
     .tasks-list .task-item { display: flex; justify-content: space-between; align-items: center; padding: .8em 0; border-bottom: 1px solid var(--color-border); cursor: pointer; transition: background-color .2s; }
     .tasks-list .task-item:hover { background-color: var(--color-background); }
     .tasks-list .task-item:last-child { border-bottom: none; }
@@ -178,7 +182,25 @@
     .task-item .deadline { font-size: .9em; color: var(--color-danger); }
     .task-item .urgency-indicator { font-size: 1.5em; color: var(--color-warning); }
     
-    /* Tabs for Partners Module */
+    /* Document Tracking Widget */
+    .doc-tracking-item summary {
+        font-weight: 600;
+        cursor: pointer;
+        padding: .8em;
+        border-radius: 8px;
+        transition: background-color .2s;
+        display: flex; justify-content: space-between;
+    }
+    .doc-tracking-item summary:hover { background-color: var(--color-background); }
+    .doc-tracking-item[open] summary { background-color: var(--color-background); }
+    .doc-tracking-body { padding: 1em; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; }
+    .doc-tracking-body h5 { margin: 0 0 .5em 0; font-size: .9em; display: flex; align-items: center; gap: .5em; }
+    .doc-tracking-body input[type="date"] { padding: .5em; font-size: .9em; margin-bottom: 1em; }
+    .doc-tracking-body .checklist { font-size: .9em; display: flex; flex-direction: column; gap: .5em; }
+    .doc-tracking-body .checklist label { font-weight: 400; }
+
+
+    /* Tabs Styles */
     .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: 1.5em; }
     .tabs button {
         background: none; border: none; padding: 1em 1.5em; cursor: pointer;
@@ -194,8 +216,9 @@
 
     /* Dynamic Form Sections */
     .service-details { display: none; margin-top: 1.5em; border-top: 1px solid var(--color-border); padding-top: 1.5em; }
-    .checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .5em; }
-    .checklist label { font-weight: 400; display: flex; align-items: center; gap: .5em; }
+    .checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .8em; }
+    .checklist label { font-weight: 500; display: flex; align-items: center; gap: .5em; margin-bottom: 0; }
+    .checklist input { margin-bottom: 0; }
 
     /* Login Styles */
     #login-container {
@@ -209,11 +232,12 @@
     }
 
     @media(max-width:1200px){
-        .dashboard-grid { grid-template-columns: 1fr; }
+        .dashboard-grid, .reports-grid { grid-template-columns: 1fr; }
     }
     @media(max-width:900px){
       .main-container {margin-left:0; padding: 1em; padding-bottom: 80px;}
       #detailsModalBody .details-grid { grid-template-columns: 1fr; }
+      .doc-tracking-body { grid-template-columns: 1fr; }
       .sidebar {
           position: fixed; bottom: 0; top: auto; width: 100%; height: auto;
           flex-direction:row; align-items:center; gap: .5em;
@@ -258,7 +282,7 @@
         <button id="nav-contratos" onclick="showSection('contratos')"><i class="ph-fill ph-file-text"></i> <span>Gestão de Contratos</span></button>
         <button id="nav-parceiros" onclick="showSection('parceiros')"><i class="ph-fill ph-handshake"></i> <span>Parceiros</span></button>
         <button id="nav-tarefas" onclick="showSection('tarefas')"><i class="ph-fill ph-list-checks"></i> <span>Tarefas / Pendentes</span></button>
-        <button id="nav-comercial" onclick="showSection('comercial')"><i class="ph-fill ph-briefcase"></i> <span>Gestão Comercial</span></button>
+        <button id="nav-comercial" onclick="showSection('comercial')"><i class="ph-fill ph-briefcase"></i> <span>Gestão de Equipa</span></button>
         <button id="nav-financeira" onclick="showSection('financeira')"><i class="ph-fill ph-bank"></i> <span>Gestão Financeira</span></button>
         <button id="nav-relatorios" onclick="showSection('relatorios')"><i class="ph-fill ph-chart-bar"></i> <span>Relatórios</span></button>
       </nav>
@@ -294,13 +318,20 @@
                   <div class="subtitle">Tarefas concluídas</div>
               </div>
           </div>
+
+          <!-- NOVO WIDGET DE CONTROLO DE DOCUMENTOS -->
+          <div class="document-tracking-container" style="margin-bottom: 2em;">
+              <h4>Controlo de Documentos de Crédito</h4>
+              <div id="documentTrackingList"></div>
+          </div>
+
           <div class="dashboard-grid">
               <div class="chart-container">
-                  <h4>Volume de Crédito</h4>
+                  <h4>Volume de Crédito Mensal</h4>
                   <canvas id="creditChart"></canvas>
               </div>
               <div class="tasks-container">
-                  <h4>Gestão de Tarefas</h4>
+                  <h4>Tarefas Urgentes</h4>
                   <div id="dashboardTasksList" class="tasks-list"></div>
               </div>
           </div>
@@ -334,7 +365,7 @@
         </div>
         <div class="table-container">
             <table class="data-table" id="contractTable">
-                <thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Estado</th><th>Data de Início</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Fase</th><th>Data de Início</th><th>Comercial</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -415,13 +446,123 @@
         </div>
         <div class="table-container">
             <table class="data-table" id="comerciaisTable">
-                <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>IBAN</th><th>Estado</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Função</th><th>Estado</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
       </div>
-      <div id="financeira-section" class="main-content"><div class="section-header"><h2><i class="ph ph-bank"></i>Gestão Financeira</h2></div><p>Em desenvolvimento.</p></div>
-      <div id="relatorios-section" class="main-content"><div class="section-header"><h2><i class="ph ph-chart-bar"></i>Relatórios</h2></div><p>Em desenvolvimento.</p></div>
+      
+      <!-- Gestão Financeira -->
+      <div id="financeira-section" class="main-content">
+        <div class="section-header">
+          <h2><i class="ph ph-bank"></i>Gestão Financeira</h2>
+        </div>
+        <div class="tabs" id="finance-tabs">
+            <button class="active" onclick="openFinanceTab(event, 'financeira-dashboard')">Dashboard Mensal</button>
+            <button onclick="openFinanceTab(event, 'financeira-despesas')">Despesas</button>
+            <button onclick="openFinanceTab(event, 'financeira-por-conciliar')">Por Conciliar</button>
+            <button onclick="openFinanceTab(event, 'financeira-banco')">Banco</button>
+        </div>
+
+        <!-- Tab Financeira Dashboard -->
+        <div id="financeira-dashboard" class="tab-content active">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="title">Comissões a Receber (s/ IVA)</div>
+                    <div class="value" id="kpi-comissoes-receber">€0.00</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="title">Comissões a Pagar (c/ IVA)</div>
+                    <div class="value" id="kpi-comissoes-pagar">€0.00</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="title">Total Despesas (Mês)</div>
+                    <div class="value" id="kpi-total-despesas">€0.00</div>
+                </div>
+            </div>
+            <div class="reports-grid">
+                <div class="report-widget">
+                    <h4>A Receber das Financeiras (Mês)</h4>
+                    <table class="data-table" id="financeirasReceberTable">
+                        <thead><tr><th>Financeira</th><th>Valor a Receber</th></tr></thead>
+                        <tbody><tr><td colspan="2">A calcular...</td></tr></tbody>
+                    </table>
+                </div>
+                <div class="report-widget">
+                    <h4>A Pagar a Fornecedores (Mês)</h4>
+                    <table class="data-table" id="fornecedoresPagarTable">
+                        <thead><tr><th>Fornecedor</th><th>Valor a Pagar</th></tr></thead>
+                        <tbody><tr><td colspan="2">A calcular...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Financeira Despesas -->
+        <div id="financeira-despesas" class="tab-content">
+            <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+                <button class="btn-primary" onclick="openFormModal('despesa')"><i class="ph ph-plus"></i> Adicionar Despesa</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="despesasTable">
+                    <thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Banco</th><th>Valor</th><th>Conciliada</th><th>Ações</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab Financeira Por Conciliar -->
+        <div id="financeira-por-conciliar" class="tab-content">
+            <div class="header-actions" style="margin-bottom: 1.5em; justify-content: space-between; align-items: center;">
+                <h3>Despesas por Conciliar</h3>
+                <div class="header-actions">
+                    <button class="btn-primary" onclick="openConciliarModal()"><i class="ph ph-check-square"></i> Conciliar Selecionadas</button>
+                    <button class="btn-secondary" style="padding: .8em;" onclick="exportarLancamento()" title="Exportar Lançamento"><i class="ph ph-export"></i></button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="porConciliarTable">
+                    <thead><tr><th><input type="checkbox" onchange="toggleAllConciliar(this.checked)"></th><th>Data</th><th>Descrição</th><th>Tipo</th><th>Valor</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Tab Financeira Banco -->
+        <div id="financeira-banco" class="tab-content">
+            <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+                <button class="btn-primary" onclick="openFormModal('banco')"><i class="ph ph-plus"></i> Adicionar Conta</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="bancosTable">
+                    <thead><tr><th>Nome do Banco</th><th>IBAN</th><th>Saldo</th><th>Ações</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+      
+      <!-- Relatórios -->
+      <div id="relatorios-section" class="main-content">
+        <div class="section-header">
+          <h2><i class="ph ph-chart-bar"></i>Relatórios</h2>
+        </div>
+        <div class="reports-grid">
+            <div class="report-widget">
+                <h4>Desempenho por Comercial</h4>
+                <table class="data-table" id="comercialPerformanceTable">
+                    <thead><tr><th>Comercial</th><th>Nº Contratos</th><th>Volume Total</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="report-widget">
+                <h4>Distribuição de Contratos</h4>
+                <div class="chart-container" style="padding: 0; box-shadow: none;">
+                    <canvas id="contractTypeChart"></canvas>
+                </div>
+            </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -435,6 +576,23 @@
   </div>
   <div id="confirmModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 400px;"><p id="confirmModalText"></p><div class="modal-footer" style="text-align: center;"><button id="confirmModalNo" class="btn-secondary">Não</button><button id="confirmModalYes" class="btn-primary">Sim</button></div></div>
+  </div>
+   <!-- MODAL DE CONCILIAÇÃO -->
+  <div id="conciliarModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 450px;">
+        <div class="modal-header"><h3>Conciliar Despesas</h3><button class="close-btn" onclick="closeConciliarModal()">&times;</button></div>
+        <div class="modal-body">
+            <p>Selecione a data e o banco para conciliar as <strong id="conciliarCount"></strong> despesa(s) selecionada(s).</p>
+            <div class="row">
+                <div class="col"><label>Data do Movimento</label><input type="date" id="conciliarDate"></div>
+                <div class="col"><label>Banco</label><select id="conciliarBanco"></select></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="closeConciliarModal()">Cancelar</button>
+            <button type="button" class="btn-primary" onclick="conciliarDespesasEmMassa()">Confirmar</button>
+        </div>
+    </div>
   </div>
 
   <!-- FIREBASE SDKS -->
@@ -457,19 +615,46 @@
     const db = firebase.firestore();
 
     // --- LÓGICA DA APLICAÇÃO ---
-    auth.onAuthStateChanged(user => {
+    let currentUserData = null; // Armazena os dados do utilizador logado (incluindo a função)
+    let partnersData = {}; // Cache para dados dos parceiros (fornecedores, financeiras, etc.)
+
+    auth.onAuthStateChanged(async user => {
       const loginContainer = document.getElementById('login-container');
       const appContainer = document.getElementById('app-container');
       if (user) {
+        // Encontrar o perfil do utilizador na coleção 'comerciais' pelo email
+        const comecialSnapshot = await db.collection('comerciais').where('email', '==', user.email).limit(1).get();
+        if (!comecialSnapshot.empty) {
+            const doc = comecialSnapshot.docs[0];
+            currentUserData = { id: doc.id, ...doc.data() };
+        } else {
+            // Fallback: se não encontrar perfil, assume Administrador (não ideal para produção)
+            currentUserData = { id: user.uid, email: user.email, role: 'Administrador', firstName: 'Admin' };
+            console.warn("Utilizador autenticado mas sem perfil na coleção 'comerciais'. A assumir função de Administrador.");
+        }
+        
+        // Esconder/mostrar secções com base na função
+        setupUIVisibility();
+        await preloadPartnerData(); // Carregar dados dos parceiros para cache
+
         loginContainer.style.display = 'none';
         appContainer.style.display = 'block';
         showSection('dashboard');
         loadAllData();
       } else {
+        currentUserData = null;
         loginContainer.style.display = 'flex';
         appContainer.style.display = 'none';
       }
     });
+    
+    function setupUIVisibility() {
+        if (!currentUserData) return;
+        const isAdmin = currentUserData.role === 'Administrador';
+        document.getElementById('nav-comercial').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('nav-financeira').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('nav-relatorios').style.display = isAdmin ? 'flex' : 'none';
+    }
 
     document.getElementById('loginForm').onsubmit = e => {
       e.preventDefault();
@@ -488,9 +673,11 @@
         document.getElementById(sectionId + '-section').classList.add('active');
         document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
         document.getElementById('nav-' + sectionId).classList.add('active');
-        if (sectionId === 'dashboard') {
-            loadDashboardData();
-        }
+        
+        // Carrega dados específicos da secção quando é aberta
+        if (sectionId === 'dashboard') loadDashboardData();
+        if (sectionId === 'financeira') loadFinanceiraModule();
+        if (sectionId === 'relatorios') loadRelatoriosData();
     }
 
     function loadAllData() {
@@ -498,8 +685,10 @@
         loadContracts();
         loadTasks();
         loadPartners();
-        loadComerciais();
-        loadDashboardData();
+        if (currentUserData && currentUserData.role === 'Administrador') {
+            loadComerciais();
+        }
+        loadDashboardData(); // Carrega o dashboard por defeito
     }
 
     // --- MODAIS ---
@@ -507,7 +696,7 @@
     const detailsModal = document.getElementById('detailsModal');
     let currentFormSubmitHandler = null;
 
-    function openFormModal(type, id = null) {
+    async function openFormModal(type, id = null) {
         document.getElementById('formModalTitle').textContent = `${id ? 'Editar' : 'Adicionar'} ${type.charAt(0).toUpperCase() + type.slice(1)}`;
         const formModalBody = document.getElementById('formModalBody');
         formModalBody.innerHTML = ''; 
@@ -521,38 +710,48 @@
             case 'financeira': formHTML = getFinanceiraFormHTML(); break;
             case 'seguradora': formHTML = getSeguradoraFormHTML(); break;
             case 'comercial': formHTML = getComercialFormHTML(); break;
+            case 'despesa': formHTML = getDespesaFormHTML(); break;
+            case 'banco': formHTML = getBancoFormHTML(); break;
         }
         formModalBody.innerHTML = formHTML;
 
-        // Pós-renderização
+        // Pós-renderização e carregamento de dados para formulários
         if (id) {
-            if (type === 'cliente') populateClientForm(id);
-            if (type === 'contrato') loadContractDropdowns(() => populateContractForm(id));
-            if (type === 'tarefa') populateTaskForm(id);
-            if (type === 'fornecedor') populatePartnerForm('fornecedores', id);
-            if (type === 'financeira') populatePartnerForm('financeiras', id);
-            if (type === 'seguradora') populatePartnerForm('seguradoras', id);
-            if (type === 'comercial') populateComercialForm(id);
+            if (type === 'cliente') await populateClientForm(id);
+            if (type === 'contrato') await loadContractDropdowns(() => populateContractForm(id));
+            if (type === 'tarefa') await loadDropdownsForTaskForm(() => populateTaskForm(id));
+            if (type === 'fornecedor') await populatePartnerForm('fornecedores', id);
+            if (type === 'financeira') await populatePartnerForm('financeiras', id);
+            if (type === 'seguradora') await populatePartnerForm('seguradoras', id);
+            if (type === 'comercial') await populateComercialForm(id);
+            if (type === 'despesa') await populateDespesaForm(id);
+            if (type === 'banco') await populateBancoForm(id);
         } else {
-            if (type === 'cliente') document.getElementById('clientCreationDate').value = new Date().toISOString().split('T')[0];
-            if (type === 'contrato') loadContractDropdowns();
-            if (type === 'tarefa') {
-                loadClientsForDropdown('taskClient');
-                loadContractsForDropdown('taskContract');
+            if (type === 'cliente') {
+                document.getElementById('clientCreationDate').value = new Date().toISOString().split('T')[0];
+                await loadComerciaisForDropdown('clientManager');
+            }
+            if (type === 'contrato') await loadContractDropdowns();
+            if (type === 'tarefa') await loadDropdownsForTaskForm();
+            if (type === 'despesa') {
+                document.getElementById('despesaDate').value = new Date().toISOString().split('T')[0];
+                await loadBancosForDropdown('despesaBanco');
             }
         }
         
         const form = formModalBody.querySelector('form');
-        currentFormSubmitHandler = (e) => {
+        currentFormSubmitHandler = async (e) => {
             e.preventDefault();
             switch(type) {
-                case 'cliente': handleClientFormSubmit(id); break;
-                case 'contrato': handleContractFormSubmit(id); break;
-                case 'tarefa': handleTaskFormSubmit(id); break;
-                case 'fornecedor': handlePartnerFormSubmit('fornecedores', id); break;
-                case 'financeira': handlePartnerFormSubmit('financeiras', id); break;
-                case 'seguradora': handlePartnerFormSubmit('seguradoras', id); break;
-                case 'comercial': handleComercialFormSubmit(id); break;
+                case 'cliente': await handleClientFormSubmit(id); break;
+                case 'contrato': await handleContractFormSubmit(id); break;
+                case 'tarefa': await handleTaskFormSubmit(id); break;
+                case 'fornecedor': await handlePartnerFormSubmit('fornecedores', id); break;
+                case 'financeira': await handlePartnerFormSubmit('financeiras', id); break;
+                case 'seguradora': await handlePartnerFormSubmit('seguradoras', id); break;
+                case 'comercial': await handleComercialFormSubmit(id); break;
+                case 'despesa': await handleDespesaFormSubmit(id); break;
+                case 'banco': await handleBancoFormSubmit(id); break;
             }
         };
         form.addEventListener('submit', currentFormSubmitHandler);
@@ -621,21 +820,28 @@
                              <h4>Informação do Contrato</h4>
                             <p><strong>Cliente:</strong> ${d.clientName || '-'}</p>
                             <p><strong>Tipo de Serviço:</strong> ${d.type || '-'}</p>
-                            <p><strong>Valor:</strong> €${d.value || '0.00'}</p>
-                            <p><strong>Estado:</strong> ${d.status || '-'}</p>
+                            <p><strong>Valor:</strong> €${parseFloat(d.valorFinanciado || 0).toLocaleString('pt-PT')}</p>
+                            <p><strong>Fase:</strong> ${d.fase || '-'}</p>
                             <p><strong>Data de Início:</strong> ${d.startDate || '-'}</p>
+                            <p><strong>Comercial:</strong> ${d.commercialName || '-'}</p>
                             <hr>
                             <h4>Observações</h4>
                             <p>${d.notes || 'Nenhuma observação.'}</p>
                         </div>
                         <div>
-                            <h4>Documentos da Proposta</h4>
-                            <ul id="documentList"></ul>
-                            <input type="file" id="fileUpload" style="display: none;" onchange="handleFileSelect(this.files)">
-                            <button class="btn-primary" style="margin-top: 1em;" onclick="document.getElementById('fileUpload').click();">Carregar Ficheiro</button>
+                            <h4>Etapas e Tarefas Associadas</h4>
+                            <div id="milestonesList"></div>
+                            <form id="milestoneForm" style="margin-top: 1em; border-top: 1px solid var(--color-border); padding-top: 1em;">
+                                <label>Adicionar Etapa e Tarefa (Opcional)</label>
+                                <input type="text" id="newMilestoneDescription" placeholder="Descrição da nova etapa*" required>
+                                <div class="row">
+                                    <div class="col"><input type="text" id="newMilestoneOwner" placeholder="Responsável da tarefa"></div>
+                                    <div class="col"><input type="date" id="newMilestoneDueDate"></div>
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: 100%;">Adicionar Etapa</button>
+                            </form>
                         </div>
                     </div>
-
                     <h4>Histórico de Interações do Contrato</h4>
                     <div id="contractInteractionHistory"></div>
                      <form id="contractInteractionForm">
@@ -644,7 +850,14 @@
                         <div class="modal-footer" style="margin-top: 1em; padding: 0;"><button type="submit" class="btn-primary">Adicionar</button></div>
                     </form>
                 `;
+                loadMilestones(id, 'milestonesList');
                 loadInteractions('contratos', id, 'contractInteractionHistory');
+
+                document.getElementById('milestoneForm').onsubmit = (e) => {
+                    e.preventDefault();
+                    handleMilestoneSubmit(id);
+                };
+
                 document.getElementById('contractInteractionForm').onsubmit = (e) => {
                     e.preventDefault();
                     const note = document.getElementById('newContractInteractionNote').value;
@@ -673,19 +886,33 @@
     // --- DASHBOARD ---
     let creditChartInstance = null;
     async function loadDashboardData() {
-        const now = new Date();
-        document.getElementById('dashboard-update-time').textContent = `Última atualização: hoje às ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+        const today = new Date();
+        document.getElementById('dashboard-update-time').textContent = `Última atualização: hoje às ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
+
+        loadDocumentTrackingWidget();
 
         // KPIs
-        const contractsSnapshot = await db.collection('contratos').get();
+        const contractsSnapshot = await db.collection('contratos').where('fase', '==', 'Ativo').get();
         let creditVolume = 0;
         let closedInsurances = 0;
+        let monthlyCreditData = new Array(6).fill(0);
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+        sixMonthsAgo.setDate(1);
+
         contractsSnapshot.forEach(doc => {
             const contract = doc.data();
-            if (contract.type === 'Crédito' && contract.value) {
-                creditVolume += parseFloat(contract.value);
+            if (contract.type === 'Crédito' && contract.valorFinanciado) {
+                creditVolume += parseFloat(contract.valorFinanciado);
+                const contractDate = new Date(contract.startDate);
+                if(contractDate >= sixMonthsAgo) {
+                    const monthDiff = (today.getFullYear() - contractDate.getFullYear()) * 12 + (today.getMonth() - contractDate.getMonth());
+                    if (monthDiff >= 0 && monthDiff < 6) {
+                        monthlyCreditData[5 - monthDiff] += parseFloat(contract.valorFinanciado);
+                    }
+                }
             }
-            if (contract.type === 'Seguro' && contract.status === 'Concluído') {
+            if (contract.type === 'Seguro') {
                 closedInsurances++;
             }
         });
@@ -703,18 +930,26 @@
         // Lista de Tarefas
         const dashboardTasksList = document.getElementById('dashboardTasksList');
         dashboardTasksList.innerHTML = '';
-        const recentTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
+        const pendingTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
         
         let tasks = [];
-        recentTasksSnapshot.forEach(doc => tasks.push({id: doc.id, ...doc.data()}));
-        
-        tasks.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
-        tasks = tasks.slice(0, 5);
+        pendingTasksSnapshot.forEach(doc => {
+            tasks.push({ id: doc.id, ...doc.data() });
+        });
 
-        if (tasks.length === 0) {
+        // Ordenar tarefas por data de vencimento (no lado do cliente)
+        tasks.sort((a, b) => {
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        });
+
+        const recentTasks = tasks.slice(0, 5); // Obter as 5 mais recentes
+
+        if (recentTasks.length === 0) {
             dashboardTasksList.innerHTML = '<p>Nenhuma tarefa pendente.</p>';
         } else {
-            tasks.forEach(task => {
+            recentTasks.forEach(task => {
                 const item = document.createElement('div');
                 item.className = 'task-item';
                 item.onclick = () => showSection('tarefas');
@@ -722,9 +957,9 @@
                 let urgencyIndicator = '';
                 if (task.dueDate) {
                     const dueDate = new Date(task.dueDate);
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
-                    const diffTime = dueDate - today;
+                    const startOfToday = new Date();
+                    startOfToday.setHours(0,0,0,0);
+                    const diffTime = dueDate - startOfToday;
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     if (diffDays <= 3 && diffDays >= 0) {
                         urgencyIndicator = `<i class="ph-fill ph-warning-circle urgency-indicator" title="Prazo termina em ${diffDays+1} dias!"></i>`;
@@ -736,16 +971,21 @@
             });
         }
         
-        // Gráfico (com dados de exemplo)
+        // Gráfico Dinâmico
+        const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        let labels = [];
+        for (let i = 5; i >= 0; i--) {
+            labels.push(monthNames[(today.getMonth() - i + 12) % 12]);
+        }
         const ctx = document.getElementById('creditChart').getContext('2d');
         if(creditChartInstance) creditChartInstance.destroy();
         creditChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                labels: labels,
                 datasets: [{
                     label: 'Volume de Crédito',
-                    data: [350000, 400000, 380000, 420000, 450000, 466500],
+                    data: monthlyCreditData,
                     backgroundColor: 'rgba(200, 184, 156, 0.7)',
                     borderColor: 'rgba(200, 184, 156, 1)',
                     borderWidth: 1,
@@ -757,9 +997,20 @@
     }
 
     // --- PARCEIROS ---
+    async function preloadPartnerData() {
+        const partnerTypes = ['fornecedores', 'financeiras', 'seguradoras'];
+        for (const type of partnerTypes) {
+            partnersData[type] = {};
+            const snapshot = await db.collection(type).get();
+            snapshot.forEach(doc => {
+                partnersData[type][doc.id] = doc.data().name;
+            });
+        }
+    }
+
     function openPartnerTab(evt, tabName) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('#parceiros-section .tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('#parceiros-section .tabs button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
         evt.currentTarget.classList.add('active');
     }
@@ -768,6 +1019,7 @@
         loadPartnerData('fornecedores');
         loadPartnerData('financeiras');
         loadPartnerData('seguradoras');
+        await preloadPartnerData(); // Recarregar cache se houver alterações
     }
     
     async function loadPartnerData(type) {
@@ -848,37 +1100,365 @@
     }
     
     async function completeTask(id, title) {
+        const taskDocRef = db.collection('tarefas').doc(id);
+        const taskDoc = await taskDocRef.get();
+        if (!taskDoc.exists) return;
+        const taskData = taskDoc.data();
+
         const today = new Date().toISOString().split('T')[0];
-        await db.collection('tarefas').doc(id).update({
+        await taskDocRef.update({
             status: 'Concluído',
             completionDate: today
         });
         
-        const taskDoc = await db.collection('tarefas').doc(id).get();
-        const taskData = taskDoc.data();
         const note = `Tarefa '${title}' foi concluída.`;
         
         if (taskData.clientId) { handleInteractionSubmit('clientes', taskData.clientId, note); }
-        if (taskData.contractId) { handleInteractionSubmit('contratos', taskData.contractId, note); }
+        if (taskData.contractId) { 
+            handleInteractionSubmit('contratos', taskData.contractId, note); 
+            // Se for uma tarefa automática de documentos, adiciona nota específica
+            if (taskData.autoTaskType === 'documentos_em_falta') {
+                const docNote = `Pendente de documentos em falta foi resolvido.`;
+                handleInteractionSubmit('contratos', taskData.contractId, docNote);
+            }
+        }
         
         loadTasks();
         loadDashboardData();
     }
 
     // --- Funções de ajuda e genéricas ---
-    function getClientFormHTML() { return `<form id="clientForm"><div class="row"><div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div><div class="col"><label>Email</label><input type="email" id="clientEmail" /></div></div><div class="row"><div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div><div class="col"><label>NIF</label><input type="text" id="clientNif" maxlength="9" /></div></div><label>Morada</label><input type="text" id="clientAddress" /><div class="row"><div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div><div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div></div><div class="row"><div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div><div class="col"><label>Comercial Responsável</label><input type="text" id="clientManager" /></div></div><div class="row"><div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div><div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div></div><label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleClientFormSubmit(id) { const data = { name: document.getElementById('clientName').value.trim(), email: document.getElementById('clientEmail').value.trim(), phone: document.getElementById('clientPhone').value.trim(), nif: document.getElementById('clientNif').value.trim(), address: document.getElementById('clientAddress').value.trim(), postalCode: document.getElementById('clientPostalCode').value.trim(), city: document.getElementById('clientCity').value.trim(), serviceType: document.getElementById('clientServiceType').value, manager: document.getElementById('clientManager').value.trim(), rgpd: document.getElementById('clientRgpd').value, creationDate: document.getElementById('clientCreationDate').value, internalNotes: document.getElementById('clientInternalNotes').value.trim(), clientType: 'Particular' }; const action = id ? db.collection('clientes').doc(id).update(data) : db.collection('clientes').add(data); await action; closeFormModal(); loadClients(); loadDashboardData(); }
-    async function populateClientForm(id) { const doc = await db.collection('clientes').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('clientName').value = d.name || ''; document.getElementById('clientEmail').value = d.email || ''; document.getElementById('clientPhone').value = d.phone || ''; document.getElementById('clientNif').value = d.nif || ''; document.getElementById('clientAddress').value = d.address || ''; document.getElementById('clientPostalCode').value = d.postalCode || ''; document.getElementById('clientCity').value = d.city || ''; document.getElementById('clientServiceType').value = d.serviceType || ''; document.getElementById('clientManager').value = d.manager || ''; document.getElementById('clientRgpd').value = d.rgpd || 'Não'; document.getElementById('clientCreationDate').value = d.creationDate || ''; document.getElementById('clientInternalNotes').value = d.internalNotes || ''; } }
-    function getContractFormHTML() { return `<form id="contractForm"> <div class="row"> <div class="col"><label>Cliente*</label><select id="contractClient" required></select></div> <div class="col"><label>Data do Contrato</label><input type="date" id="contractDate"></div> <div class="col"><label>Comercial*</label><select id="contractCommercial" required></select></div> </div> <label>Tipo de Serviço*</label> <select id="contractServiceType" onchange="handleContractTypeChange(this.value)" required> <option value="">Selecione Tipo de Serviço</option> <option value="Crédito">Crédito</option> <option value="Seguro">Seguro</option> <option value="Legalização Automóvel">Legalização Automóvel</option> <option value="Consultoria Financeira">Consultoria Financeira</option> </select> <div id="detailsCredito" class="service-details"><h4>Detalhes do Crédito</h4><!-- ... Campos do crédito aqui ... --></div> <div id="detailsSeguro" class="service-details"><h4>Detalhes do Seguro</h4><!-- ... Campos do seguro aqui ... --></div> <div id="detailsLegalizacao" class="service-details"><h4>Detalhes da Legalização</h4><!-- ... Campos da legalização aqui ... --></div> <div id="detailsConsultoria" class="service-details"><h4>Detalhes da Consultoria</h4><!-- ... Campos da consultoria aqui ... --></div> <div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleContractFormSubmit(id) { const clientSelect = document.getElementById('contractClient'); const data = { clientId: clientSelect.value, clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '', type: document.getElementById('contractType').value, value: document.getElementById('contractValue').value, status: document.getElementById('contractStatus').value, startDate: document.getElementById('contractStartDate').value, notes: document.getElementById('contractNotes').value.trim() }; const action = id ? db.collection('contratos').doc(id).update(data) : db.collection('contratos').add(data); await action; closeFormModal(); loadContracts(); loadDashboardData(); }
-    async function populateContractForm(id) { const doc = await db.collection('contratos').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('contractClient').value = d.clientId || ''; document.getElementById('contractType').value = d.type || ''; document.getElementById('contractValue').value = d.value || ''; document.getElementById('contractStatus').value = d.status || 'Pendente'; document.getElementById('contractStartDate').value = d.startDate || ''; document.getElementById('contractNotes').value = d.notes || ''; } }
-    async function loadContractDropdowns(callback) { const select = document.getElementById('contractClient'); if (!select) return; select.innerHTML = '<option value="">Selecione um Cliente</option>'; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += `<option value="${doc.id}">${d.name}</option>`; }); if (callback) callback(); }
-    async function loadAssociatedContracts(clientId) { const container = document.getElementById('associatedContracts'); container.innerHTML = ''; const snapshot = await db.collection('contratos').where('clientId', '==', clientId).get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhum contrato associado.</p>'; return; } let html = '<ul style="list-style: none; padding: 0;">'; snapshot.forEach(doc => { const d = doc.data(); html += `<li style="margin-bottom: .5em;">${d.type} - Estado: ${d.status} (Início: ${d.startDate})</li>`; }); html += '</ul>'; container.innerHTML = html; }
+    function getClientFormHTML() { return `<form id="clientForm"><div class="row"><div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div><div class="col"><label>Email</label><input type="email" id="clientEmail" /></div></div><div class="row"><div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div><div class="col"><label>NIF</label><input type="text" id="clientNif" maxlength="9" /></div></div><label>Morada</label><input type="text" id="clientAddress" /><div class="row"><div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div><div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div></div><div class="row"><div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div><div class="col"><label>Comercial Responsável</label><select id="clientManager"></select></div></div><div class="row"><div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div><div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div></div><label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
+    async function handleClientFormSubmit(id) { const managerSelect = document.getElementById('clientManager'); const data = { name: document.getElementById('clientName').value.trim(), email: document.getElementById('clientEmail').value.trim(), phone: document.getElementById('clientPhone').value.trim(), nif: document.getElementById('clientNif').value.trim(), address: document.getElementById('clientAddress').value.trim(), postalCode: document.getElementById('clientPostalCode').value.trim(), city: document.getElementById('clientCity').value.trim(), serviceType: document.getElementById('clientServiceType').value, managerId: managerSelect.value, managerName: managerSelect.options[managerSelect.selectedIndex]?.text || '', rgpd: document.getElementById('clientRgpd').value, creationDate: document.getElementById('clientCreationDate').value, internalNotes: document.getElementById('clientInternalNotes').value.trim(), clientType: 'Particular' }; const action = id ? db.collection('clientes').doc(id).update(data) : db.collection('clientes').add(data); await action; closeFormModal(); loadClients(); loadDashboardData(); }
+    async function populateClientForm(id) { await loadComerciaisForDropdown('clientManager'); const doc = await db.collection('clientes').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('clientName').value = d.name || ''; document.getElementById('clientEmail').value = d.email || ''; document.getElementById('clientPhone').value = d.phone || ''; document.getElementById('clientNif').value = d.nif || ''; document.getElementById('clientAddress').value = d.address || ''; document.getElementById('clientPostalCode').value = d.postalCode || ''; document.getElementById('clientCity').value = d.city || ''; document.getElementById('clientServiceType').value = d.serviceType || ''; document.getElementById('clientManager').value = d.managerId || ''; document.getElementById('clientRgpd').value = d.rgpd || 'Não'; document.getElementById('clientCreationDate').value = d.creationDate || ''; document.getElementById('clientInternalNotes').value = d.internalNotes || ''; } }
+    
+    // --- CONTRATOS ---
+    function getContractFormHTML() { 
+        return `<form id="contractForm">
+            <div class="row">
+                <div class="col"><label>Cliente*</label><select id="contractClient" required></select></div>
+                <div class="col"><label>Data do Contrato</label><input type="date" id="contractDate"></div>
+                <div class="col"><label>Comercial*</label><select id="contractCommercial" required></select></div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Tipo de Serviço*</label>
+                    <select id="contractType" onchange="handleContractTypeChange(this.value)" required>
+                        <option value="">Selecione Tipo de Serviço</option>
+                        <option value="Crédito">Crédito</option>
+                        <option value="Seguro">Seguro</option>
+                        <option value="Legalização Automóvel">Legalização Automóvel</option>
+                        <option value="Consultoria Financeira">Consultoria Financeira</option>
+                    </select>
+                </div>
+                 <div class="col"><label>Fase do Contrato</label>
+                    <select id="contractFase">
+                        <option value="Proposta">Proposta</option>
+                        <option value="Ativo">Ativo</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Detalhes Crédito -->
+            <div id="detailsCredito" class="service-details">
+                <h4>Detalhes do Crédito</h4>
+                 <div class="row">
+                    <div class="col"><label>Nº Proposta</label><input type="text" id="creditoProposta"></div>
+                    <div class="col"><label>Matrícula</label><input type="text" id="creditoMatricula"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>Fornecedor</label><select id="creditoFornecedor"></select></div>
+                    <div class="col"><label>Financeira</label><select id="creditoFinanceira"></select></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>Tipo de Crédito</label><input type="text" id="creditoTipo" placeholder="Ex: Pessoal, Automóvel"></div>
+                    <div class="col"><label>Valor Financiado (€)</label><input type="number" id="creditoValorFinanciado" oninput="calculateComissaoPagar()"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>Comissão (%)</label><input type="number" id="creditoComissaoPercent" oninput="calculateComissaoPagar()"></div>
+                    <div class="col"><label>Comissão a Pagar</label><input type="text" id="creditoComissaoPagar" readonly style="background-color: #eee;"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>Comissão Recebida (€)</label><input type="number" id="creditoComissaoRecebida"></div>
+                </div>
+                 <div class="row">
+                    <div class="col"><label>Data entrega fornecedor</label><input type="date" id="creditoDataFornecedor"></div>
+                    <div class="col"><label>Data entrega financeira</label><input type="date" id="creditoDataFinanceira"></div>
+                </div>
+                <label><input type="checkbox" id="creditoDocsFaltaCheck" onchange="document.getElementById('creditoDocsFaltaContainer').style.display = this.checked ? 'block' : 'none'"> Documentos em falta?</label>
+                <div id="creditoDocsFaltaContainer" style="display:none;"><textarea id="creditoDocsFalta" rows="2" placeholder="Especificar documentos..."></textarea></div>
+                <h4>Checklist Documentos</h4>
+                <div class="checklist">
+                    <label><input type="checkbox" name="creditoChecklist" value="Livrete"> Livrete</label>
+                    <label><input type="checkbox" name="creditoChecklist" value="Contrato"> Contrato</label>
+                    <label><input type="checkbox" name="creditoChecklist" value="DUA"> DUA</label>
+                    <label><input type="checkbox" name="creditoChecklist" value="DAV"> DAV</label>
+                    <label><input type="checkbox" name="creditoChecklist" value="MUA de compra"> MUA de compra</label>
+                    <label><input type="checkbox" name="creditoChecklist" value="MUA de venda"> MUA de venda</label>
+                    <label><input type="checkbox" name="creditoChecklist" value="Extinção de reserva"> Extinção de reserva</label>
+                </div>
+                <label style="margin-top: 1em;"><input type="checkbox" id="creditoRealizado"> Crédito realizado?</label>
+            </div>
+
+            <!-- Detalhes Seguro -->
+            <div id="detailsSeguro" class="service-details">
+                <h4>Detalhes do Seguro</h4>
+                <div class="row">
+                    <div class="col"><label>Tipo de Seguro</label><input type="text" id="seguroTipo"></div>
+                    <div class="col"><label>Seguradora</label><select id="seguroSeguradora"></select></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>Nº Apólice</label><input type="text" id="seguroApolice"></div>
+                    <div class="col"><label>Matrícula</label><input type="text" id="seguroMatricula"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>Data Subscrição</label><input type="date" id="seguroDataSubscricao"></div>
+                    <div class="col"><label>Comissão Recebida (€)</label><input type="number" id="seguroComissao"></div>
+                </div>
+                <label><input type="checkbox" id="seguroRenovacao"> Renovação automática?</label>
+                <label><input type="checkbox" id="seguroIsFreelancer" onchange="document.getElementById('seguroFreelancerContainer').style.display = this.checked ? 'block' : 'none'"> Freelancer?</label>
+                <div id="seguroFreelancerContainer" style="display:none;"><input type="text" id="seguroFreelancerName" placeholder="Nome do Freelancer"></div>
+            </div>
+
+            <!-- Detalhes Legalização Automóvel -->
+            <div id="detailsLegalizacao" class="service-details">
+                <h4>Detalhes da Legalização</h4>
+                <div class="row">
+                    <div class="col"><label>Nº Chassis</label><input type="text" id="legalizacaoChassis"></div>
+                    <div class="col"><label>Matrícula Estrangeira</label><input type="text" id="legalizacaoMatricula"></div>
+                </div>
+                <div class="row">
+                    <div class="col"><label>País de Importação</label><input type="text" id="legalizacaoPais"></div>
+                    <div class="col"><label>Data Estimada de Conclusão</label><input type="date" id="legalizacaoDataConclusao"></div>
+                </div>
+            </div>
+
+            <!-- Detalhes Consultoria Financeira -->
+            <div id="detailsConsultoria" class="service-details">
+                <h4>Detalhes da Consultoria</h4>
+                <label>Diagnóstico Financeiro Feito?</label>
+                <select id="consultoriaDiagnostico"><option value="Não">Não</option><option value="Sim">Sim</option></select>
+                <label>Situação Atual (Rendimentos, despesas, dívidas)</label>
+                <textarea id="consultoriaSituacao" rows="3"></textarea>
+                <label>Data da Sessão</label>
+                <input type="date" id="consultoriaDataSessao">
+                <label>Ações a Implementar</label>
+                <textarea id="consultoriaAcoes" rows="3"></textarea>
+            </div>
+
+            <div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar Contrato</button></div>
+        </form>`; 
+    }
+
+    async function handleContractTypeChange(serviceType) {
+        document.querySelectorAll('.service-details').forEach(div => div.style.display = 'none');
+        if (serviceType === 'Crédito') {
+            document.getElementById('detailsCredito').style.display = 'block';
+            await loadPartnersForDropdown('fornecedores', 'creditoFornecedor');
+            await loadPartnersForDropdown('financeiras', 'creditoFinanceira');
+        }
+        if (serviceType === 'Seguro') {
+            document.getElementById('detailsSeguro').style.display = 'block';
+            await loadPartnersForDropdown('seguradoras', 'seguroSeguradora');
+        }
+        if (serviceType === 'Legalização Automóvel') document.getElementById('detailsLegalizacao').style.display = 'block';
+        if (serviceType === 'Consultoria Financeira') document.getElementById('detailsConsultoria').style.display = 'block';
+    }
+
+    function calculateComissaoPagar() {
+        const valorFinanciado = parseFloat(document.getElementById('creditoValorFinanciado').value) || 0;
+        const comissaoPercent = parseFloat(document.getElementById('creditoComissaoPercent').value) || 0;
+        const comissaoPagar = valorFinanciado * (comissaoPercent / 100);
+        document.getElementById('creditoComissaoPagar').value = comissaoPagar.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' });
+    }
+
+    async function loadPartnersForDropdown(type, selectId) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        select.innerHTML = '<option value="">Selecione</option>';
+        const snapshot = await db.collection(type).orderBy('name').get();
+        snapshot.forEach(doc => {
+            select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
+        });
+    }
+
+    async function handleContractFormSubmit(id) { 
+        const clientSelect = document.getElementById('contractClient'); 
+        const commercialSelect = document.getElementById('contractCommercial'); 
+        const contractType = document.getElementById('contractType').value;
+
+        // Base Data
+        let data = { 
+            clientId: clientSelect.value, 
+            clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '', 
+            commercialId: commercialSelect.value, 
+            commercialName: commercialSelect.options[commercialSelect.selectedIndex]?.text || '', 
+            type: contractType, 
+            fase: document.getElementById('contractFase').value,
+            startDate: document.getElementById('contractDate').value, 
+            commissionStatus: 'Não Paga' 
+        }; 
+        
+        // Service-Specific Data
+        switch(contractType) {
+            case 'Crédito':
+                const checklist = Array.from(document.querySelectorAll('input[name="creditoChecklist"]:checked')).map(cb => cb.value);
+                const comissaoPagarValue = parseFloat(document.getElementById('creditoComissaoPagar').value.replace(/[^0-9,-]+/g,"").replace(",", ".")) || 0;
+                Object.assign(data, {
+                    numeroProposta: document.getElementById('creditoProposta').value,
+                    fornecedorId: document.getElementById('creditoFornecedor').value,
+                    financeiraId: document.getElementById('creditoFinanceira').value,
+                    tipoCredito: document.getElementById('creditoTipo').value,
+                    matricula: document.getElementById('creditoMatricula').value,
+                    valorFinanciado: document.getElementById('creditoValorFinanciado').value,
+                    comissaoPercent: document.getElementById('creditoComissaoPercent').value,
+                    comissaoPagar: comissaoPagarValue,
+                    comissaoRecebida: document.getElementById('creditoComissaoRecebida').value,
+                    dataEntregaFornecedor: document.getElementById('creditoDataFornecedor').value,
+                    dataEntregaFinanceira: document.getElementById('creditoDataFinanceira').value,
+                    docsEmFalta: document.getElementById('creditoDocsFalta').value,
+                    checklistDocs: checklist,
+                    checklistDocsFornecedor: [], // Inicializar checklists para o dashboard
+                    checklistDocsFinanceira: [],
+                    creditoRealizado: document.getElementById('creditoRealizado').checked,
+                });
+                break;
+            case 'Seguro':
+                 Object.assign(data, {
+                    tipoSeguro: document.getElementById('seguroTipo').value,
+                    seguradoraId: document.getElementById('seguroSeguradora').value,
+                    apolice: document.getElementById('seguroApolice').value,
+                    matricula: document.getElementById('seguroMatricula').value,
+                    dataSubscricao: document.getElementById('seguroDataSubscricao').value,
+                    comissaoRecebida: document.getElementById('seguroComissao').value,
+                    renovacaoAuto: document.getElementById('seguroRenovacao').checked,
+                    isFreelancer: document.getElementById('seguroIsFreelancer').checked,
+                    freelancerName: document.getElementById('seguroFreelancerName').value,
+                 });
+                break;
+            case 'Legalização Automóvel':
+                 Object.assign(data, {
+                    chassis: document.getElementById('legalizacaoChassis').value,
+                    matriculaEstrangeira: document.getElementById('legalizacaoMatricula').value,
+                    paisImportacao: document.getElementById('legalizacaoPais').value,
+                    dataConclusaoEstimada: document.getElementById('legalizacaoDataConclusao').value,
+                 });
+                break;
+            case 'Consultoria Financeira':
+                 Object.assign(data, {
+                    diagnosticoFeito: document.getElementById('consultoriaDiagnostico').value,
+                    situacaoAtual: document.getElementById('consultoriaSituacao').value,
+                    dataSessao: document.getElementById('consultoriaDataSessao').value,
+                    acoesImplementar: document.getElementById('consultoriaAcoes').value,
+                 });
+                break;
+        }
+
+        const docRef = id ? db.collection('contratos').doc(id) : db.collection('contratos').doc();
+        const action = id ? docRef.update(data) : docRef.set(data);
+        await action;
+        const contractId = docRef.id;
+
+        // CRIAR TAREFA AUTOMÁTICA PARA DOCUMENTOS EM FALTA
+        if (contractType === 'Crédito' && document.getElementById('creditoDocsFaltaCheck').checked) {
+            const docsFaltaTexto = document.getElementById('creditoDocsFalta').value.trim();
+            if (docsFaltaTexto) {
+                await db.collection('tarefas').add({
+                    title: `Documentos em falta: ${data.clientName}`,
+                    description: docsFaltaTexto,
+                    owner: data.commercialName, // Atribui ao comercial do contrato
+                    dueDate: '',
+                    priority: 'Alta',
+                    status: 'Pendente',
+                    clientId: data.clientId,
+                    contractId: contractId,
+                    autoTaskType: 'documentos_em_falta' // Flag para identificar a tarefa
+                });
+            }
+        }
+        
+        closeFormModal(); 
+        loadContracts(); 
+        loadDashboardData(); 
+        loadFinanceiraModule(); 
+        loadRelatoriosData(); 
+    }
+
+    async function populateContractForm(id) { 
+        const doc = await db.collection('contratos').doc(id).get(); 
+        if (doc.exists) { 
+            const d = doc.data(); 
+            document.getElementById('contractClient').value = d.clientId || ''; 
+            document.getElementById('contractCommercial').value = d.commercialId || ''; 
+            document.getElementById('contractType').value = d.type || ''; 
+            document.getElementById('contractFase').value = d.fase || 'Proposta'; 
+            document.getElementById('contractDate').value = d.startDate || ''; 
+
+            await handleContractTypeChange(d.type); // Mostra a secção correta
+
+            // Popula os campos específicos
+            switch(d.type) {
+                case 'Crédito':
+                    document.getElementById('creditoProposta').value = d.numeroProposta || '';
+                    document.getElementById('creditoFornecedor').value = d.fornecedorId || '';
+                    document.getElementById('creditoFinanceira').value = d.financeiraId || '';
+                    document.getElementById('creditoTipo').value = d.tipoCredito || '';
+                    document.getElementById('creditoMatricula').value = d.matricula || '';
+                    document.getElementById('creditoValorFinanciado').value = d.valorFinanciado || '';
+                    document.getElementById('creditoComissaoPercent').value = d.comissaoPercent || '';
+                    document.getElementById('creditoComissaoRecebida').value = d.comissaoRecebida || '';
+                    document.getElementById('creditoDataFornecedor').value = d.dataEntregaFornecedor || '';
+                    document.getElementById('creditoDataFinanceira').value = d.dataEntregaFinanceira || '';
+                    if(d.docsEmFalta) {
+                        document.getElementById('creditoDocsFaltaCheck').checked = true;
+                        document.getElementById('creditoDocsFaltaContainer').style.display = 'block';
+                        document.getElementById('creditoDocsFalta').value = d.docsEmFalta;
+                    }
+                    (d.checklistDocs || []).forEach(docName => {
+                        const checkbox = document.querySelector(`input[name="creditoChecklist"][value="${docName}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                    document.getElementById('creditoRealizado').checked = d.creditoRealizado || false;
+                    calculateComissaoPagar();
+                    break;
+                case 'Seguro':
+                    document.getElementById('seguroTipo').value = d.tipoSeguro || '';
+                    document.getElementById('seguroSeguradora').value = d.seguradoraId || '';
+                    document.getElementById('seguroApolice').value = d.apolice || '';
+                    document.getElementById('seguroMatricula').value = d.matricula || '';
+                    document.getElementById('seguroDataSubscricao').value = d.dataSubscricao || '';
+                    document.getElementById('seguroComissao').value = d.comissaoRecebida || '';
+                    document.getElementById('seguroRenovacao').checked = d.renovacaoAuto || false;
+                    if (d.isFreelancer) {
+                        document.getElementById('seguroIsFreelancer').checked = true;
+                        document.getElementById('seguroFreelancerContainer').style.display = 'block';
+                        document.getElementById('seguroFreelancerName').value = d.freelancerName || '';
+                    }
+                    break;
+                case 'Legalização Automóvel':
+                    document.getElementById('legalizacaoChassis').value = d.chassis || '';
+                    document.getElementById('legalizacaoMatricula').value = d.matriculaEstrangeira || '';
+                    document.getElementById('legalizacaoPais').value = d.paisImportacao || '';
+                    document.getElementById('legalizacaoDataConclusao').value = d.dataConclusaoEstimada || '';
+                    break;
+                case 'Consultoria Financeira':
+                    document.getElementById('consultoriaDiagnostico').value = d.diagnosticoFeito || 'Não';
+                    document.getElementById('consultoriaSituacao').value = d.situacaoAtual || '';
+                    document.getElementById('consultoriaDataSessao').value = d.dataSessao || '';
+                    document.getElementById('consultoriaAcoes').value = d.acoesImplementar || '';
+                    break;
+            }
+        } 
+    }
+    
+    async function loadContractDropdowns(callback) { await loadClientsForDropdown('contractClient'); await loadComerciaisForDropdown('contractCommercial'); if (callback) callback(); }
+    async function loadAssociatedContracts(clientId) { const container = document.getElementById('associatedContracts'); container.innerHTML = ''; const snapshot = await db.collection('contratos').where('clientId', '==', clientId).get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhum contrato associado.</p>'; return; } let html = '<ul style="list-style: none; padding: 0;">'; snapshot.forEach(doc => { const d = doc.data(); html += `<li style="margin-bottom: .5em;">${d.type} - Fase: ${d.fase} (Início: ${d.startDate})</li>`; }); html += '</ul>'; container.innerHTML = html; }
     function getTaskFormHTML() { return `<form id="taskForm"><label>Título da tarefa</label><input type="text" id="taskTitle" required /><label>Descrição</label><textarea id="taskDescription" rows="3"></textarea><div class="row"><div class="col"><label>Responsável</label><input type="text" id="taskOwner" /></div><div class="col"><label>Prazo</label><input type="date" id="taskDueDate" /></div></div><div class="row"><div class="col"><label>Prioridade</label><select id="taskPriority"><option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option></select></div><div class="col"><label>Estado</label><select id="taskStatus"><option value="Pendente">Pendente</option><option value="Em Andamento">Em Andamento</option><option value="Concluído">Concluído</option></select></div></div><div class="row"><div class="col"><label>Associar a Cliente (Opcional)</label><select id="taskClient"><option value="">Nenhum</option></select></div><div class="col"><label>Associar a Contrato (Opcional)</label><select id="taskContract"><option value="">Nenhum</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
     async function handleTaskFormSubmit(id) { const data = { title: document.getElementById('taskTitle').value.trim(), description: document.getElementById('taskDescription').value.trim(), owner: document.getElementById('taskOwner').value.trim(), dueDate: document.getElementById('taskDueDate').value, priority: document.getElementById('taskPriority').value, status: document.getElementById('taskStatus').value, clientId: document.getElementById('taskClient').value, contractId: document.getElementById('taskContract').value, }; const action = id ? db.collection('tarefas').doc(id).update(data) : db.collection('tarefas').add(data); await action; const note = `Tarefa '${data.title}' foi ${id ? 'atualizada' : 'criada'} com estado '${data.status}'.`; if (data.clientId) { handleInteractionSubmit('clientes', data.clientId, note); } if (data.contractId) { handleInteractionSubmit('contratos', data.contractId, note); } closeFormModal(); loadTasks(); loadDashboardData(); }
     async function populateTaskForm(id) { const doc = await db.collection('tarefas').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('taskTitle').value = d.title || ''; document.getElementById('taskDescription').value = d.description || ''; document.getElementById('taskOwner').value = d.owner || ''; document.getElementById('taskDueDate').value = d.dueDate || ''; document.getElementById('taskPriority').value = d.priority || 'Média'; document.getElementById('taskStatus').value = d.status || 'Pendente'; document.getElementById('taskClient').value = d.clientId || ''; document.getElementById('taskContract').value = d.contractId || ''; } }
-    async function loadClientsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; }); }
-    async function loadContractsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; const snapshot = await db.collection('contratos').orderBy('clientName').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += `<option value="${doc.id}">${d.type} - ${d.clientName}</option>`; }); }
+    async function loadDropdownsForTaskForm(callback) { await loadClientsForDropdown('taskClient'); await loadContractsForDropdown('taskContract'); if(callback) callback(); }
+    async function loadClientsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; select.innerHTML = '<option value="">Selecione</option>'; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; }); }
+    async function loadContractsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; select.innerHTML = '<option value="">Selecione</option>'; const snapshot = await db.collection('contratos').orderBy('clientName').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += `<option value="${doc.id}">${d.type} - ${d.clientName}</option>`; }); }
     function handleFileSelect(files) { const list = document.getElementById('documentList'); if (!list || files.length === 0) return; const file = files[0]; list.innerHTML += `<li><span>${file.name}</span><button class="btn-danger" style="padding: .2em .5em; font-size: .8em;">X</button></li>`; /* Lógica de upload real iria aqui */ }
     function deleteItem(collection, id, name, callback) { showConfirmModal(`Tem a certeza que quer eliminar "${name}"?`, async () => { await db.collection(collection).doc(id).delete(); callback(); loadDashboardData(); }); }
     function getFornecedorFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome</label><input id="partnerName" required></div><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>IBAN</label><input id="partnerIban"></div></div><div class="row"><div class="col"><label>Morada</label><input id="partnerAddress"></div><div class="col"><label>Código Postal</label><input id="partnerPostalCode"></div><div class="col"><label>Localidade</label><input id="partnerCity"></div></div><div class="row"><div class="col"><label>Telefone</label><input id="partnerPhone"></div><div class="col"><label>Email</label><input id="partnerEmail" type="email"></div><div class="col"><label>CAE</label><input id="partnerCae"></div></div><div class="row"><div class="col"><label>Capital Social</label><input id="partnerCapital" type="number"></div><div class="col"><label>Pessoa a Contactar</label><input id="partnerContactPerson"></div><div class="col"><label>Equipamento</label><select id="partnerEquipment"><option>AUTO</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
@@ -886,17 +1466,18 @@
     function getSeguradoraFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Seguradora</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
     async function handleInteractionSubmit(collection, docId, note, elementId) { if (!note.trim()) return; await db.collection(collection).doc(docId).collection('interactions').add({ note: note, timestamp: firebase.firestore.FieldValue.serverTimestamp() }); if(elementId) { loadInteractions(collection, docId, elementId); } }
     async function loadInteractions(collection, docId, elementId) { const container = document.getElementById(elementId); container.innerHTML = ''; const snapshot = await db.collection(collection).doc(docId).collection('interactions').orderBy('timestamp', 'desc').get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhuma interação registada.</p>'; return; } snapshot.forEach(doc => { const d = doc.data(); const date = d.timestamp ? d.timestamp.toDate().toLocaleString('pt-PT') : 'Data inválida'; const item = document.createElement('div'); item.className = 'interaction-item'; item.innerHTML = `<div class="date">${date}</div><div>${d.note}</div>`; container.appendChild(item); }); }
-    function handleContractTypeChange(value) {
-        document.querySelectorAll('.service-details').forEach(div => div.style.display = 'none');
-        if (value === 'Crédito') document.getElementById('detailsCredito').style.display = 'block';
-        if (value === 'Seguro') document.getElementById('detailsSeguro').style.display = 'block';
-        if (value === 'Legalização Automóvel') document.getElementById('detailsLegalizacao').style.display = 'block';
-        if (value === 'Consultoria Financeira') document.getElementById('detailsConsultoria').style.display = 'block';
-    }
+    
     async function loadClients() {
         const tableBody = document.getElementById('clientTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('clientes').orderBy('name').get();
+        
+        let query = db.collection('clientes');
+        // APLICAR PERMISSÃO: Comercial só vê os seus clientes
+        if (currentUserData && currentUserData.role === 'Comercial') {
+            query = query.where('managerId', '==', currentUserData.id);
+        }
+        
+        const snapshot = await query.orderBy('name').get();
         snapshot.forEach(doc => {
             const d = doc.data();
             const row = tableBody.insertRow();
@@ -905,7 +1486,7 @@
                 <td>${d.name || '-'}</td>
                 <td>${d.nif || '-'}</td>
                 <td>${d.clientType || 'Particular'}</td>
-                <td>${d.manager || '-'}</td>
+                <td>${d.managerName || '-'}</td>
                 <td>${d.rgpd || '-'}</td>
                 <td class="actions-cell">
                     <button onclick="openDetailsModal('cliente', '${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
@@ -918,16 +1499,24 @@
     async function loadContracts() {
         const tableBody = document.getElementById('contractTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('contratos').orderBy('startDate', 'desc').get();
+
+        let query = db.collection('contratos');
+        // APLICAR PERMISSÃO: Comercial só vê os seus contratos
+        if (currentUserData && currentUserData.role === 'Comercial') {
+            query = query.where('commercialId', '==', currentUserData.id);
+        }
+
+        const snapshot = await query.orderBy('startDate', 'desc').get();
         snapshot.forEach(doc => {
             const d = doc.data();
             const row = tableBody.insertRow();
             row.innerHTML = `
                 <td>${d.clientName || '-'}</td>
                 <td>${d.type || '-'}</td>
-                <td>€${parseFloat(d.value || 0).toLocaleString('pt-PT')}</td>
-                <td>${d.status || '-'}</td>
+                <td>€${parseFloat(d.valorFinanciado || d.value || 0).toLocaleString('pt-PT')}</td>
+                <td>${d.fase || '-'}</td>
                 <td>${d.startDate || '-'}</td>
+                <td>${d.commercialName || '-'}</td>
                 <td class="actions-cell">
                     <button onclick="openDetailsModal('contrato', '${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
                     <button onclick="openFormModal('contrato', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
@@ -936,10 +1525,29 @@
             `;
         });
     }
-    function getComercialFormHTML() { return `<form id="comercialForm"><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email</label><input id="comercialEmail" type="email" required></div></div><div class="row"><div class="col"><label>Telefone</label><input id="comercialPhone"></div><div class="col"><label>NIF</label><input id="comercialNif"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div></div><div class="row"><div class="col"><label>Data de Início</label><input id="comercialStartDate" type="date"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`;}
-    async function handleComercialFormSubmit(id) { const data = { firstName: document.getElementById('comercialFirstName').value, lastName: document.getElementById('comercialLastName').value, email: document.getElementById('comercialEmail').value, phone: document.getElementById('comercialPhone').value, nif: document.getElementById('comercialNif').value, iban: document.getElementById('comercialIban').value, startDate: document.getElementById('comercialStartDate').value, status: document.getElementById('comercialStatus').value, }; const action = id ? db.collection('comerciais').doc(id).update(data) : db.collection('comerciais').add(data); await action; closeFormModal(); loadComerciais();}
-    async function populateComercialForm(id) { const doc = await db.collection('comerciais').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('comercialFirstName').value = d.firstName || ''; document.getElementById('comercialLastName').value = d.lastName || ''; document.getElementById('comercialEmail').value = d.email || ''; document.getElementById('comercialPhone').value = d.phone || ''; document.getElementById('comercialNif').value = d.nif || ''; document.getElementById('comercialIban').value = d.iban || ''; document.getElementById('comercialStartDate').value = d.startDate || ''; document.getElementById('comercialStatus').value = d.status || 'Ativo'; } }
+    function getComercialFormHTML() { return `<form id="comercialForm"><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email</label><input id="comercialEmail" type="email" required></div><div class="col"><label>Função</label><select id="comercialRole"><option value="Comercial">Comercial</option><option value="Gestor de Equipa">Gestor de Equipa</option><option value="Administrador">Administrador</option></select></div></div><div class="row"><div class="col"><label>Telefone</label><input id="comercialPhone"></div><div class="col"><label>NIF</label><input id="comercialNif"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div></div><div class="row"><div class="col"><label>Data de Início</label><input id="comercialStartDate" type="date"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`;}
+    async function handleComercialFormSubmit(id) { 
+        // Idealmente, aqui também se criaria/atualizaria o utilizador no Firebase Auth.
+        // Por simplicidade, estamos a gerir apenas no Firestore.
+        const data = { 
+            firstName: document.getElementById('comercialFirstName').value, 
+            lastName: document.getElementById('comercialLastName').value, 
+            email: document.getElementById('comercialEmail').value, 
+            role: document.getElementById('comercialRole').value, 
+            phone: document.getElementById('comercialPhone').value, 
+            nif: document.getElementById('comercialNif').value, 
+            iban: document.getElementById('comercialIban').value, 
+            startDate: document.getElementById('comercialStartDate').value, 
+            status: document.getElementById('comercialStatus').value, 
+        }; 
+        const action = id ? db.collection('comerciais').doc(id).update(data) : db.collection('comerciais').add(data); 
+        await action; 
+        closeFormModal(); 
+        loadComerciais();
+    }
+    async function populateComercialForm(id) { const doc = await db.collection('comerciais').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('comercialFirstName').value = d.firstName || ''; document.getElementById('comercialLastName').value = d.lastName || ''; document.getElementById('comercialEmail').value = d.email || ''; document.getElementById('comercialRole').value = d.role || 'Comercial'; document.getElementById('comercialPhone').value = d.phone || ''; document.getElementById('comercialNif').value = d.nif || ''; document.getElementById('comercialIban').value = d.iban || ''; document.getElementById('comercialStartDate').value = d.startDate || ''; document.getElementById('comercialStatus').value = d.status || 'Ativo'; } }
     async function loadComerciais() {
+        if (!currentUserData || currentUserData.role !== 'Administrador') return; // Apenas Admins podem ver
         const tableBody = document.getElementById('comerciaisTable').querySelector('tbody');
         tableBody.innerHTML = '';
         const snapshot = await db.collection('comerciais').orderBy('firstName').get();
@@ -950,11 +1558,11 @@
                 <td>${d.firstName} ${d.lastName}</td>
                 <td>${d.email || '-'}</td>
                 <td>${d.phone || '-'}</td>
-                <td>${d.iban || '-'}</td>
-                <td>${d.status || '-'}</td>
+                <td>${d.role || 'N/D'}</td>
+                <td><span style="color: ${d.status === 'Ativo' ? 'var(--color-success)' : 'var(--color-danger)'}">${d.status}</span></td>
                 <td class="actions-cell">
-                    <button onclick="toggleComercialStatus('${doc.id}', '${d.status}')">${d.status === 'Ativo' ? 'Desativar' : 'Ativar'}</button>
-                    <button onclick="openFormModal('comercial', '${doc.id}')">EDITAR</button>
+                    <button onclick="toggleComercialStatus('${doc.id}', '${d.status}')" title="${d.status === 'Ativo' ? 'Desativar' : 'Ativar'}"><i class="ph ph-power"></i></button>
+                    <button onclick="openFormModal('comercial', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
                 </td>
             `;
         });
@@ -963,6 +1571,582 @@
         const newStatus = currentStatus === 'Ativo' ? 'Inativo' : 'Ativo';
         await db.collection('comerciais').doc(id).update({ status: newStatus });
         loadComerciais();
+    }
+    async function loadComerciaisForDropdown(selectId) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        select.innerHTML = '<option value="">Selecione</option>';
+        const snapshot = await db.collection('comerciais').where('status', '==', 'Ativo').get();
+        
+        let comerciais = [];
+        snapshot.forEach(doc => {
+            comerciais.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Ordenar por nome no lado do cliente
+        comerciais.sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+        comerciais.forEach(d => {
+            select.innerHTML += `<option value="${d.id}">${d.firstName} ${d.lastName}</option>`;
+        });
+    }
+
+    // --- GESTÃO FINANCEIRA ---
+    function openFinanceTab(evt, tabName) {
+        document.querySelectorAll('#financeira-section .tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('#financeira-section .tabs button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        evt.currentTarget.classList.add('active');
+
+        // Carregar dados do separador ativo
+        if(tabName === 'financeira-dashboard') loadFinanceiraDashboard();
+        if(tabName === 'financeira-despesas') loadDespesas();
+        if(tabName === 'financeira-por-conciliar') loadPorConciliar();
+        if(tabName === 'financeira-banco') loadBancos();
+    }
+
+    function loadFinanceiraModule() {
+        // Por defeito, carrega o primeiro separador (Dashboard)
+        loadFinanceiraDashboard();
+        // Ativa o primeiro separador visualmente
+        const financeTabs = document.querySelector('#finance-tabs');
+        if (financeTabs) {
+            financeTabs.querySelector('button').classList.add('active');
+            document.getElementById('financeira-dashboard').classList.add('active');
+        }
+    }
+    
+    async function loadFinanceiraDashboard() {
+        const contratosSnapshot = await db.collection('contratos').where('fase', '==', 'Ativo').get();
+        const despesasSnapshot = await db.collection('despesas').get();
+        
+        let totalReceber = 0;
+        let totalPagar = 0;
+        let aReceberFinanceira = {};
+        let aPagarFornecedor = {};
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+
+        contratosSnapshot.forEach(doc => {
+            const d = doc.data();
+            if(d.type === 'Crédito') {
+                totalReceber += parseFloat(d.comissaoRecebida || 0);
+                totalPagar += parseFloat(d.comissaoPagar || 0);
+
+                const contractDate = new Date(d.startDate);
+                if (contractDate.getMonth() === currentMonth && contractDate.getFullYear() === currentYear) {
+                    if(d.financeiraId) {
+                        aReceberFinanceira[d.financeiraId] = (aReceberFinanceira[d.financeiraId] || 0) + parseFloat(d.comissaoRecebida || 0);
+                    }
+                    if(d.fornecedorId) {
+                        aPagarFornecedor[d.fornecedorId] = (aPagarFornecedor[d.fornecedorId] || 0) + parseFloat(d.comissaoPagar || 0);
+                    }
+                }
+            } else if (d.type === 'Seguro') {
+                totalReceber += parseFloat(d.comissaoRecebida || 0);
+            }
+        });
+
+        document.getElementById('kpi-comissoes-receber').textContent = `€${totalReceber.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+        document.getElementById('kpi-comissoes-pagar').textContent = `€${(totalPagar * 1.23).toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+        
+        let totalDespesas = 0;
+        despesasSnapshot.forEach(doc => {
+            totalDespesas += parseFloat(doc.data().value || 0);
+        });
+        document.getElementById('kpi-total-despesas').textContent = `€${totalDespesas.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+
+        // Preencher tabelas
+        const tableReceberBody = document.getElementById('financeirasReceberTable').querySelector('tbody');
+        tableReceberBody.innerHTML = '';
+        for(const id in aReceberFinanceira) {
+            const name = partnersData.financeiras[id] || 'Desconhecida';
+            tableReceberBody.innerHTML += `<tr><td>${name}</td><td>€${aReceberFinanceira[id].toLocaleString('pt-PT')}</td></tr>`;
+        }
+        if (tableReceberBody.innerHTML === '') tableReceberBody.innerHTML = '<tr><td colspan="2">Nenhum valor a receber este mês.</td></tr>';
+
+        const tablePagarBody = document.getElementById('fornecedoresPagarTable').querySelector('tbody');
+        tablePagarBody.innerHTML = '';
+        for(const id in aPagarFornecedor) {
+            const name = partnersData.fornecedores[id] || 'Desconhecido';
+            tablePagarBody.innerHTML += `<tr><td>${name}</td><td>€${aPagarFornecedor[id].toLocaleString('pt-PT')}</td></tr>`;
+        }
+        if (tablePagarBody.innerHTML === '') tablePagarBody.innerHTML = '<tr><td colspan="2">Nenhum valor a pagar este mês.</td></tr>';
+    }
+
+    async function loadDespesas() {
+        const tableBody = document.getElementById('despesasTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+        const snapshot = await db.collection('despesas').orderBy('date', 'desc').get();
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${d.date}</td>
+                <td>${d.description}</td>
+                <td>${d.type}</td>
+                <td>${d.bancoName || '-'}</td>
+                <td>€${parseFloat(d.value || 0).toLocaleString('pt-PT')}</td>
+                <td><input type="checkbox" ${d.isConciliada ? 'checked' : ''} disabled></td>
+                <td class="actions-cell">
+                    <button onclick="openFormModal('despesa', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('despesas', '${doc.id}', 'esta despesa', loadDespesas)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                </td>
+            `;
+        });
+    }
+    
+    function getDespesaFormHTML() {
+        return `<form id="despesaForm">
+            <div class="row">
+                <div class="col"><label>Data</label><input type="date" id="despesaDate" required></div>
+                <div class="col"><label>Valor</label><input type="number" id="despesaValue" step="0.01" required></div>
+            </div>
+            <label>Descrição</label><input type="text" id="despesaDescription" required>
+            <div class="row">
+                <div class="col"><label>Tipo de Despesa</label>
+                    <select id="despesaType" required>
+                        <option value="Renda">Renda</option>
+                        <option value="Comunicações">Comunicações</option>
+                        <option value="Material de Escritório">Material de Escritório</option>
+                        <option value="Transporte">Transporte</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="col"><label>Banco</label><select id="despesaBanco"></select></div>
+            </div>
+            <label><input type="checkbox" id="despesaIsConciliada"> Marcar como já conciliada</label>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </div>
+        </form>`;
+    }
+
+    async function handleDespesaFormSubmit(id) {
+        const bancoSelect = document.getElementById('despesaBanco');
+        const data = {
+            date: document.getElementById('despesaDate').value,
+            value: document.getElementById('despesaValue').value,
+            description: document.getElementById('despesaDescription').value,
+            type: document.getElementById('despesaType').value,
+            isConciliada: document.getElementById('despesaIsConciliada').checked,
+            bancoId: bancoSelect.value,
+            bancoName: bancoSelect.options[bancoSelect.selectedIndex]?.text || '',
+        };
+        const action = id ? db.collection('despesas').doc(id).update(data) : db.collection('despesas').add(data);
+        await action;
+        closeFormModal();
+        loadDespesas();
+        loadPorConciliar();
+        loadFinanceiraDashboard();
+    }
+
+    async function populateDespesaForm(id) {
+        await loadBancosForDropdown('despesaBanco');
+        const doc = await db.collection('despesas').doc(id).get();
+        if (doc.exists) {
+            const d = doc.data();
+            document.getElementById('despesaDate').value = d.date;
+            document.getElementById('despesaValue').value = d.value;
+            document.getElementById('despesaDescription').value = d.description;
+            document.getElementById('despesaType').value = d.type;
+            document.getElementById('despesaBanco').value = d.bancoId || '';
+            document.getElementById('despesaIsConciliada').checked = d.isConciliada;
+        }
+    }
+
+    async function loadPorConciliar() {
+        const tableBody = document.getElementById('porConciliarTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+        const snapshot = await db.collection('despesas').where('isConciliada', '==', false).get();
+        
+        if(snapshot.empty) {
+            tableBody.innerHTML = '<tr><td colspan="5">Nenhuma despesa por conciliar.</td></tr>';
+            return;
+        }
+
+        let despesas = [];
+        snapshot.forEach(doc => {
+            despesas.push({ id: doc.id, ...doc.data() });
+        });
+
+        despesas.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        tableBody.innerHTML = '';
+        despesas.forEach(d => {
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td><input type="checkbox" class="conciliar-check" value="${d.id}"></td>
+                <td>${d.date}</td>
+                <td>${d.description}</td>
+                <td>${d.type}</td>
+                <td>€${parseFloat(d.value || 0).toLocaleString('pt-PT')}</td>
+            `;
+        });
+    }
+    
+    function toggleAllConciliar(checked) {
+        document.querySelectorAll('.conciliar-check').forEach(cb => cb.checked = checked);
+    }
+    
+    const conciliarModal = document.getElementById('conciliarModal');
+    async function openConciliarModal() {
+        const selectedIds = Array.from(document.querySelectorAll('.conciliar-check:checked')).map(cb => cb.value);
+        if (selectedIds.length === 0) {
+            alert('Por favor, selecione pelo menos uma despesa para conciliar.');
+            return;
+        }
+        document.getElementById('conciliarCount').textContent = selectedIds.length;
+        await loadBancosForDropdown('conciliarBanco');
+        document.getElementById('conciliarDate').value = new Date().toISOString().split('T')[0];
+        conciliarModal.classList.add('active');
+    }
+    function closeConciliarModal() { conciliarModal.classList.remove('active'); }
+
+    async function conciliarDespesasEmMassa() {
+        const selectedIds = Array.from(document.querySelectorAll('.conciliar-check:checked')).map(cb => cb.value);
+        const conciliarDate = document.getElementById('conciliarDate').value;
+        const bancoSelect = document.getElementById('conciliarBanco');
+        const bancoId = bancoSelect.value;
+        const bancoName = bancoSelect.options[bancoSelect.selectedIndex]?.text || '';
+
+        if (!conciliarDate || !bancoId) {
+            alert('Por favor, preencha a data e o banco.');
+            return;
+        }
+
+        const batch = db.batch();
+        selectedIds.forEach(id => {
+            const docRef = db.collection('despesas').doc(id);
+            batch.update(docRef, { 
+                isConciliada: true,
+                dataConciliacao: conciliarDate,
+                bancoId: bancoId,
+                bancoName: bancoName
+            });
+        });
+        await batch.commit();
+        
+        closeConciliarModal();
+        loadPorConciliar();
+        loadDespesas();
+    }
+    
+    function exportarLancamento() {
+        const selectedRows = Array.from(document.querySelectorAll('.conciliar-check:checked')).map(cb => cb.closest('tr'));
+        if (selectedRows.length === 0) {
+            alert('Por favor, selecione despesas para exportar.');
+            return;
+        }
+        let total = 0;
+        let content = `<h1>Folha de Lançamento</h1><p>Data: ${new Date().toLocaleDateString('pt-PT')}</p><table border="1" style="width:100%; border-collapse: collapse;"><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Valor</th></tr></thead><tbody>`;
+        selectedRows.forEach(row => {
+            const cells = row.cells;
+            const value = parseFloat(cells[4].textContent.replace('€', '').replace('.', '').replace(',', '.'));
+            total += value;
+            content += `<tr><td>${cells[1].textContent}</td><td>${cells[2].textContent}</td><td>${cells[3].textContent}</td><td>${cells[4].textContent}</td></tr>`;
+        });
+        content += `</tbody><tfoot><tr><td colspan="3" style="text-align:right;"><strong>Total</strong></td><td><strong>€${total.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</strong></td></tr></tfoot></table>`;
+        
+        const win = window.open('', 'Print', 'height=600,width=800');
+        win.document.write('<html><head><title>Folha de Lançamento</title></head><body>');
+        win.document.write(content);
+        win.document.write('</body></html>');
+        win.document.close();
+        win.print();
+    }
+
+    async function loadBancos() {
+        const tableBody = document.getElementById('bancosTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+        const snapshot = await db.collection('bancos').orderBy('name').get();
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${d.name}</td>
+                <td>${d.iban || '-'}</td>
+                <td>€${parseFloat(d.balance || 0).toLocaleString('pt-PT')}</td>
+                <td class="actions-cell">
+                    <button onclick="openFormModal('banco', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('bancos', '${doc.id}', d.name, loadBancos)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                </td>
+            `;
+        });
+    }
+    
+    async function loadBancosForDropdown(selectId) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        select.innerHTML = '<option value="">Selecione um banco</option>';
+        const snapshot = await db.collection('bancos').orderBy('name').get();
+        snapshot.forEach(doc => {
+            select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
+        });
+    }
+
+    function getBancoFormHTML() {
+        return `<form id="bancoForm">
+            <label>Nome do Banco</label><input type="text" id="bancoName" required>
+            <label>IBAN</label><input type="text" id="bancoIban">
+            <label>Saldo Inicial</label><input type="number" id="bancoBalance" step="0.01" required>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </div>
+        </form>`;
+    }
+
+    async function handleBancoFormSubmit(id) {
+        const data = {
+            name: document.getElementById('bancoName').value,
+            iban: document.getElementById('bancoIban').value,
+            balance: document.getElementById('bancoBalance').value,
+        };
+        const action = id ? db.collection('bancos').doc(id).update(data) : db.collection('bancos').add(data);
+        await action;
+        closeFormModal();
+        loadBancos();
+    }
+
+    async function populateBancoForm(id) {
+        const doc = await db.collection('bancos').doc(id).get();
+        if (doc.exists) {
+            const d = doc.data();
+            document.getElementById('bancoName').value = d.name;
+            document.getElementById('bancoIban').value = d.iban;
+            document.getElementById('bancoBalance').value = d.balance;
+        }
+    }
+
+    // --- RELATÓRIOS ---
+    let contractTypeChartInstance = null;
+    async function loadRelatoriosData() {
+        const performanceTableBody = document.getElementById('comercialPerformanceTable').querySelector('tbody');
+        performanceTableBody.innerHTML = '<tr><td colspan="3">A calcular...</td></tr>';
+
+        const comerciaisSnapshot = await db.collection('comerciais').get();
+        const contratosSnapshot = await db.collection('contratos').where('fase', '==', 'Ativo').get();
+
+        const performanceData = {};
+        comerciaisSnapshot.forEach(doc => {
+            performanceData[doc.id] = {
+                name: `${doc.data().firstName} ${doc.data().lastName}`,
+                contractCount: 0,
+                totalValue: 0
+            };
+        });
+
+        contratosSnapshot.forEach(doc => {
+            const contrato = doc.data();
+            if (contrato.commercialId && performanceData[contrato.commercialId]) {
+                performanceData[contrato.commercialId].contractCount++;
+                performanceData[contrato.commercialId].totalValue += parseFloat(contrato.valorFinanciado || 0);
+            }
+        });
+
+        performanceTableBody.innerHTML = '';
+        for (const id in performanceData) {
+            const data = performanceData[id];
+            const row = performanceTableBody.insertRow();
+            row.innerHTML = `
+                <td>${data.name}</td>
+                <td>${data.contractCount}</td>
+                <td>€${data.totalValue.toLocaleString('pt-PT')}</td>
+            `;
+        }
+
+        const contractTypes = {};
+        const allContratosSnapshot = await db.collection('contratos').get();
+        allContratosSnapshot.forEach(doc => {
+            const type = doc.data().type || 'Indefinido';
+            contractTypes[type] = (contractTypes[type] || 0) + 1;
+        });
+
+        const ctx = document.getElementById('contractTypeChart').getContext('2d');
+        if (contractTypeChartInstance) contractTypeChartInstance.destroy();
+        contractTypeChartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(contractTypes),
+                datasets: [{
+                    data: Object.values(contractTypes),
+                    backgroundColor: ['#c8b89c', '#6c757d', '#a99a8b', '#d1ccc0', '#8a959d'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    }
+
+    // --- MILESTONES (ETAPAS DO CONTRATO) ---
+    async function loadMilestones(contractId, containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = 'A carregar etapas...';
+        const snapshot = await db.collection('contratos').doc(contractId).collection('milestones').orderBy('createdAt').get();
+        
+        if (snapshot.empty) {
+            container.innerHTML = '<p>Nenhuma etapa definida.</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const item = document.createElement('div');
+            item.className = `milestone-item ${d.completed ? 'completed' : ''}`;
+            item.innerHTML = `
+                <input type="checkbox" id="milestone-${doc.id}" ${d.completed ? 'checked' : ''} onchange="toggleMilestone('${contractId}', '${doc.id}', this.checked)">
+                <label for="milestone-${doc.id}">${d.description}</label>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    async function handleMilestoneSubmit(contractId) {
+        const descInput = document.getElementById('newMilestoneDescription');
+        const ownerInput = document.getElementById('newMilestoneOwner');
+        const dueDateInput = document.getElementById('newMilestoneDueDate');
+        
+        const description = descInput.value.trim();
+        if (!description) return;
+
+        // 1. Criar a etapa (milestone)
+        await db.collection('contratos').doc(contractId).collection('milestones').add({
+            description: description,
+            completed: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // 2. Se houver responsável ou prazo, criar a tarefa associada
+        const owner = ownerInput.value.trim();
+        const dueDate = dueDateInput.value;
+        if (owner || dueDate) {
+            const contractDoc = await db.collection('contratos').doc(contractId).get();
+            const contractData = contractDoc.data();
+            
+            await db.collection('tarefas').add({
+                title: description,
+                owner: owner,
+                dueDate: dueDate,
+                priority: 'Média',
+                status: 'Pendente',
+                clientId: contractData.clientId || '',
+                contractId: contractId,
+            });
+            // Atualizar a lista de tarefas em background
+            loadTasks();
+            loadDashboardData();
+        }
+
+        // Limpar os campos do formulário
+        descInput.value = '';
+        ownerInput.value = '';
+        dueDateInput.value = '';
+        
+        // Recarregar a lista de etapas
+        loadMilestones(contractId, 'milestonesList');
+    }
+
+    async function toggleMilestone(contractId, milestoneId, isCompleted) {
+        await db.collection('contratos').doc(contractId).collection('milestones').doc(milestoneId).update({
+            completed: isCompleted
+        });
+        loadMilestones(contractId, 'milestonesList');
+    }
+
+    // --- WIDGET DE CONTROLO DE DOCUMENTOS ---
+    async function loadDocumentTrackingWidget() {
+        const container = document.getElementById('documentTrackingList');
+        container.innerHTML = '<p>A procurar propostas pendentes...</p>';
+
+        const snapshot = await db.collection('contratos').where('type', '==', 'Crédito').get();
+        
+        const pendingContracts = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (!data.dataEntregaFornecedor || !data.dataEntregaFinanceira) {
+                pendingContracts.push({ id: doc.id, ...data });
+            }
+        });
+
+        if (pendingContracts.length === 0) {
+            container.innerHTML = '<p>Nenhuma entrega de documentos pendente.</p>';
+            return;
+        }
+
+        container.innerHTML = '';
+        const docList = ["Livrete", "Contrato", "DUA", "DAV", "MUA de compra", "MUA de venda", "Extinção de reserva"];
+        
+        pendingContracts.forEach(contract => {
+            const fornecedorName = partnersData.fornecedores[contract.fornecedorId] || 'N/D';
+            const financeiraName = partnersData.financeiras[contract.financeiraId] || 'N/D';
+
+            let checklistFornecedorHTML = docList.map(doc => `
+                <label><input type="checkbox" onchange="updateContractChecklistFromDashboard('${contract.id}', 'checklistDocsFornecedor', '${doc}', this.checked)" 
+                ${(contract.checklistDocsFornecedor || []).includes(doc) ? 'checked' : ''}> ${doc}</label>
+            `).join('');
+            let checklistFinanceiraHTML = docList.map(doc => `
+                <label><input type="checkbox" onchange="updateContractChecklistFromDashboard('${contract.id}', 'checklistDocsFinanceira', '${doc}', this.checked)"
+                ${(contract.checklistDocsFinanceira || []).includes(doc) ? 'checked' : ''}> ${doc}</label>
+            `).join('');
+
+            const item = document.createElement('details');
+            item.className = 'doc-tracking-item';
+            item.innerHTML = `
+                <summary>
+                    <span>Proposta #${contract.numeroProposta || 'N/A'}</span>
+                    <span>${fornecedorName} <i class="ph ph-arrow-right"></i> ${financeiraName}</span>
+                </summary>
+                <div class="doc-tracking-body">
+                    <div>
+                        <h5><i class="ph ph-download-simple"></i> Fornecedor -> THE WAY</h5>
+                        <input type="date" value="${contract.dataEntregaFornecedor || ''}" onchange="updateContractFromDashboard('${contract.id}', 'dataEntregaFornecedor', this.value)">
+                        <div class="checklist">${checklistFornecedorHTML}</div>
+                    </div>
+                    <div>
+                        <h5><i class="ph ph-upload-simple"></i> THE WAY -> Financeira</h5>
+                        <input type="date" value="${contract.dataEntregaFinanceira || ''}" onchange="updateContractFromDashboard('${contract.id}', 'dataEntregaFinanceira', this.value)">
+                        <div class="checklist">${checklistFinanceiraHTML}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    async function updateContractFromDashboard(contractId, field, value) {
+        const updateData = {};
+        updateData[field] = value;
+        await db.collection('contratos').doc(contractId).update(updateData);
+        
+        const doc = await db.collection('contratos').doc(contractId).get();
+        const data = doc.data();
+        if (data.dataEntregaFornecedor && data.dataEntregaFinanceira) {
+            loadDocumentTrackingWidget();
+        }
+    }
+
+    async function updateContractChecklistFromDashboard(contractId, field, docName, isChecked) {
+        const docRef = db.collection('contratos').doc(contractId);
+        if (isChecked) {
+            await docRef.update({
+                [field]: firebase.firestore.FieldValue.arrayUnion(docName)
+            });
+        } else {
+            await docRef.update({
+                [field]: firebase.firestore.FieldValue.arrayRemove(docName)
+            });
+        }
     }
 
   </script>
