@@ -4,45 +4,54 @@
   <meta charset="UTF-8">
   <title>THE WAY - Gestão Completa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonte Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Fontes Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Ícones Phosphor -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- jsPDF para exportar PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root {
-      --color-primary: #c8b89c; /* Beige */
-      --color-primary-dark: #b5a589;
-      --color-secondary: #6c757d;
-      --color-background: #f8f7f4;
-      --color-surface: #ffffff;
-      --color-text-primary: #212529;
-      --color-text-secondary: #6c757d;
-      --color-border: #e9ecef;
-      --color-danger: #e54a4a;
-      --color-success: #198754;
-      --color-warning: #ffc107;
+      --color-primary: #C8B89C; /* Bege Principal */
+      --color-primary-dark: #B5A589;
+      --color-secondary: #212529; /* Preto */
+      --color-background: #F8F7F4; /* Bege muito claro / Fundo */
+      --color-surface: #FFFFFF; /* Branco */
+      --color-text-primary: #212529; /* Preto */
+      --color-text-secondary: #6B7280; /* Cinza para texto secundário */
+      --color-border: #E5E7EB;
+      --color-danger: #EF4444;
+      --color-success: #10B981;
+      --color-warning: #F59E0B;
+      --color-accent: #CAD2D8; /* Cinza Azulado Claro */
     }
     body {
       margin: 0;
       background: var(--color-background);
-      font-family: 'Inter', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       color: var(--color-text-primary);
       font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     .sidebar {
       position: fixed; left: 0; top: 0; bottom: 0;
-      width: 240px; background: var(--color-surface); color: var(--color-text-primary);
-      padding: 1.2em; box-shadow: 2px 0 18px #0000000a;
+      width: 250px; background: var(--color-surface); color: var(--color-text-primary);
+      padding: 1.5em; box-shadow: 2px 0 25px #0000000a;
       display: flex; flex-direction: column; z-index: 100;
       box-sizing: border-box;
       border-right: 1px solid var(--color-border);
     }
-    .sidebar .logo-box { text-align: center; margin: 1.5em 0 2em;}
+    .sidebar .logo-box { text-align: center; margin: 1.5em 0 2.5em;}
     .logo {
-      font-size: 1.5em;
+      font-size: 1.8em;
       font-weight: 700;
+      color: var(--color-primary);
     }
     .sidebar nav {
       flex: 1 1 auto; display: flex; flex-direction: column;
@@ -50,176 +59,139 @@
     }
     .sidebar nav button {
       background: none; border: none; color: var(--color-text-secondary);
-      font-size: 1.05em; font-weight: 500; text-align: left;
-      padding: .8em 1em; border-radius: 8px; cursor: pointer;
-      transition: background .2s, color .2s;
+      font-size: 1em; font-weight: 500; text-align: left;
+      padding: .9em 1.2em; border-radius: 8px; cursor: pointer;
+      transition: background .2s, color .2s, transform .2s;
       letter-spacing: .02em;
       display: flex; align-items: center; gap: .8em;
     }
-    .sidebar nav button i { font-size: 1.3em; }
+    .sidebar nav button i { font-size: 1.4em; }
     .sidebar nav button.active,
     .sidebar nav button:hover {
       background: var(--color-primary);
       color: var(--color-surface);
+      transform: translateX(5px);
     }
     .logout-btn {
-      background: var(--color-primary); color: var(--color-surface);
+      background: var(--color-danger); color: var(--color-surface);
       border: none; border-radius: 8px;
-      padding: .7em 1.7em; font-weight: 700;
-      margin: 1.3em 0 .5em 0; display: block;
+      padding: .8em 1.7em; font-weight: 600;
+      margin: 1.5em 0 .5em 0; display: block;
       cursor: pointer; font-size: 1em;
       transition: background .16s;
+      width: 100%;
     }
-    .logout-btn:hover { background: var(--color-primary-dark); }
-    .main-container { margin-left: 240px; padding: 2em; }
+    .logout-btn:hover { background: #D93737; }
+    .main-container { margin-left: 250px; padding: 2.5em; }
     .main-content { display: none; }
-    .main-content.active { display: block; }
+    .main-content.active { display: block; animation: fadeIn .5s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
     .section-header {
         display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 1.5em; flex-wrap: wrap; gap: 1em;
+        margin-bottom: 2em; flex-wrap: wrap; gap: 1em;
     }
     .section-header h2 {
-        margin: 0; font-size: 1.8em; display: flex; align-items: center; gap: .5em;
+        margin: 0; font-size: 2em; font-weight: 700; display: flex; align-items: center; gap: .5em;
     }
     .header-actions { display: flex; gap: 1em; align-items: center; }
-    .search-bar {
-        padding: .8em 1em; border-radius: 8px; border: 1.5px solid var(--color-border);
+    .search-bar, .filter-bar select, .filter-bar input {
+        padding: .8em 1.2em; border-radius: 8px; border: 1.5px solid var(--color-border);
         font-size: 1em; width: 250px; background: var(--color-surface);
+        transition: border-color .2s, box-shadow .2s;
+    }
+    .search-bar:focus, .filter-bar select:focus, .filter-bar input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(200, 184, 156, 0.2);
     }
     .btn-primary {
         background: var(--color-primary); color: var(--color-surface);
-        border: none; padding: .8em 1.5em; border-radius: 8px;
+        border: none; padding: .9em 1.6em; border-radius: 8px;
         font-weight: 600; font-size: 1em; cursor: pointer;
-        transition: background .2s; display: flex; align-items: center; gap: .5em;
+        transition: background .2s, transform .2s; display: flex; align-items: center; gap: .5em;
+        box-shadow: 0 4px 12px rgba(200, 184, 156, 0.3);
     }
-    .btn-primary:hover { background: var(--color-primary-dark); }
+    .btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-2px); }
     
     /* Table Styles */
     .table-container {
         background: var(--color-surface); border-radius: 12px;
-        padding: 1.5em; box-shadow: 0 4px 20px #0000000a;
+        padding: 1em; box-shadow: 0 4px 25px #0000000a;
         overflow-x: auto;
     }
     .data-table { width: 100%; border-collapse: collapse; }
     .data-table th, .data-table td {
-        padding: 1em; text-align: left;
+        padding: 1.1em 1.2em; text-align: left;
         border-bottom: 1px solid var(--color-border); vertical-align: middle;
     }
     .data-table th {
-        font-weight: 600; font-size: .85em; color: var(--color-text-secondary);
-        text-transform: uppercase; letter-spacing: .05em;
+        font-weight: 600; font-size: .8em; color: var(--color-text-secondary);
+        text-transform: uppercase; letter-spacing: .08em;
     }
     .data-table td { font-size: .95em; }
+    .data-table tbody tr:hover { background-color: #F9FAFB; }
     .data-table tbody tr:last-child td { border-bottom: none; }
-    .actions-cell { white-space: nowrap; }
+    .actions-cell { white-space: nowrap; text-align: right; }
     .actions-cell button {
       background: none; border: none; cursor: pointer;
-      padding: .5em; color: var(--color-text-secondary); transition: color .2s;
+      padding: .5em; color: var(--color-text-secondary); transition: color .2s, transform .2s;
     }
-    .actions-cell button:hover { color: var(--color-primary); }
+    .actions-cell button:hover { color: var(--color-primary); transform: scale(1.1); }
     .actions-cell button.btn-danger:hover { color: var(--color-danger); }
-    .actions-cell i { font-size: 1.3em; }
+    .actions-cell i { font-size: 1.4em; }
 
     /* Modal Styles */
     .modal-overlay {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.5); display: none;
+        background: rgba(17, 24, 39, 0.6); display: none;
         align-items: center; justify-content: center;
-        z-index: 1000; padding: 1em;
+        z-index: 1000; padding: 1em; backdrop-filter: blur(4px);
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active { display: flex; animation: fadeIn .3s; }
     .modal-box {
-        background: var(--color-surface); padding: 2em;
-        border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        background: var(--color-surface); padding: 2.5em;
+        border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         width: 100%; max-width: 800px;
         max-height: 90vh; overflow-y: auto;
+        transform: scale(0.95); opacity: 0;
+        transition: transform .3s ease, opacity .3s ease;
     }
+    .modal-overlay.active .modal-box { transform: scale(1); opacity: 1; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5em; }
-    .modal-header h3 { margin: 0; font-size: 1.5em; }
-    .modal-header .close-btn { background: none; border: none; font-size: 1.8em; cursor: pointer; color: var(--color-text-secondary); }
+    .modal-header h3 { margin: 0; font-size: 1.6em; font-weight: 600; }
+    .modal-header .close-btn { background: #F3F4F6; border: none; font-size: 1.5em; cursor: pointer; color: var(--color-text-secondary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background .2s, color .2s; }
+    .modal-header .close-btn:hover { background: #E5E7EB; color: var(--color-text-primary); }
     .modal-body .row {display:flex; flex-wrap: wrap; gap:1.5em;}
     .modal-body .col {flex:1; min-width: 250px;}
     .modal-body label {font-weight:600;display:block;margin-bottom:.5em; font-size: .9em;}
     .modal-body input, .modal-body select, .modal-body textarea {
-      width: 100%; padding: .8em; border-radius: 8px;
+      width: 100%; padding: .9em 1em; border-radius: 8px;
       border: 1.5px solid var(--color-border); font-size: 1em;
-      margin-bottom: 1em; background: var(--color-background);
-      color: var(--color-text-primary); transition: border .16s;
+      margin-bottom: 1.2em; background: var(--color-background);
+      color: var(--color-text-primary); transition: border .16s, box-shadow .16s;
       box-sizing: border-box;
     }
-    .modal-footer { margin-top: 2em; text-align: right; }
-    .modal-footer button { padding: .8em 2em; }
-    .modal-footer .btn-secondary { background: var(--color-border); color: var(--color-text-primary); margin-right: 1em; }
-
-    /* Details Modal Specifics */
-    #detailsModalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
-    #detailsModalBody h4 { margin-top: 1.5em; margin-bottom: .5em; border-bottom: 1px solid var(--color-border); padding-bottom: .5em; }
-    #interactionHistory, #contractInteractionHistory { max-height: 200px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 1em; }
-    .interaction-item { border-bottom: 1px solid var(--color-border); padding: .8em 0; }
-    .interaction-item:last-child { border-bottom: none; }
-    .interaction-item .date { font-size: .8em; color: var(--color-text-secondary); margin-bottom: .3em; }
-    #interactionForm, #contractInteractionForm { margin-top: 1em; }
-    #documentList { list-style: none; padding: 0; }
-    #documentList li { display: flex; justify-content: space-between; align-items: center; padding: .5em; border-radius: 6px; }
-    #documentList li:hover { background-color: var(--color-background); }
-    #milestonesList .milestone-item { display: flex; align-items: center; gap: .8em; padding: .5em 0;}
-    #milestonesList .milestone-item label { margin-bottom: 0; font-weight: 500; }
-    #milestonesList .milestone-item.completed label { text-decoration: line-through; color: var(--color-text-secondary); }
-
-
+    .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(200, 184, 156, 0.2);
+    }
+    .modal-footer { margin-top: 2em; display: flex; justify-content: flex-end; gap: 1em; }
+    .modal-footer button { padding: .9em 2.2em; }
+    .modal-footer .btn-secondary { background: var(--color-border); color: var(--color-text-primary); box-shadow: none; }
+    .modal-footer .btn-secondary:hover { background: #D1D5DB; }
+    
     /* Dashboard & Reports Styles */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
-    .kpi-card { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
-    .kpi-card .title { font-size: .9em; color: var(--color-text-secondary); margin-bottom: .5em; }
-    .kpi-card .value { font-size: 2.2em; font-weight: 700; }
+    .kpi-card { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 25px #0000000a; transition: transform .2s, box-shadow .2s; }
+    .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px #0000000f; }
+    .kpi-card .title { font-size: .9em; color: var(--color-text-secondary); margin-bottom: .5em; font-weight: 500;}
+    .kpi-card .value { font-size: 2.4em; font-weight: 700; }
     .kpi-card .subtitle { font-size: .8em; color: var(--color-success); }
-    .dashboard-grid, .reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
-    .chart-container, .tasks-container, .report-widget, .document-tracking-container { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 20px #0000000a; }
-    .tasks-list .task-item { display: flex; justify-content: space-between; align-items: center; padding: .8em 0; border-bottom: 1px solid var(--color-border); cursor: pointer; transition: background-color .2s; }
-    .tasks-list .task-item:hover { background-color: var(--color-background); }
-    .tasks-list .task-item:last-child { border-bottom: none; }
-    .task-item .title { font-weight: 600; }
-    .task-item .deadline { font-size: .9em; color: var(--color-danger); }
-    .task-item .urgency-indicator { font-size: 1.5em; color: var(--color-warning); }
+    .dashboard-grid, .reports-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; margin-bottom: 2em; }
+    .chart-container, .tasks-container, .report-widget, .document-tracking-container { background: var(--color-surface); border-radius: 12px; padding: 1.5em; box-shadow: 0 4px 25px #0000000a; }
     
-    /* Document Tracking Widget */
-    .doc-tracking-item summary {
-        font-weight: 600;
-        cursor: pointer;
-        padding: .8em;
-        border-radius: 8px;
-        transition: background-color .2s;
-        display: flex; justify-content: space-between;
-    }
-    .doc-tracking-item summary:hover { background-color: var(--color-background); }
-    .doc-tracking-item[open] summary { background-color: var(--color-background); }
-    .doc-tracking-body { padding: 1em; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; }
-    .doc-tracking-body h5 { margin: 0 0 .5em 0; font-size: .9em; display: flex; align-items: center; gap: .5em; }
-    .doc-tracking-body input[type="date"] { padding: .5em; font-size: .9em; margin-bottom: 1em; }
-    .doc-tracking-body .checklist { font-size: .9em; display: flex; flex-direction: column; gap: .5em; }
-    .doc-tracking-body .checklist label { font-weight: 400; }
-
-
-    /* Tabs Styles */
-    .tabs { display: flex; border-bottom: 1px solid var(--color-border); margin-bottom: 1.5em; }
-    .tabs button {
-        background: none; border: none; padding: 1em 1.5em; cursor: pointer;
-        font-size: 1em; font-weight: 500; color: var(--color-text-secondary);
-        border-bottom: 3px solid transparent;
-    }
-    .tabs button.active {
-        color: var(--color-primary);
-        border-bottom-color: var(--color-primary);
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Dynamic Form Sections */
-    .service-details { display: none; margin-top: 1.5em; border-top: 1px solid var(--color-border); padding-top: 1.5em; }
-    .checklist { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .8em; }
-    .checklist label { font-weight: 500; display: flex; align-items: center; gap: .5em; margin-bottom: 0; }
-    .checklist input { margin-bottom: 0; }
-
     /* Login Styles */
     #login-container {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -228,8 +200,81 @@
     }
     #login-section {
         background: var(--color-surface); padding: 3em; border-radius: 15px;
-        box-shadow: 0 10px 30px #0000001a; width: 100%; max-width: 400px;
+        box-shadow: 0 10px 40px #0000001a; width: 100%; max-width: 400px; text-align: center;
     }
+    #login-section h2 { font-size: 2em; margin-bottom: 1.5em; }
+    #login-section label { display: none; }
+    #login-section input {
+        width: 100%; padding: 1em; margin-bottom: 1em; box-sizing: border-box;
+        border-radius: 8px; border: 1.5px solid var(--color-border); font-size: 1em;
+    }
+    
+    /* Toast Notification Styles */
+    #toast-container {
+        position: fixed;
+        bottom: 2em;
+        right: 2em;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+    }
+    .toast {
+        padding: 1em 1.5em;
+        border-radius: 8px;
+        color: #fff;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: opacity .4s ease, transform .4s ease;
+    }
+    .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .toast.success { background-color: var(--color-success); }
+    .toast.error { background-color: var(--color-danger); }
+    .toast.info { background-color: var(--color-secondary); }
+
+    /* Outros estilos específicos... (mantidos do original para brevidade) */
+    #detailsModalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
+    #detailsModalBody h4 { margin-top: 1.5em; margin-bottom: .5em; border-bottom: 1px solid var(--color-border); padding-bottom: .5em; }
+    #interactionHistory, #contractInteractionHistory, #partnerInteractionHistory { max-height: 200px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 1em; background: #F9FAFB; }
+    .interaction-item { border-bottom: 1px solid var(--color-border); padding: .8em 0; }
+    .interaction-item:last-child { border-bottom: none; }
+    .interaction-item .date { font-size: .8em; color: var(--color-text-secondary); margin-bottom: .3em; }
+    #documentList { list-style: none; padding: 0; margin-top: 1em; max-height: 200px; overflow-y: auto; }
+    #documentList li, #movimentosList li { display: flex; justify-content: space-between; align-items: center; padding: .7em .5em; border-radius: 6px; transition: background-color .2s; }
+    #documentList li:hover, #movimentosList li:hover { background-color: var(--color-background); }
+    #documentList a, #movimentosList a { text-decoration: none; color: var(--color-primary); font-weight: 500; display: flex; align-items: center; gap: .5em;}
+    .tabs { display: flex; border-bottom: 2px solid var(--color-border); margin-bottom: 1.5em; }
+    .tabs button { background: none; border: none; padding: 1em 1.5em; cursor: pointer; font-size: 1em; font-weight: 600; color: var(--color-text-secondary); border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .tabs button.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .service-details { display: none; margin-top: 1.5em; border-top: 1px solid var(--color-border); padding-top: 1.5em; }
+    .tasks-list .task-item { display: flex; justify-content: space-between; align-items: center; padding: .8em 0; border-bottom: 1px solid var(--color-border); cursor: pointer; transition: background-color .2s; }
+    .tasks-list .task-item:hover { background-color: var(--color-background); }
+    .tasks-list .task-item:last-child { border-bottom: none; }
+    .task-item .title { font-weight: 600; }
+    .task-item .deadline { font-size: .9em; color: var(--color-danger); }
+    .task-item .urgency-indicator { font-size: 1.5em; color: var(--color-warning); }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 1em; margin-bottom: 1.5em; background: var(--color-surface); padding: 1em; border-radius: 12px; }
+    .doc-tracking-item summary { font-weight: 600; cursor: pointer; padding: .8em; border-radius: 8px; transition: background-color .2s; display: flex; justify-content: space-between; }
+    .doc-tracking-item summary:hover { background-color: var(--color-background); }
+    .doc-tracking-item[open] summary { background-color: var(--color-background); }
+    .doc-tracking-body { padding: 1em; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; }
+    .doc-tracking-body h5 { margin: 0 0 .5em 0; font-size: .9em; display: flex; align-items: center; gap: .5em; }
+    .doc-tracking-body input[type="date"] { padding: .5em; font-size: .9em; margin-bottom: 1em; }
+    .doc-tracking-body .checklist { font-size: .9em; display: flex; flex-direction: column; gap: .5em; }
+    .doc-tracking-body .checklist label { font-weight: 400; }
+    #milestonesList .milestone-item { display: flex; align-items: center; gap: .8em; padding: .5em 0;}
+    #milestonesList .milestone-item label { margin-bottom: 0; font-weight: 500; }
+    #milestonesList .milestone-item.completed label { text-decoration: line-through; color: var(--color-text-secondary); }
+    #upload-form { margin-top: 1em; display: flex; gap: 1em; }
+    #upload-form input[type="file"] { flex-grow: 1; }
+    #upload-progress { width: 100%; margin-top: .5em; display: none; }
 
     @media(max-width:1200px){
         .dashboard-grid, .reports-grid { grid-template-columns: 1fr; }
@@ -258,15 +303,15 @@
   <!-- ECRÃ DE LOGIN -->
   <div id="login-container">
     <div id="login-section">
-      <h2>Entrar</h2>
+      <div class="logo">THE WAY</div>
       <form id="loginForm">
-        <label>Email</label>
-        <input class="input" type="email" id="email" required />
-        <label>Password</label>
-        <input class="input" type="password" id="password" required minlength="6" />
-        <button type="submit" class="btn-primary" style="width: 100%;">Entrar</button>
+        <label for="email">Email</label>
+        <input class="input" type="email" id="email" required placeholder="Email" />
+        <label for="password">Password</label>
+        <input class="input" type="password" id="password" required minlength="6" placeholder="Password" />
+        <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1em;">Entrar</button>
       </form>
-      <div id="loginError" style="color: var(--color-danger); margin-top:1em; text-align: center;"></div>
+      <div id="loginError" style="color: var(--color-danger); margin-top:1em; text-align: center; font-weight: 500;"></div>
     </div>
   </div>
 
@@ -278,19 +323,19 @@
       </div>
       <nav>
         <button id="nav-dashboard" onclick="showSection('dashboard')"><i class="ph-fill ph-squares-four"></i> <span>Dashboard</span></button>
-        <button id="nav-clientes" onclick="showSection('clientes')"><i class="ph-fill ph-users"></i> <span>Gestão de Clientes</span></button>
-        <button id="nav-contratos" onclick="showSection('contratos')"><i class="ph-fill ph-file-text"></i> <span>Gestão de Contratos</span></button>
+        <button id="nav-clientes" onclick="showSection('clientes')"><i class="ph-fill ph-users"></i> <span>Clientes</span></button>
+        <button id="nav-contratos" onclick="showSection('contratos')"><i class="ph-fill ph-file-text"></i> <span>Contratos</span></button>
         <button id="nav-parceiros" onclick="showSection('parceiros')"><i class="ph-fill ph-handshake"></i> <span>Parceiros</span></button>
-        <button id="nav-tarefas" onclick="showSection('tarefas')"><i class="ph-fill ph-list-checks"></i> <span>Tarefas / Pendentes</span></button>
-        <button id="nav-comercial" onclick="showSection('comercial')"><i class="ph-fill ph-briefcase"></i> <span>Gestão de Equipa</span></button>
-        <button id="nav-financeira" onclick="showSection('financeira')"><i class="ph-fill ph-bank"></i> <span>Gestão Financeira</span></button>
+        <button id="nav-tarefas" onclick="showSection('tarefas')"><i class="ph-fill ph-list-checks"></i> <span>Tarefas</span></button>
+        <button id="nav-comercial" onclick="showSection('comercial')"><i class="ph-fill ph-briefcase"></i> <span>Equipa</span></button>
+        <button id="nav-financeira" onclick="showSection('financeira')"><i class="ph-fill ph-bank"></i> <span>Financeiro</span></button>
         <button id="nav-relatorios" onclick="showSection('relatorios')"><i class="ph-fill ph-chart-bar"></i> <span>Relatórios</span></button>
       </nav>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
+      <button id="logoutBtn" class="logout-btn">Terminar Sessão</button>
     </div>
 
     <div class="main-container">
-      <!-- Dashboard -->
+       <!-- Dashboard -->
       <div id="dashboard-section" class="main-content">
           <div class="section-header">
               <h2>Dashboard</h2>
@@ -319,7 +364,6 @@
               </div>
           </div>
 
-          <!-- NOVO WIDGET DE CONTROLO DE DOCUMENTOS -->
           <div class="document-tracking-container" style="margin-bottom: 2em;">
               <h4>Controlo de Documentos de Crédito</h4>
               <div id="documentTrackingList"></div>
@@ -359,7 +403,7 @@
         <div class="section-header">
           <h2><i class="ph ph-file-text"></i>Gestão de Contratos</h2>
           <div class="header-actions">
-            <input type="search" id="search-contratos" class="search-bar" placeholder="Pesquisar...">
+            <input type="search" id="search-contratos" class="search-bar" placeholder="Pesquisar por Cliente, Tipo...">
             <button class="btn-primary" onclick="openFormModal('contrato')"><i class="ph ph-plus"></i> Adicionar Novo</button>
           </div>
         </div>
@@ -398,7 +442,6 @@
               <button onclick="openPartnerTab(event, 'seguradoras')">Seguradoras</button>
           </div>
 
-          <!-- Tab Fornecedores -->
           <div id="fornecedores" class="tab-content active">
               <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
                   <button class="btn-primary" onclick="openFormModal('fornecedor')"><i class="ph ph-plus"></i> Adicionar Fornecedor</button>
@@ -410,7 +453,6 @@
                   </table>
               </div>
           </div>
-          <!-- Tab Financeiras -->
           <div id="financeiras" class="tab-content">
               <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
                   <button class="btn-primary" onclick="openFormModal('financeira')"><i class="ph ph-plus"></i> Adicionar Financeira</button>
@@ -422,7 +464,6 @@
                   </table>
               </div>
           </div>
-          <!-- Tab Seguradoras -->
           <div id="seguradoras" class="tab-content">
                <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
                   <button class="btn-primary" onclick="openFormModal('seguradora')"><i class="ph ph-plus"></i> Adicionar Seguradora</button>
@@ -459,12 +500,12 @@
         </div>
         <div class="tabs" id="finance-tabs">
             <button class="active" onclick="openFinanceTab(event, 'financeira-dashboard')">Dashboard Mensal</button>
+            <button onclick="openFinanceTab(event, 'financeira-comissoes')">Comissões</button>
             <button onclick="openFinanceTab(event, 'financeira-despesas')">Despesas</button>
             <button onclick="openFinanceTab(event, 'financeira-por-conciliar')">Por Conciliar</button>
-            <button onclick="openFinanceTab(event, 'financeira-banco')">Banco</button>
+            <button onclick="openFinanceTab(event, 'financeira-banco')">Contas Bancárias</button>
         </div>
 
-        <!-- Tab Financeira Dashboard -->
         <div id="financeira-dashboard" class="tab-content active">
             <div class="kpi-grid">
                 <div class="kpi-card">
@@ -497,8 +538,19 @@
                 </div>
             </div>
         </div>
+        
+        <div id="financeira-comissoes" class="tab-content">
+            <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+                <button class="btn-primary" onclick="openComissaoModal()"><i class="ph ph-check-circle"></i> Liquidar Comissões</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table" id="comissoesTable">
+                    <thead><tr><th><input type="checkbox" onchange="toggleAllComissoes(this.checked)"></th><th>Paga por</th><th>Mês Referência</th><th>Nº Contratos</th><th>Valor Total</th><th>Estado</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
 
-        <!-- Tab Financeira Despesas -->
         <div id="financeira-despesas" class="tab-content">
             <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
                 <button class="btn-primary" onclick="openFormModal('despesa')"><i class="ph ph-plus"></i> Adicionar Despesa</button>
@@ -511,13 +563,11 @@
             </div>
         </div>
 
-        <!-- Tab Financeira Por Conciliar -->
         <div id="financeira-por-conciliar" class="tab-content">
             <div class="header-actions" style="margin-bottom: 1.5em; justify-content: space-between; align-items: center;">
                 <h3>Despesas por Conciliar</h3>
                 <div class="header-actions">
                     <button class="btn-primary" onclick="openConciliarModal()"><i class="ph ph-check-square"></i> Conciliar Selecionadas</button>
-                    <button class="btn-secondary" style="padding: .8em;" onclick="exportarLancamento()" title="Exportar Lançamento"><i class="ph ph-export"></i></button>
                 </div>
             </div>
             <div class="table-container">
@@ -528,16 +578,29 @@
             </div>
         </div>
         
-        <!-- Tab Financeira Banco -->
         <div id="financeira-banco" class="tab-content">
-            <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
-                <button class="btn-primary" onclick="openFormModal('banco')"><i class="ph ph-plus"></i> Adicionar Conta</button>
+             <div class="tabs">
+                <button class="active" onclick="openBancoSubTab(event, 'contas')">Contas</button>
+                <button onclick="openBancoSubTab(event, 'movimentos')">Movimentos</button>
             </div>
-            <div class="table-container">
-                <table class="data-table" id="bancosTable">
-                    <thead><tr><th>Nome do Banco</th><th>IBAN</th><th>Saldo</th><th>Ações</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            <div id="contas" class="tab-content active">
+                <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="openFormModal('banco')"><i class="ph ph-plus"></i> Adicionar Conta</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="bancosTable">
+                        <thead><tr><th>Nome do Banco</th><th>IBAN</th><th>Saldo</th><th>Estado</th><th>Ações</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="movimentos" class="tab-content">
+                <div class="table-container">
+                    <table class="data-table" id="movimentosTable">
+                      <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Tipo</th><th>Documento</th></tr></thead>
+                      <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
       </div>
@@ -545,8 +608,28 @@
       <!-- Relatórios -->
       <div id="relatorios-section" class="main-content">
         <div class="section-header">
-          <h2><i class="ph ph-chart-bar"></i>Relatórios</h2>
+          <h2><i class="ph ph-chart-bar"></i>Relatórios e Exportação</h2>
         </div>
+        
+        <div class="report-widget">
+            <h4>Exportar Mapas</h4>
+            <div class="filter-bar">
+                <select id="reportType">
+                    <option value="comissoes">Mapa de Comissões</option>
+                    <option value="producao">Mapa de Produção Interno</option>
+                    <option value="freelance">Mapa de Freelance</option>
+                    <option value="pendentes">Mapa de Pendentes</option>
+                </select>
+                <input type="date" id="reportStartDate">
+                <input type="date" id="reportEndDate">
+                <select id="reportFornecedor"><option value="">Todos Fornecedores</option></select>
+                <select id="reportComercial"><option value="">Todos Comerciais</option></select>
+                <select id="reportFinanceira"><option value="">Todas Financeiras</option></select>
+                <input type="text" id="reportFreelancer" placeholder="Nome do Freelancer" style="display:none;">
+                <button class="btn-primary" onclick="exportReport()"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+            </div>
+        </div>
+
         <div class="reports-grid">
             <div class="report-widget">
                 <h4>Desempenho por Comercial</h4>
@@ -563,7 +646,6 @@
             </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -577,7 +659,6 @@
   <div id="confirmModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 400px;"><p id="confirmModalText"></p><div class="modal-footer" style="text-align: center;"><button id="confirmModalNo" class="btn-secondary">Não</button><button id="confirmModalYes" class="btn-primary">Sim</button></div></div>
   </div>
-   <!-- MODAL DE CONCILIAÇÃO -->
   <div id="conciliarModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 450px;">
         <div class="modal-header"><h3>Conciliar Despesas</h3><button class="close-btn" onclick="closeConciliarModal()">&times;</button></div>
@@ -590,17 +671,42 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn-secondary" onclick="closeConciliarModal()">Cancelar</button>
-            <button type="button" class="btn-primary" onclick="conciliarDespesasEmMassa()">Confirmar</button>
+            <button type="button" class="btn-primary" onclick="conciliarDespesasEmMassa()">Confirmar e Gerar PDF</button>
+        </div>
+    </div>
+  </div>
+   <div id="comissaoModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 500px;">
+        <div class="modal-header"><h3>Liquidar Comissões</h3><button class="close-btn" onclick="closeComissaoModal()">&times;</button></div>
+        <div class="modal-body">
+            <p>Insira os dados para liquidar as <strong id="comissaoCount"></strong> comissão(ões) selecionada(s).</p>
+            <div class="row">
+              <div class="col"><label>Nº da Fatura</label><input type="text" id="comissaoFatura" required></div>
+              <div class="col"><label>Data de Pagamento</label><input type="date" id="comissaoDataPagamento" required></div>
+            </div>
+            <label>Banco de Recebimento</label><select id="comissaoBanco" required></select>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="closeComissaoModal()">Cancelar</button>
+            <button type="button" class="btn-primary" onclick="liquidarComissoes()">Confirmar Liquidação</button>
         </div>
     </div>
   </div>
 
-  <!-- FIREBASE SDKS -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
 
-  <script>
+  <!-- FIREBASE SDKS (MODULAR) -->
+  <script type="module">
+    // Importações do Firebase v9+ Modular SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+    // Inicialização do jsPDF
+    const { jsPDF } = window.jspdf;
+
     const firebaseConfig = {
       apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw",
       authDomain: "tw25-1dbb3.firebaseapp.com",
@@ -610,37 +716,65 @@
       appId: "1:995776920444:web:7866264b9f4d74bedac2f9"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    // Inicialização dos serviços Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
     // --- LÓGICA DA APLICAÇÃO ---
-    let currentUserData = null; // Armazena os dados do utilizador logado (incluindo a função)
-    let partnersData = {}; // Cache para dados dos parceiros (fornecedores, financeiras, etc.)
+    let currentUserData = null; 
+    let partnersData = {}; 
+    let currentFormSubmitHandler = null;
+    let creditChartInstance = null;
+    let contractTypeChartInstance = null;
 
-    auth.onAuthStateChanged(async user => {
+    // --- Sistema de Notificações Toast ---
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    container.removeChild(toast);
+                }
+            }, 400);
+        }, 3500);
+    }
+    
+    // --- Autenticação e UI ---
+    onAuthStateChanged(auth, async user => {
       const loginContainer = document.getElementById('login-container');
       const appContainer = document.getElementById('app-container');
       if (user) {
-        // Encontrar o perfil do utilizador na coleção 'comerciais' pelo email
-        const comecialSnapshot = await db.collection('comerciais').where('email', '==', user.email).limit(1).get();
+        const q = query(collection(db, 'comerciais'), where('email', '==', user.email), limit(1));
+        const comecialSnapshot = await getDocs(q);
+        
         if (!comecialSnapshot.empty) {
             const doc = comecialSnapshot.docs[0];
             currentUserData = { id: doc.id, ...doc.data() };
         } else {
-            // Fallback: se não encontrar perfil, assume Administrador (não ideal para produção)
             currentUserData = { id: user.uid, email: user.email, role: 'Administrador', firstName: 'Admin' };
             console.warn("Utilizador autenticado mas sem perfil na coleção 'comerciais'. A assumir função de Administrador.");
         }
         
-        // Esconder/mostrar secções com base na função
         setupUIVisibility();
-        await preloadPartnerData(); // Carregar dados dos parceiros para cache
+        await preloadPartnerData(); 
 
         loginContainer.style.display = 'none';
         appContainer.style.display = 'block';
         showSection('dashboard');
         loadAllData();
+        setupEventListeners();
       } else {
         currentUserData = null;
         loginContainer.style.display = 'flex';
@@ -661,23 +795,21 @@
       document.getElementById('loginError').textContent = '';
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      auth.signInWithEmailAndPassword(email, password)
+      signInWithEmailAndPassword(auth, email, password)
         .catch(err => {
             document.getElementById('loginError').textContent = "Login falhou. Verifique os seus dados.";
+            showToast("Login falhou. Verifique os seus dados.", "error");
         });
     };
-    document.getElementById('logoutBtn').onclick = () => auth.signOut();
+    document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-    function showSection(sectionId) {
-        document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
-        document.getElementById(sectionId + '-section').classList.add('active');
-        document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
-        document.getElementById('nav-' + sectionId).classList.add('active');
-        
-        // Carrega dados específicos da secção quando é aberta
-        if (sectionId === 'dashboard') loadDashboardData();
-        if (sectionId === 'financeira') loadFinanceiraModule();
-        if (sectionId === 'relatorios') loadRelatoriosData();
+    function setupEventListeners() {
+        document.getElementById('search-clientes').addEventListener('input', (e) => loadClients(e.target.value));
+        document.getElementById('search-contratos').addEventListener('input', (e) => loadContracts(e.target.value));
+        document.getElementById('reportType').addEventListener('change', (e) => {
+            const freelancerInput = document.getElementById('reportFreelancer');
+            freelancerInput.style.display = e.target.value === 'freelance' ? 'block' : 'none';
+        });
     }
 
     function loadAllData() {
@@ -688,15 +820,29 @@
         if (currentUserData && currentUserData.role === 'Administrador') {
             loadComerciais();
         }
-        loadDashboardData(); // Carrega o dashboard por defeito
+        loadDashboardData();
+    }
+    
+    // --- Funções Globais (Navegação, Modais) ---
+    // Expostas globalmente para que os `onclick` no HTML funcionem com `script type="module"`.
+    const showSection = window.showSection = (sectionId) => {
+        document.querySelectorAll('.main-content').forEach(s => s.classList.remove('active'));
+        document.getElementById(sectionId + '-section').classList.add('active');
+        document.querySelectorAll('.sidebar nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('nav-' + sectionId).classList.add('active');
+        
+        if (sectionId === 'dashboard') loadDashboardData();
+        if (sectionId === 'financeira') loadFinanceiraModule();
+        if (sectionId === 'relatorios') loadRelatoriosData();
     }
 
-    // --- MODAIS ---
     const formModal = document.getElementById('formModal');
     const detailsModal = document.getElementById('detailsModal');
-    let currentFormSubmitHandler = null;
+    const confirmModal = document.getElementById('confirmModal');
+    const conciliarModal = document.getElementById('conciliarModal');
+    const comissaoModal = document.getElementById('comissaoModal');
 
-    async function openFormModal(type, id = null) {
+    const openFormModal = window.openFormModal = async (type, id = null) => {
         document.getElementById('formModalTitle').textContent = `${id ? 'Editar' : 'Adicionar'} ${type.charAt(0).toUpperCase() + type.slice(1)}`;
         const formModalBody = document.getElementById('formModalBody');
         formModalBody.innerHTML = ''; 
@@ -715,7 +861,6 @@
         }
         formModalBody.innerHTML = formHTML;
 
-        // Pós-renderização e carregamento de dados para formulários
         if (id) {
             if (type === 'cliente') await populateClientForm(id);
             if (type === 'contrato') await loadContractDropdowns(() => populateContractForm(id));
@@ -758,7 +903,7 @@
         formModal.classList.add('active');
     }
 
-    function closeFormModal() {
+    const closeFormModal = window.closeFormModal = () => {
         const form = document.getElementById('formModalBody').querySelector('form');
         if (form && currentFormSubmitHandler) {
             form.removeEventListener('submit', currentFormSubmitHandler);
@@ -766,16 +911,17 @@
         formModal.classList.remove('active');
     }
     
-    async function openDetailsModal(type, id) {
+    const openDetailsModal = window.openDetailsModal = async (type, id, collectionName) => {
         const detailsModalTitle = document.getElementById('detailsModalTitle');
         const detailsModalBody = document.getElementById('detailsModalBody');
         detailsModalBody.innerHTML = 'A carregar...';
         detailsModal.classList.add('active');
 
         if (type === 'cliente') {
-            const doc = await db.collection('clientes').doc(id).get();
-            if (doc.exists) {
-                const d = doc.data();
+            const docRef = doc(db, 'clientes', id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const d = docSnap.data();
                 detailsModalTitle.textContent = `Detalhes de: ${d.name}`;
                 detailsModalBody.innerHTML = `
                     <div class="details-grid">
@@ -785,7 +931,12 @@
                         </div>
                         <div>
                             <h4>Documentos Associados</h4>
-                            <p><i>(Funcionalidade de upload a ser implementada)</i></p>
+                            <form id="upload-form">
+                                <input type="file" id="file-input" required>
+                                <button type="submit" class="btn-primary" style="padding: .5em 1em;"><i class="ph ph-upload-simple"></i></button>
+                            </form>
+                            <progress id="upload-progress" value="0" max="100"></progress>
+                            <ul id="documentList"></ul>
                         </div>
                     </div>
                     <h4>Contratos Associados</h4>
@@ -801,6 +952,7 @@
                 
                 loadAssociatedContracts(id);
                 loadInteractions('clientes', id, 'interactionHistory');
+                loadDocuments('clientes', id, 'documentList');
 
                 document.getElementById('interactionForm').onsubmit = (e) => {
                     e.preventDefault();
@@ -808,11 +960,22 @@
                     handleInteractionSubmit('clientes', id, note, 'interactionHistory');
                     document.getElementById('newInteractionNote').value = '';
                 };
+
+                document.getElementById('upload-form').onsubmit = (e) => {
+                    e.preventDefault();
+                    const fileInput = document.getElementById('file-input');
+                    const file = fileInput.files[0];
+                    if (file) {
+                        handleFileUpload('clientes', id, file);
+                    }
+                };
+
             }
         } else if (type === 'contrato') {
-            const doc = await db.collection('contratos').doc(id).get();
-            if (doc.exists) {
-                const d = doc.data();
+            const docRef = doc(db, 'contratos', id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const d = docSnap.data();
                 detailsModalTitle.textContent = `Detalhes do Contrato: ${d.type}`;
                 detailsModalBody.innerHTML = `
                     <div class="details-grid">
@@ -865,12 +1028,45 @@
                     document.getElementById('newContractInteractionNote').value = '';
                 };
             }
+        } else if (type === 'partner' && collectionName) {
+            const docRef = doc(db, collectionName, id);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const d = docSnap.data();
+                detailsModalTitle.textContent = `Detalhes de: ${d.name}`;
+                let detailsHTML = '<h4>Dados Gerais</h4>';
+                for (const [key, value] of Object.entries(d)) {
+                    if (value) {
+                       detailsHTML += `<p><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value}</p>`;
+                    }
+                }
+
+                detailsModalBody.innerHTML = `
+                    <div>${detailsHTML}</div>
+                    <hr>
+                    <h4>Histórico de Interações</h4>
+                    <div id="partnerInteractionHistory"></div>
+                    <form id="partnerInteractionForm">
+                        <label>Adicionar Nova Interação</label>
+                        <textarea id="newPartnerInteractionNote" rows="3" required></textarea>
+                        <div class="modal-footer" style="margin-top: 1em; padding: 0;"><button type="submit" class="btn-primary">Adicionar</button></div>
+                    </form>
+                `;
+                
+                loadInteractions(collectionName, id, 'partnerInteractionHistory');
+
+                document.getElementById('partnerInteractionForm').onsubmit = (e) => {
+                    e.preventDefault();
+                    const note = document.getElementById('newPartnerInteractionNote').value;
+                    handleInteractionSubmit(collectionName, id, note, 'partnerInteractionHistory');
+                    document.getElementById('newPartnerInteractionNote').value = '';
+                };
+            }
         }
     }
 
-    function closeDetailsModal() { detailsModal.classList.remove('active'); }
+    const closeDetailsModal = window.closeDetailsModal = () => { detailsModal.classList.remove('active'); }
 
-    const confirmModal = document.getElementById('confirmModal');
     let confirmCallback = null;
     function showConfirmModal(message, callback) {
         document.getElementById('confirmModalText').textContent = message;
@@ -884,15 +1080,14 @@
     document.getElementById('confirmModalNo').onclick = () => { confirmModal.classList.remove('active'); };
 
     // --- DASHBOARD ---
-    let creditChartInstance = null;
     async function loadDashboardData() {
         const today = new Date();
         document.getElementById('dashboard-update-time').textContent = `Última atualização: hoje às ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
 
         loadDocumentTrackingWidget();
 
-        // KPIs
-        const contractsSnapshot = await db.collection('contratos').where('fase', '==', 'Ativo').get();
+        const contractsQuery = query(collection(db, 'contratos'), where('fase', '==', 'Ativo'));
+        const contractsSnapshot = await getDocs(contractsQuery);
         let creditVolume = 0;
         let closedInsurances = 0;
         let monthlyCreditData = new Array(6).fill(0);
@@ -919,32 +1114,31 @@
         document.getElementById('kpi-credit-volume').textContent = `€${creditVolume.toLocaleString('pt-PT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         document.getElementById('kpi-closed-insurances').textContent = closedInsurances;
 
-        const tasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
+        const pendingTasksQuery = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
+        const tasksSnapshot = await getDocs(pendingTasksQuery);
         document.getElementById('kpi-pending-tasks').textContent = tasksSnapshot.size;
         
-        const allTasksSnapshot = await db.collection('tarefas').get();
-        const completedTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Concluído').get();
+        const allTasksSnapshot = await getDocs(collection(db, 'tarefas'));
+        const completedTasksQuery = query(collection(db, 'tarefas'), where('status', '==', 'Concluído'));
+        const completedTasksSnapshot = await getDocs(completedTasksQuery);
         const resolutionRate = allTasksSnapshot.size > 0 ? Math.round((completedTasksSnapshot.size / allTasksSnapshot.size) * 100) : 0;
         document.getElementById('kpi-resolution-rate').textContent = `${resolutionRate}%`;
 
-        // Lista de Tarefas
         const dashboardTasksList = document.getElementById('dashboardTasksList');
         dashboardTasksList.innerHTML = '';
-        const pendingTasksSnapshot = await db.collection('tarefas').where('status', '==', 'Pendente').get();
         
         let tasks = [];
-        pendingTasksSnapshot.forEach(doc => {
+        tasksSnapshot.forEach(doc => {
             tasks.push({ id: doc.id, ...doc.data() });
         });
 
-        // Ordenar tarefas por data de vencimento (no lado do cliente)
         tasks.sort((a, b) => {
             if (!a.dueDate) return 1;
             if (!b.dueDate) return -1;
             return new Date(a.dueDate) - new Date(b.dueDate);
         });
 
-        const recentTasks = tasks.slice(0, 5); // Obter as 5 mais recentes
+        const recentTasks = tasks.slice(0, 5); 
 
         if (recentTasks.length === 0) {
             dashboardTasksList.innerHTML = '<p>Nenhuma tarefa pendente.</p>';
@@ -971,7 +1165,6 @@
             });
         }
         
-        // Gráfico Dinâmico
         const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         let labels = [];
         for (let i = 5; i >= 0; i--) {
@@ -998,17 +1191,18 @@
 
     // --- PARCEIROS ---
     async function preloadPartnerData() {
-        const partnerTypes = ['fornecedores', 'financeiras', 'seguradoras'];
+        const partnerTypes = ['fornecedores', 'financeiras', 'seguradoras', 'comerciais', 'clientes'];
         for (const type of partnerTypes) {
             partnersData[type] = {};
-            const snapshot = await db.collection(type).get();
+            const snapshot = await getDocs(collection(db, type));
             snapshot.forEach(doc => {
-                partnersData[type][doc.id] = doc.data().name;
+                const data = doc.data();
+                partnersData[type][doc.id] = data.name || `${data.firstName} ${data.lastName}`;
             });
         }
     }
 
-    function openPartnerTab(evt, tabName) {
+    const openPartnerTab = window.openPartnerTab = (evt, tabName) => {
         document.querySelectorAll('#parceiros-section .tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('#parceiros-section .tabs button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
@@ -1019,13 +1213,14 @@
         loadPartnerData('fornecedores');
         loadPartnerData('financeiras');
         loadPartnerData('seguradoras');
-        await preloadPartnerData(); // Recarregar cache se houver alterações
+        await preloadPartnerData(); 
     }
     
     async function loadPartnerData(type) {
         const tableBody = document.getElementById(`${type}Table`).querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection(type).orderBy('name').get();
+        const q = query(collection(db, type), orderBy('name'));
+        const snapshot = await getDocs(q);
         snapshot.forEach(doc => {
             const d = doc.data();
             const row = tableBody.insertRow();
@@ -1037,36 +1232,49 @@
             } else if (type === 'seguradoras') {
                 cells = `<td>${d.name}</td><td>${d.commercialName}</td><td>${d.commercialContact}</td><td>${d.commercialEmail}</td>`;
             }
-            row.innerHTML = `${cells}<td class="actions-cell"><button onclick="openFormModal('${type.slice(0, -1)}', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button><button class="btn-danger" onclick="deleteItem('${type}', '${doc.id}', '${d.name}', loadPartners)" title="Eliminar"><i class="ph ph-trash"></i></button></td>`;
+            row.innerHTML = `${cells}<td class="actions-cell">
+                <button onclick="openDetailsModal('partner', '${doc.id}', '${type}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+                <button onclick="openFormModal('${type.slice(0, -1)}', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn-danger" onclick="deleteItem('${type}', '${doc.id}', '${d.name}', loadPartners)" title="Eliminar"><i class="ph ph-trash"></i></button>
+            </td>`;
         });
     }
     
     async function handlePartnerFormSubmit(type, id) {
         let data = {};
-        if (type === 'fornecedores') {
+        if (type === 'fornecedor') {
             data = {
                 name: document.getElementById('partnerName').value, nif: document.getElementById('partnerNif').value, iban: document.getElementById('partnerIban').value, address: document.getElementById('partnerAddress').value, postalCode: document.getElementById('partnerPostalCode').value, city: document.getElementById('partnerCity').value, phone: document.getElementById('partnerPhone').value, email: document.getElementById('partnerEmail').value, cae: document.getElementById('partnerCae').value, capital: document.getElementById('partnerCapital').value, contactPerson: document.getElementById('partnerContactPerson').value, equipment: document.getElementById('partnerEquipment').value
             };
-        } else if (type === 'financeiras') {
+        } else if (type === 'financeira') {
             data = {
                 name: document.getElementById('partnerName').value, address: document.getElementById('partnerAddress').value, nif: document.getElementById('partnerNif').value, commercialName: document.getElementById('partnerCommercialName').value, commercialDob: document.getElementById('partnerCommercialDob').value, commercialContact: document.getElementById('partnerCommercialContact').value, commercialEmail: document.getElementById('partnerCommercialEmail').value, commissionEmail: document.getElementById('partnerCommissionEmail').value
             };
-        } else if (type === 'seguradoras') {
+        } else if (type === 'seguradora') {
             data = {
                 name: document.getElementById('partnerName').value, address: document.getElementById('partnerAddress').value, nif: document.getElementById('partnerNif').value, commercialName: document.getElementById('partnerCommercialName').value, commercialDob: document.getElementById('partnerCommercialDob').value, commercialContact: document.getElementById('partnerCommercialContact').value, commercialEmail: document.getElementById('partnerCommercialEmail').value
             };
         }
         
-        const action = id ? db.collection(type).doc(id).update(data) : db.collection(type).add(data);
-        await action;
-        closeFormModal();
-        loadPartners();
+        try {
+            if (id) {
+                await updateDoc(doc(db, type + 's', id), data);
+            } else {
+                await addDoc(collection(db, type + 's'), data);
+            }
+            showToast(`Parceiro guardado com sucesso!`, 'success');
+            closeFormModal();
+            loadPartners();
+        } catch (error) {
+            console.error("Erro ao guardar parceiro:", error);
+            showToast("Erro ao guardar parceiro.", "error");
+        }
     }
     
     async function populatePartnerForm(type, id) {
-        const doc = await db.collection(type).doc(id).get();
-        if(!doc.exists) return;
-        const d = doc.data();
+        const docSnap = await getDoc(doc(db, type, id));
+        if(!docSnap.exists()) return;
+        const d = docSnap.data();
         if (type === 'fornecedores') {
             document.getElementById('partnerName').value = d.name || ''; document.getElementById('partnerNif').value = d.nif || ''; document.getElementById('partnerIban').value = d.iban || ''; document.getElementById('partnerAddress').value = d.address || ''; document.getElementById('partnerPostalCode').value = d.postalCode || ''; document.getElementById('partnerCity').value = d.city || ''; document.getElementById('partnerPhone').value = d.phone || ''; document.getElementById('partnerEmail').value = d.email || ''; document.getElementById('partnerCae').value = d.cae || ''; document.getElementById('partnerCapital').value = d.capital || ''; document.getElementById('partnerContactPerson').value = d.contactPerson || ''; document.getElementById('partnerEquipment').value = d.equipment || '';
         } else if (type === 'financeiras') {
@@ -1080,9 +1288,10 @@
     async function loadTasks() {
         const tableBody = document.getElementById('tasksTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('tarefas').orderBy('dueDate').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
+        const q = query(collection(db, 'tarefas'), orderBy('dueDate'));
+        const snapshot = await getDocs(q);
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
             const row = tableBody.insertRow();
             row.innerHTML = `
                 <td>${d.title}</td>
@@ -1091,32 +1300,32 @@
                 <td>${d.priority || '-'}</td>
                 <td>${d.status || '-'}</td>
                 <td class="actions-cell">
-                    ${d.status !== 'Concluído' ? `<button onclick="completeTask('${doc.id}', '${d.title}')" title="Concluir Tarefa"><i class="ph ph-check-circle"></i></button>` : ''}
-                    <button onclick="openFormModal('tarefa', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('tarefas', '${doc.id}', '${d.title}', loadTasks)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                    ${d.status !== 'Concluído' ? `<button onclick="completeTask('${docSnap.id}', '${d.title}')" title="Concluir Tarefa"><i class="ph ph-check-circle"></i></button>` : ''}
+                    <button onclick="openFormModal('tarefa', '${docSnap.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('tarefas', '${docSnap.id}', '${d.title}', loadTasks)" title="Eliminar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
         });
     }
-    
-    async function completeTask(id, title) {
-        const taskDocRef = db.collection('tarefas').doc(id);
-        const taskDoc = await taskDocRef.get();
-        if (!taskDoc.exists) return;
-        const taskData = taskDoc.data();
+
+    const completeTask = window.completeTask = async (id, title) => {
+        const taskDocRef = doc(db, 'tarefas', id);
+        const taskDocSnap = await getDoc(taskDocRef);
+        if (!taskDocSnap.exists()) return;
+        const taskData = taskDocSnap.data();
 
         const today = new Date().toISOString().split('T')[0];
-        await taskDocRef.update({
+        await updateDoc(taskDocRef, {
             status: 'Concluído',
             completionDate: today
         });
         
+        showToast(`Tarefa '${title}' concluída!`, 'success');
         const note = `Tarefa '${title}' foi concluída.`;
         
         if (taskData.clientId) { handleInteractionSubmit('clientes', taskData.clientId, note); }
         if (taskData.contractId) { 
             handleInteractionSubmit('contratos', taskData.contractId, note); 
-            // Se for uma tarefa automática de documentos, adiciona nota específica
             if (taskData.autoTaskType === 'documentos_em_falta') {
                 const docNote = `Pendente de documentos em falta foi resolvido.`;
                 handleInteractionSubmit('contratos', taskData.contractId, docNote);
@@ -1129,8 +1338,58 @@
 
     // --- Funções de ajuda e genéricas ---
     function getClientFormHTML() { return `<form id="clientForm"><div class="row"><div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div><div class="col"><label>Email</label><input type="email" id="clientEmail" /></div></div><div class="row"><div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div><div class="col"><label>NIF</label><input type="text" id="clientNif" maxlength="9" /></div></div><label>Morada</label><input type="text" id="clientAddress" /><div class="row"><div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div><div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div></div><div class="row"><div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div><div class="col"><label>Comercial Responsável</label><select id="clientManager"></select></div></div><div class="row"><div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div><div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div></div><label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleClientFormSubmit(id) { const managerSelect = document.getElementById('clientManager'); const data = { name: document.getElementById('clientName').value.trim(), email: document.getElementById('clientEmail').value.trim(), phone: document.getElementById('clientPhone').value.trim(), nif: document.getElementById('clientNif').value.trim(), address: document.getElementById('clientAddress').value.trim(), postalCode: document.getElementById('clientPostalCode').value.trim(), city: document.getElementById('clientCity').value.trim(), serviceType: document.getElementById('clientServiceType').value, managerId: managerSelect.value, managerName: managerSelect.options[managerSelect.selectedIndex]?.text || '', rgpd: document.getElementById('clientRgpd').value, creationDate: document.getElementById('clientCreationDate').value, internalNotes: document.getElementById('clientInternalNotes').value.trim(), clientType: 'Particular' }; const action = id ? db.collection('clientes').doc(id).update(data) : db.collection('clientes').add(data); await action; closeFormModal(); loadClients(); loadDashboardData(); }
-    async function populateClientForm(id) { await loadComerciaisForDropdown('clientManager'); const doc = await db.collection('clientes').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('clientName').value = d.name || ''; document.getElementById('clientEmail').value = d.email || ''; document.getElementById('clientPhone').value = d.phone || ''; document.getElementById('clientNif').value = d.nif || ''; document.getElementById('clientAddress').value = d.address || ''; document.getElementById('clientPostalCode').value = d.postalCode || ''; document.getElementById('clientCity').value = d.city || ''; document.getElementById('clientServiceType').value = d.serviceType || ''; document.getElementById('clientManager').value = d.managerId || ''; document.getElementById('clientRgpd').value = d.rgpd || 'Não'; document.getElementById('clientCreationDate').value = d.creationDate || ''; document.getElementById('clientInternalNotes').value = d.internalNotes || ''; } }
+    async function handleClientFormSubmit(id) { 
+        const managerSelect = document.getElementById('clientManager'); 
+        const data = { 
+            name: document.getElementById('clientName').value.trim(), 
+            email: document.getElementById('clientEmail').value.trim(), 
+            phone: document.getElementById('clientPhone').value.trim(), 
+            nif: document.getElementById('clientNif').value.trim(), 
+            address: document.getElementById('clientAddress').value.trim(), 
+            postalCode: document.getElementById('clientPostalCode').value.trim(), 
+            city: document.getElementById('clientCity').value.trim(), 
+            serviceType: document.getElementById('clientServiceType').value, 
+            managerId: managerSelect.value, 
+            managerName: managerSelect.options[managerSelect.selectedIndex]?.text || '', 
+            rgpd: document.getElementById('clientRgpd').value, 
+            creationDate: document.getElementById('clientCreationDate').value, 
+            internalNotes: document.getElementById('clientInternalNotes').value.trim(), 
+            clientType: 'Particular' 
+        }; 
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'clientes', id), data);
+            } else {
+                await addDoc(collection(db, 'clientes'), data);
+            }
+            showToast(`Cliente ${id ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
+            closeFormModal(); 
+            loadClients(); 
+            loadDashboardData(); 
+        } catch (error) {
+            console.error("Erro ao guardar cliente:", error);
+            showToast("Erro ao guardar o cliente.", "error");
+        }
+    }
+    async function populateClientForm(id) { 
+        await loadComerciaisForDropdown('clientManager'); 
+        const docSnap = await getDoc(doc(db, 'clientes', id)); 
+        if (docSnap.exists()) { 
+            const d = docSnap.data(); 
+            document.getElementById('clientName').value = d.name || ''; 
+            document.getElementById('clientEmail').value = d.email || ''; 
+            document.getElementById('clientPhone').value = d.phone || ''; 
+            document.getElementById('clientNif').value = d.nif || ''; 
+            document.getElementById('clientAddress').value = d.address || ''; 
+            document.getElementById('clientPostalCode').value = d.postalCode || ''; 
+            document.getElementById('clientCity').value = d.city || ''; 
+            document.getElementById('clientServiceType').value = d.serviceType || ''; 
+            document.getElementById('clientManager').value = d.managerId || ''; 
+            document.getElementById('clientRgpd').value = d.rgpd || 'Não'; 
+            document.getElementById('clientCreationDate').value = d.creationDate || ''; 
+            document.getElementById('clientInternalNotes').value = d.internalNotes || ''; 
+        } 
+    }
     
     // --- CONTRATOS ---
     function getContractFormHTML() { 
@@ -1250,7 +1509,7 @@
         </form>`; 
     }
 
-    async function handleContractTypeChange(serviceType) {
+    const handleContractTypeChange = window.handleContractTypeChange = async (serviceType) => {
         document.querySelectorAll('.service-details').forEach(div => div.style.display = 'none');
         if (serviceType === 'Crédito') {
             document.getElementById('detailsCredito').style.display = 'block';
@@ -1265,7 +1524,7 @@
         if (serviceType === 'Consultoria Financeira') document.getElementById('detailsConsultoria').style.display = 'block';
     }
 
-    function calculateComissaoPagar() {
+    const calculateComissaoPagar = window.calculateComissaoPagar = () => {
         const valorFinanciado = parseFloat(document.getElementById('creditoValorFinanciado').value) || 0;
         const comissaoPercent = parseFloat(document.getElementById('creditoComissaoPercent').value) || 0;
         const comissaoPagar = valorFinanciado * (comissaoPercent / 100);
@@ -1276,7 +1535,8 @@
         const select = document.getElementById(selectId);
         if (!select) return;
         select.innerHTML = '<option value="">Selecione</option>';
-        const snapshot = await db.collection(type).orderBy('name').get();
+        const q = query(collection(db, type), orderBy('name'));
+        const snapshot = await getDocs(q);
         snapshot.forEach(doc => {
             select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
         });
@@ -1287,7 +1547,6 @@
         const commercialSelect = document.getElementById('contractCommercial'); 
         const contractType = document.getElementById('contractType').value;
 
-        // Base Data
         let data = { 
             clientId: clientSelect.value, 
             clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '', 
@@ -1299,7 +1558,6 @@
             commissionStatus: 'Não Paga' 
         }; 
         
-        // Service-Specific Data
         switch(contractType) {
             case 'Crédito':
                 const checklist = Array.from(document.querySelectorAll('input[name="creditoChecklist"]:checked')).map(cb => cb.value);
@@ -1318,7 +1576,7 @@
                     dataEntregaFinanceira: document.getElementById('creditoDataFinanceira').value,
                     docsEmFalta: document.getElementById('creditoDocsFalta').value,
                     checklistDocs: checklist,
-                    checklistDocsFornecedor: [], // Inicializar checklists para o dashboard
+                    checklistDocsFornecedor: [], 
                     checklistDocsFinanceira: [],
                     creditoRealizado: document.getElementById('creditoRealizado').checked,
                 });
@@ -1354,49 +1612,55 @@
                 break;
         }
 
-        const docRef = id ? db.collection('contratos').doc(id) : db.collection('contratos').doc();
-        const action = id ? docRef.update(data) : docRef.set(data);
-        await action;
-        const contractId = docRef.id;
-
-        // CRIAR TAREFA AUTOMÁTICA PARA DOCUMENTOS EM FALTA
-        if (contractType === 'Crédito' && document.getElementById('creditoDocsFaltaCheck').checked) {
-            const docsFaltaTexto = document.getElementById('creditoDocsFalta').value.trim();
-            if (docsFaltaTexto) {
-                await db.collection('tarefas').add({
-                    title: `Documentos em falta: ${data.clientName}`,
-                    description: docsFaltaTexto,
-                    owner: data.commercialName, // Atribui ao comercial do contrato
-                    dueDate: '',
-                    priority: 'Alta',
-                    status: 'Pendente',
-                    clientId: data.clientId,
-                    contractId: contractId,
-                    autoTaskType: 'documentos_em_falta' // Flag para identificar a tarefa
-                });
+        try {
+            const docRef = id ? doc(db, 'contratos', id) : doc(collection(db, 'contratos'));
+            if (id) {
+                await updateDoc(docRef, data);
+            } else {
+                await addDoc(collection(db, 'contratos'), data);
             }
+            const contractId = docRef.id;
+
+            if (contractType === 'Crédito' && document.getElementById('creditoDocsFaltaCheck').checked) {
+                const docsFaltaTexto = document.getElementById('creditoDocsFalta').value.trim();
+                if (docsFaltaTexto) {
+                    await addDoc(collection(db, 'tarefas'), {
+                        title: `Documentos em falta: ${data.clientName}`,
+                        description: docsFaltaTexto,
+                        owner: data.commercialName, 
+                        dueDate: '',
+                        priority: 'Alta',
+                        status: 'Pendente',
+                        clientId: data.clientId,
+                        contractId: contractId,
+                        autoTaskType: 'documentos_em_falta' 
+                    });
+                }
+            }
+            showToast(`Contrato ${id ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
+            closeFormModal(); 
+            loadContracts(); 
+            loadDashboardData(); 
+            loadFinanceiraModule(); 
+            loadRelatoriosData(); 
+        } catch (error) {
+            console.error("Erro ao guardar contrato:", error);
+            showToast("Erro ao guardar contrato.", "error");
         }
-        
-        closeFormModal(); 
-        loadContracts(); 
-        loadDashboardData(); 
-        loadFinanceiraModule(); 
-        loadRelatoriosData(); 
     }
 
     async function populateContractForm(id) { 
-        const doc = await db.collection('contratos').doc(id).get(); 
-        if (doc.exists) { 
-            const d = doc.data(); 
+        const docSnap = await getDoc(doc(db, 'contratos', id)); 
+        if (docSnap.exists()) { 
+            const d = docSnap.data(); 
             document.getElementById('contractClient').value = d.clientId || ''; 
             document.getElementById('contractCommercial').value = d.commercialId || ''; 
             document.getElementById('contractType').value = d.type || ''; 
             document.getElementById('contractFase').value = d.fase || 'Proposta'; 
             document.getElementById('contractDate').value = d.startDate || ''; 
 
-            await handleContractTypeChange(d.type); // Mostra a secção correta
+            await handleContractTypeChange(d.type);
 
-            // Popula os campos específicos
             switch(d.type) {
                 case 'Crédito':
                     document.getElementById('creditoProposta').value = d.numeroProposta || '';
@@ -1452,63 +1716,212 @@
     }
     
     async function loadContractDropdowns(callback) { await loadClientsForDropdown('contractClient'); await loadComerciaisForDropdown('contractCommercial'); if (callback) callback(); }
-    async function loadAssociatedContracts(clientId) { const container = document.getElementById('associatedContracts'); container.innerHTML = ''; const snapshot = await db.collection('contratos').where('clientId', '==', clientId).get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhum contrato associado.</p>'; return; } let html = '<ul style="list-style: none; padding: 0;">'; snapshot.forEach(doc => { const d = doc.data(); html += `<li style="margin-bottom: .5em;">${d.type} - Fase: ${d.fase} (Início: ${d.startDate})</li>`; }); html += '</ul>'; container.innerHTML = html; }
+    async function loadAssociatedContracts(clientId) { 
+        const container = document.getElementById('associatedContracts'); 
+        container.innerHTML = ''; 
+        const q = query(collection(db, 'contratos'), where('clientId', '==', clientId));
+        const snapshot = await getDocs(q); 
+        if (snapshot.empty) { 
+            container.innerHTML = '<p>Nenhum contrato associado.</p>'; 
+            return; 
+        } 
+        let html = '<ul style="list-style: none; padding: 0;">'; 
+        snapshot.forEach(doc => { 
+            const d = doc.data(); 
+            html += `<li style="margin-bottom: .5em;">${d.type} - Fase: ${d.fase} (Início: ${d.startDate})</li>`; 
+        }); 
+        html += '</ul>'; 
+        container.innerHTML = html; 
+    }
     function getTaskFormHTML() { return `<form id="taskForm"><label>Título da tarefa</label><input type="text" id="taskTitle" required /><label>Descrição</label><textarea id="taskDescription" rows="3"></textarea><div class="row"><div class="col"><label>Responsável</label><input type="text" id="taskOwner" /></div><div class="col"><label>Prazo</label><input type="date" id="taskDueDate" /></div></div><div class="row"><div class="col"><label>Prioridade</label><select id="taskPriority"><option value="Baixa">Baixa</option><option value="Média" selected>Média</option><option value="Alta">Alta</option></select></div><div class="col"><label>Estado</label><select id="taskStatus"><option value="Pendente">Pendente</option><option value="Em Andamento">Em Andamento</option><option value="Concluído">Concluído</option></select></div></div><div class="row"><div class="col"><label>Associar a Cliente (Opcional)</label><select id="taskClient"><option value="">Nenhum</option></select></div><div class="col"><label>Associar a Contrato (Opcional)</label><select id="taskContract"><option value="">Nenhum</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleTaskFormSubmit(id) { const data = { title: document.getElementById('taskTitle').value.trim(), description: document.getElementById('taskDescription').value.trim(), owner: document.getElementById('taskOwner').value.trim(), dueDate: document.getElementById('taskDueDate').value, priority: document.getElementById('taskPriority').value, status: document.getElementById('taskStatus').value, clientId: document.getElementById('taskClient').value, contractId: document.getElementById('taskContract').value, }; const action = id ? db.collection('tarefas').doc(id).update(data) : db.collection('tarefas').add(data); await action; const note = `Tarefa '${data.title}' foi ${id ? 'atualizada' : 'criada'} com estado '${data.status}'.`; if (data.clientId) { handleInteractionSubmit('clientes', data.clientId, note); } if (data.contractId) { handleInteractionSubmit('contratos', data.contractId, note); } closeFormModal(); loadTasks(); loadDashboardData(); }
-    async function populateTaskForm(id) { const doc = await db.collection('tarefas').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('taskTitle').value = d.title || ''; document.getElementById('taskDescription').value = d.description || ''; document.getElementById('taskOwner').value = d.owner || ''; document.getElementById('taskDueDate').value = d.dueDate || ''; document.getElementById('taskPriority').value = d.priority || 'Média'; document.getElementById('taskStatus').value = d.status || 'Pendente'; document.getElementById('taskClient').value = d.clientId || ''; document.getElementById('taskContract').value = d.contractId || ''; } }
+    async function handleTaskFormSubmit(id) { 
+        const data = { 
+            title: document.getElementById('taskTitle').value.trim(), 
+            description: document.getElementById('taskDescription').value.trim(), 
+            owner: document.getElementById('taskOwner').value.trim(), 
+            dueDate: document.getElementById('taskDueDate').value, 
+            priority: document.getElementById('taskPriority').value, 
+            status: document.getElementById('taskStatus').value, 
+            clientId: document.getElementById('taskClient').value, 
+            contractId: document.getElementById('taskContract').value, 
+        }; 
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'tarefas', id), data);
+            } else {
+                await addDoc(collection(db, 'tarefas'), data);
+            }
+            const note = `Tarefa '${data.title}' foi ${id ? 'atualizada' : 'criada'} com estado '${data.status}'.`; 
+            if (data.clientId) { handleInteractionSubmit('clientes', data.clientId, note); } 
+            if (data.contractId) { handleInteractionSubmit('contratos', data.contractId, note); } 
+            showToast(`Tarefa guardada com sucesso!`, 'success');
+            closeFormModal(); 
+            loadTasks(); 
+            loadDashboardData(); 
+        } catch (error) {
+            console.error("Erro ao guardar tarefa:", error);
+            showToast("Erro ao guardar tarefa.", "error");
+        }
+    }
+    async function populateTaskForm(id) { 
+        const docSnap = await getDoc(doc(db, 'tarefas', id)); 
+        if (docSnap.exists()) { 
+            const d = docSnap.data(); 
+            document.getElementById('taskTitle').value = d.title || ''; 
+            document.getElementById('taskDescription').value = d.description || ''; 
+            document.getElementById('taskOwner').value = d.owner || ''; 
+            document.getElementById('taskDueDate').value = d.dueDate || ''; 
+            document.getElementById('taskPriority').value = d.priority || 'Média'; 
+            document.getElementById('taskStatus').value = d.status || 'Pendente'; 
+            document.getElementById('taskClient').value = d.clientId || ''; 
+            document.getElementById('taskContract').value = d.contractId || ''; 
+        } 
+    }
     async function loadDropdownsForTaskForm(callback) { await loadClientsForDropdown('taskClient'); await loadContractsForDropdown('taskContract'); if(callback) callback(); }
-    async function loadClientsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; select.innerHTML = '<option value="">Selecione</option>'; const snapshot = await db.collection('clientes').orderBy('name').get(); snapshot.forEach(doc => { select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; }); }
-    async function loadContractsForDropdown(selectId) { const select = document.getElementById(selectId); if (!select) return; select.innerHTML = '<option value="">Selecione</option>'; const snapshot = await db.collection('contratos').orderBy('clientName').get(); snapshot.forEach(doc => { const d = doc.data(); select.innerHTML += `<option value="${doc.id}">${d.type} - ${d.clientName}</option>`; }); }
-    function handleFileSelect(files) { const list = document.getElementById('documentList'); if (!list || files.length === 0) return; const file = files[0]; list.innerHTML += `<li><span>${file.name}</span><button class="btn-danger" style="padding: .2em .5em; font-size: .8em;">X</button></li>`; /* Lógica de upload real iria aqui */ }
-    function deleteItem(collection, id, name, callback) { showConfirmModal(`Tem a certeza que quer eliminar "${name}"?`, async () => { await db.collection(collection).doc(id).delete(); callback(); loadDashboardData(); }); }
+    async function loadClientsForDropdown(selectId) { 
+        const select = document.getElementById(selectId); 
+        if (!select) return; 
+        select.innerHTML = '<option value="">Selecione</option>'; 
+        const q = query(collection(db, 'clientes'), orderBy('name'));
+        const snapshot = await getDocs(q); 
+        snapshot.forEach(doc => { 
+            select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`; 
+        }); 
+    }
+    async function loadContractsForDropdown(selectId) { 
+        const select = document.getElementById(selectId); 
+        if (!select) return; 
+        select.innerHTML = '<option value="">Nenhum</option>'; 
+        const q = query(collection(db, 'contratos'), orderBy('clientName'));
+        const snapshot = await getDocs(q); 
+        snapshot.forEach(doc => { 
+            const d = doc.data(); 
+            select.innerHTML += `<option value="${doc.id}">${d.type} - ${d.clientName}</option>`; 
+        }); 
+    }
+    const deleteItem = window.deleteItem = (collectionName, id, name, callback) => { 
+        showConfirmModal(`Tem a certeza que quer eliminar "${name}"?`, async () => { 
+            await deleteDoc(doc(db, collectionName, id)); 
+            showToast(`"${name}" eliminado com sucesso.`, 'info');
+            callback(); 
+            loadDashboardData(); 
+        }); 
+    }
     function getFornecedorFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome</label><input id="partnerName" required></div><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>IBAN</label><input id="partnerIban"></div></div><div class="row"><div class="col"><label>Morada</label><input id="partnerAddress"></div><div class="col"><label>Código Postal</label><input id="partnerPostalCode"></div><div class="col"><label>Localidade</label><input id="partnerCity"></div></div><div class="row"><div class="col"><label>Telefone</label><input id="partnerPhone"></div><div class="col"><label>Email</label><input id="partnerEmail" type="email"></div><div class="col"><label>CAE</label><input id="partnerCae"></div></div><div class="row"><div class="col"><label>Capital Social</label><input id="partnerCapital" type="number"></div><div class="col"><label>Pessoa a Contactar</label><input id="partnerContactPerson"></div><div class="col"><label>Equipamento</label><select id="partnerEquipment"><option>AUTO</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
     function getFinanceiraFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Financeira</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div></div><div class="row"><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div><div class="col"><label>Email Comissões</label><input id="partnerCommissionEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
     function getSeguradoraFormHTML() { return `<form id="partnerForm"><div class="row"><div class="col"><label>Nome da Seguradora</label><input id="partnerName" required></div><div class="col"><label>Morada</label><input id="partnerAddress"></div></div><div class="row"><div class="col"><label>NIF</label><input id="partnerNif"></div><div class="col"><label>Nome do Comercial</label><input id="partnerCommercialName"></div></div><div class="row"><div class="col"><label>Data Nascimento Comercial</label><input id="partnerCommercialDob" type="date"></div><div class="col"><label>Contacto Comercial</label><input id="partnerCommercialContact"></div><div class="col"><label>Email Comercial</label><input id="partnerCommercialEmail" type="email"></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
-    async function handleInteractionSubmit(collection, docId, note, elementId) { if (!note.trim()) return; await db.collection(collection).doc(docId).collection('interactions').add({ note: note, timestamp: firebase.firestore.FieldValue.serverTimestamp() }); if(elementId) { loadInteractions(collection, docId, elementId); } }
-    async function loadInteractions(collection, docId, elementId) { const container = document.getElementById(elementId); container.innerHTML = ''; const snapshot = await db.collection(collection).doc(docId).collection('interactions').orderBy('timestamp', 'desc').get(); if (snapshot.empty) { container.innerHTML = '<p>Nenhuma interação registada.</p>'; return; } snapshot.forEach(doc => { const d = doc.data(); const date = d.timestamp ? d.timestamp.toDate().toLocaleString('pt-PT') : 'Data inválida'; const item = document.createElement('div'); item.className = 'interaction-item'; item.innerHTML = `<div class="date">${date}</div><div>${d.note}</div>`; container.appendChild(item); }); }
+    async function handleInteractionSubmit(collectionName, docId, note, elementId) { 
+        if (!note.trim()) return; 
+        const interactionData = { 
+            note: note, 
+            timestamp: serverTimestamp(), 
+            user: currentUserData.firstName || 'Sistema' 
+        };
+        await addDoc(collection(db, collectionName, docId, 'interactions'), interactionData);
+        if(elementId) { 
+            loadInteractions(collectionName, docId, elementId); 
+        } 
+    }
+    async function loadInteractions(collectionName, docId, elementId) { 
+        const container = document.getElementById(elementId); 
+        container.innerHTML = ''; 
+        const q = query(collection(db, collectionName, docId, 'interactions'), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q); 
+        if (snapshot.empty) { 
+            container.innerHTML = '<p>Nenhuma interação registada.</p>'; 
+            return; 
+        } 
+        snapshot.forEach(doc => { 
+            const d = doc.data(); 
+            const date = d.timestamp ? d.timestamp.toDate().toLocaleString('pt-PT') : 'Data inválida'; 
+            const item = document.createElement('div'); 
+            item.className = 'interaction-item'; 
+            item.innerHTML = `<div class="date">${date} por <strong>${d.user || 'Sistema'}</strong></div><div>${d.note}</div>`; 
+            container.appendChild(item); 
+        }); 
+    }
     
-    async function loadClients() {
+    async function loadClients(searchTerm = '') {
         const tableBody = document.getElementById('clientTable').querySelector('tbody');
-        tableBody.innerHTML = '';
+        tableBody.innerHTML = '<tr><td colspan="7">A carregar clientes...</td></tr>';
         
-        let query = db.collection('clientes');
-        // APLICAR PERMISSÃO: Comercial só vê os seus clientes
+        let initialQuery;
         if (currentUserData && currentUserData.role === 'Comercial') {
-            query = query.where('managerId', '==', currentUserData.id);
+            initialQuery = query(collection(db, 'clientes'), where('managerId', '==', currentUserData.id), orderBy('name'));
+        } else {
+            initialQuery = query(collection(db, 'clientes'), orderBy('name'));
         }
         
-        const snapshot = await query.orderBy('name').get();
+        const snapshot = await getDocs(initialQuery);
+        let clients = [];
         snapshot.forEach(doc => {
-            const d = doc.data();
+            clients.push({ id: doc.id, ...doc.data() });
+        });
+        
+        if (searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            clients = clients.filter(client => 
+                (client.name && client.name.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                (client.nif && client.nif.toLowerCase().includes(lowerCaseSearchTerm))
+            );
+        }
+
+        tableBody.innerHTML = '';
+        if (clients.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7">Nenhum cliente encontrado.</td></tr>';
+            return;
+        }
+
+        clients.forEach(d => {
             const row = tableBody.insertRow();
             row.innerHTML = `
-                <td>${doc.id.substring(0, 6)}...</td>
+                <td>${d.id.substring(0, 6)}...</td>
                 <td>${d.name || '-'}</td>
                 <td>${d.nif || '-'}</td>
                 <td>${d.clientType || 'Particular'}</td>
                 <td>${d.managerName || '-'}</td>
                 <td>${d.rgpd || '-'}</td>
                 <td class="actions-cell">
-                    <button onclick="openDetailsModal('cliente', '${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
-                    <button onclick="openFormModal('cliente', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('clientes', '${doc.id}', '${d.name}', loadClients)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                    <button onclick="openDetailsModal('cliente', '${d.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+                    <button onclick="openFormModal('cliente', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('clientes', '${d.id}', '${d.name}', loadClients)" title="Eliminar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
         });
     }
-    async function loadContracts() {
-        const tableBody = document.getElementById('contractTable').querySelector('tbody');
-        tableBody.innerHTML = '';
 
-        let query = db.collection('contratos');
-        // APLICAR PERMISSÃO: Comercial só vê os seus contratos
+    async function loadContracts(searchTerm = '') {
+        const tableBody = document.getElementById('contractTable').querySelector('tbody');
+        tableBody.innerHTML = '<tr><td colspan="7">A carregar contratos...</td></tr>';
+
+        let initialQuery;
         if (currentUserData && currentUserData.role === 'Comercial') {
-            query = query.where('commercialId', '==', currentUserData.id);
+            initialQuery = query(collection(db, 'contratos'), where('commercialId', '==', currentUserData.id), orderBy('startDate', 'desc'));
+        } else {
+            initialQuery = query(collection(db, 'contratos'), orderBy('startDate', 'desc'));
         }
 
-        const snapshot = await query.orderBy('startDate', 'desc').get();
+        const snapshot = await getDocs(initialQuery);
+        let contracts = [];
         snapshot.forEach(doc => {
-            const d = doc.data();
+            contracts.push({ id: doc.id, ...doc.data() });
+        });
+
+        if (searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            contracts = contracts.filter(contract => 
+                (contract.clientName && contract.clientName.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                (contract.type && contract.type.toLowerCase().includes(lowerCaseSearchTerm))
+            );
+        }
+
+        tableBody.innerHTML = '';
+        if (contracts.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7">Nenhum contrato encontrado.</td></tr>';
+            return;
+        }
+
+        contracts.forEach(d => {
             const row = tableBody.insertRow();
             row.innerHTML = `
                 <td>${d.clientName || '-'}</td>
@@ -1518,20 +1931,20 @@
                 <td>${d.startDate || '-'}</td>
                 <td>${d.commercialName || '-'}</td>
                 <td class="actions-cell">
-                    <button onclick="openDetailsModal('contrato', '${doc.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
-                    <button onclick="openFormModal('contrato', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('contratos', '${doc.id}', 'este contrato', loadContracts)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                    <button onclick="openDetailsModal('contrato', '${d.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+                    <button onclick="openFormModal('contrato', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('contratos', '${d.id}', 'este contrato', loadContracts)" title="Eliminar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
         });
     }
-    function getComercialFormHTML() { return `<form id="comercialForm"><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email</label><input id="comercialEmail" type="email" required></div><div class="col"><label>Função</label><select id="comercialRole"><option value="Comercial">Comercial</option><option value="Gestor de Equipa">Gestor de Equipa</option><option value="Administrador">Administrador</option></select></div></div><div class="row"><div class="col"><label>Telefone</label><input id="comercialPhone"></div><div class="col"><label>NIF</label><input id="comercialNif"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div></div><div class="row"><div class="col"><label>Data de Início</label><input id="comercialStartDate" type="date"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`;}
+
+    function getComercialFormHTML() { return `<form id="comercialForm"><p style="font-size: .9em; color: var(--color-text-secondary);">Nota: A criação de um novo comercial aqui apenas cria o perfil. O login (email/password) deve ser criado separadamente no painel do Firebase Authentication por um administrador.</p><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email (deve corresponder ao login)</label><input id="comercialEmail" type="email" required></div><div class="col"><label>Função</label><select id="comercialRole"><option value="Comercial">Comercial</option><option value="Gestor de Equipa">Gestor de Equipa</option><option value="Administrador">Administrador</option></select></div></div><div class="row"><div class="col"><label>Telefone</label><input id="comercialPhone"></div><div class="col"><label>NIF</label><input id="comercialNif"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div></div><div class="row"><div class="col"><label>Data de Início</label><input id="comercialStartDate" type="date"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`;}
     async function handleComercialFormSubmit(id) { 
-        // Idealmente, aqui também se criaria/atualizaria o utilizador no Firebase Auth.
-        // Por simplicidade, estamos a gerir apenas no Firestore.
         const data = { 
             firstName: document.getElementById('comercialFirstName').value, 
             lastName: document.getElementById('comercialLastName').value, 
+            name: `${document.getElementById('comercialFirstName').value} ${document.getElementById('comercialLastName').value}`,
             email: document.getElementById('comercialEmail').value, 
             role: document.getElementById('comercialRole').value, 
             phone: document.getElementById('comercialPhone').value, 
@@ -1540,19 +1953,43 @@
             startDate: document.getElementById('comercialStartDate').value, 
             status: document.getElementById('comercialStatus').value, 
         }; 
-        const action = id ? db.collection('comerciais').doc(id).update(data) : db.collection('comerciais').add(data); 
-        await action; 
-        closeFormModal(); 
-        loadComerciais();
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'comerciais', id), data);
+            } else {
+                await addDoc(collection(db, 'comerciais'), data);
+            }
+            showToast(`Comercial guardado com sucesso!`, 'success');
+            closeFormModal(); 
+            loadComerciais();
+        } catch (error) {
+            console.error("Erro ao guardar comercial:", error);
+            showToast("Erro ao guardar comercial.", "error");
+        }
     }
-    async function populateComercialForm(id) { const doc = await db.collection('comerciais').doc(id).get(); if (doc.exists) { const d = doc.data(); document.getElementById('comercialFirstName').value = d.firstName || ''; document.getElementById('comercialLastName').value = d.lastName || ''; document.getElementById('comercialEmail').value = d.email || ''; document.getElementById('comercialRole').value = d.role || 'Comercial'; document.getElementById('comercialPhone').value = d.phone || ''; document.getElementById('comercialNif').value = d.nif || ''; document.getElementById('comercialIban').value = d.iban || ''; document.getElementById('comercialStartDate').value = d.startDate || ''; document.getElementById('comercialStatus').value = d.status || 'Ativo'; } }
+    async function populateComercialForm(id) { 
+        const docSnap = await getDoc(doc(db, 'comerciais', id)); 
+        if (docSnap.exists()) { 
+            const d = docSnap.data(); 
+            document.getElementById('comercialFirstName').value = d.firstName || ''; 
+            document.getElementById('comercialLastName').value = d.lastName || ''; 
+            document.getElementById('comercialEmail').value = d.email || ''; 
+            document.getElementById('comercialRole').value = d.role || 'Comercial'; 
+            document.getElementById('comercialPhone').value = d.phone || ''; 
+            document.getElementById('comercialNif').value = d.nif || ''; 
+            document.getElementById('comercialIban').value = d.iban || ''; 
+            document.getElementById('comercialStartDate').value = d.startDate || ''; 
+            document.getElementById('comercialStatus').value = d.status || 'Ativo'; 
+        } 
+    }
     async function loadComerciais() {
-        if (!currentUserData || currentUserData.role !== 'Administrador') return; // Apenas Admins podem ver
+        if (!currentUserData || currentUserData.role !== 'Administrador') return;
         const tableBody = document.getElementById('comerciaisTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('comerciais').orderBy('firstName').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
+        const q = query(collection(db, 'comerciais'), orderBy('firstName'));
+        const snapshot = await getDocs(q);
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
             const row = tableBody.insertRow();
             row.innerHTML = `
                 <td>${d.firstName} ${d.lastName}</td>
@@ -1561,29 +1998,30 @@
                 <td>${d.role || 'N/D'}</td>
                 <td><span style="color: ${d.status === 'Ativo' ? 'var(--color-success)' : 'var(--color-danger)'}">${d.status}</span></td>
                 <td class="actions-cell">
-                    <button onclick="toggleComercialStatus('${doc.id}', '${d.status}')" title="${d.status === 'Ativo' ? 'Desativar' : 'Ativar'}"><i class="ph ph-power"></i></button>
-                    <button onclick="openFormModal('comercial', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button onclick="toggleComercialStatus('${docSnap.id}', '${d.status}')" title="${d.status === 'Ativo' ? 'Desativar' : 'Ativar'}"><i class="ph ph-power"></i></button>
+                    <button onclick="openFormModal('comercial', '${docSnap.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
                 </td>
             `;
         });
     }
-    async function toggleComercialStatus(id, currentStatus) {
+    const toggleComercialStatus = window.toggleComercialStatus = async (id, currentStatus) => {
         const newStatus = currentStatus === 'Ativo' ? 'Inativo' : 'Ativo';
-        await db.collection('comerciais').doc(id).update({ status: newStatus });
+        await updateDoc(doc(db, 'comerciais', id), { status: newStatus });
+        showToast(`Estado do comercial alterado para ${newStatus}.`, 'info');
         loadComerciais();
     }
     async function loadComerciaisForDropdown(selectId) {
         const select = document.getElementById(selectId);
         if (!select) return;
         select.innerHTML = '<option value="">Selecione</option>';
-        const snapshot = await db.collection('comerciais').where('status', '==', 'Ativo').get();
+        const q = query(collection(db, 'comerciais'), where('status', '==', 'Ativo'));
+        const snapshot = await getDocs(q);
         
         let comerciais = [];
         snapshot.forEach(doc => {
             comerciais.push({ id: doc.id, ...doc.data() });
         });
 
-        // Ordenar por nome no lado do cliente
         comerciais.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
         comerciais.forEach(d => {
@@ -1592,23 +2030,34 @@
     }
 
     // --- GESTÃO FINANCEIRA ---
-    function openFinanceTab(evt, tabName) {
+    const openFinanceTab = window.openFinanceTab = (evt, tabName) => {
         document.querySelectorAll('#financeira-section .tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('#financeira-section .tabs button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
         evt.currentTarget.classList.add('active');
 
-        // Carregar dados do separador ativo
         if(tabName === 'financeira-dashboard') loadFinanceiraDashboard();
+        if(tabName === 'financeira-comissoes') loadComissoes();
         if(tabName === 'financeira-despesas') loadDespesas();
         if(tabName === 'financeira-por-conciliar') loadPorConciliar();
-        if(tabName === 'financeira-banco') loadBancos();
+        if(tabName === 'financeira-banco') openBancoSubTab({currentTarget: document.querySelector('#financeira-banco .tabs button.active') || document.querySelector('#financeira-banco .tabs button')}, 'contas');
+    }
+    
+    const openBancoSubTab = window.openBancoSubTab = (evt, tabName) => {
+        document.querySelectorAll('#financeira-banco .tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('#financeira-banco .tabs button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        
+        if (evt && evt.currentTarget) {
+            evt.currentTarget.classList.add('active');
+        }
+        
+        if (tabName === 'contas') loadBancos();
+        if (tabName === 'movimentos') loadMovimentos();
     }
 
     function loadFinanceiraModule() {
-        // Por defeito, carrega o primeiro separador (Dashboard)
         loadFinanceiraDashboard();
-        // Ativa o primeiro separador visualmente
         const financeTabs = document.querySelector('#finance-tabs');
         if (financeTabs) {
             financeTabs.querySelector('button').classList.add('active');
@@ -1617,8 +2066,8 @@
     }
     
     async function loadFinanceiraDashboard() {
-        const contratosSnapshot = await db.collection('contratos').where('fase', '==', 'Ativo').get();
-        const despesasSnapshot = await db.collection('despesas').get();
+        const contratosSnapshot = await getDocs(query(collection(db, 'contratos'), where('fase', '==', 'Ativo')));
+        const despesasSnapshot = await getDocs(collection(db, 'despesas'));
         
         let totalReceber = 0;
         let totalPagar = 0;
@@ -1657,7 +2106,6 @@
         });
         document.getElementById('kpi-total-despesas').textContent = `€${totalDespesas.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
 
-        // Preencher tabelas
         const tableReceberBody = document.getElementById('financeirasReceberTable').querySelector('tbody');
         tableReceberBody.innerHTML = '';
         for(const id in aReceberFinanceira) {
@@ -1678,9 +2126,10 @@
     async function loadDespesas() {
         const tableBody = document.getElementById('despesasTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('despesas').orderBy('date', 'desc').get();
-        snapshot.forEach(doc => {
-            const d = doc.data();
+        const q = query(collection(db, 'despesas'), orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
             const row = tableBody.insertRow();
             row.innerHTML = `
                 <td>${d.date}</td>
@@ -1690,8 +2139,8 @@
                 <td>€${parseFloat(d.value || 0).toLocaleString('pt-PT')}</td>
                 <td><input type="checkbox" ${d.isConciliada ? 'checked' : ''} disabled></td>
                 <td class="actions-cell">
-                    <button onclick="openFormModal('despesa', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('despesas', '${doc.id}', 'esta despesa', loadDespesas)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                    <button onclick="openFormModal('despesa', '${docSnap.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('despesas', '${docSnap.id}', 'esta despesa', loadDespesas)" title="Eliminar"><i class="ph ph-trash"></i></button>
                 </td>
             `;
         });
@@ -1735,19 +2184,28 @@
             bancoId: bancoSelect.value,
             bancoName: bancoSelect.options[bancoSelect.selectedIndex]?.text || '',
         };
-        const action = id ? db.collection('despesas').doc(id).update(data) : db.collection('despesas').add(data);
-        await action;
-        closeFormModal();
-        loadDespesas();
-        loadPorConciliar();
-        loadFinanceiraDashboard();
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'despesas', id), data);
+            } else {
+                await addDoc(collection(db, 'despesas'), data);
+            }
+            showToast('Despesa guardada com sucesso!', 'success');
+            closeFormModal();
+            loadDespesas();
+            loadPorConciliar();
+            loadFinanceiraDashboard();
+        } catch (error) {
+            console.error("Erro ao guardar despesa:", error);
+            showToast("Erro ao guardar despesa.", "error");
+        }
     }
 
     async function populateDespesaForm(id) {
         await loadBancosForDropdown('despesaBanco');
-        const doc = await db.collection('despesas').doc(id).get();
-        if (doc.exists) {
-            const d = doc.data();
+        const docSnap = await getDoc(doc(db, 'despesas', id));
+        if (docSnap.exists()) {
+            const d = docSnap.data();
             document.getElementById('despesaDate').value = d.date;
             document.getElementById('despesaValue').value = d.value;
             document.getElementById('despesaDescription').value = d.description;
@@ -1760,7 +2218,8 @@
     async function loadPorConciliar() {
         const tableBody = document.getElementById('porConciliarTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('despesas').where('isConciliada', '==', false).get();
+        const q = query(collection(db, 'despesas'), where('isConciliada', '==', false));
+        const snapshot = await getDocs(q);
         
         if(snapshot.empty) {
             tableBody.innerHTML = '<tr><td colspan="5">Nenhuma despesa por conciliar.</td></tr>';
@@ -1778,7 +2237,7 @@
         despesas.forEach(d => {
             const row = tableBody.insertRow();
             row.innerHTML = `
-                <td><input type="checkbox" class="conciliar-check" value="${d.id}"></td>
+                <td><input type="checkbox" class="conciliar-check" value="${d.id}" data-value="${d.value}"></td>
                 <td>${d.date}</td>
                 <td>${d.description}</td>
                 <td>${d.type}</td>
@@ -1787,25 +2246,24 @@
         });
     }
     
-    function toggleAllConciliar(checked) {
+    const toggleAllConciliar = window.toggleAllConciliar = (checked) => {
         document.querySelectorAll('.conciliar-check').forEach(cb => cb.checked = checked);
     }
     
-    const conciliarModal = document.getElementById('conciliarModal');
-    async function openConciliarModal() {
+    const openConciliarModal = window.openConciliarModal = async () => {
         const selectedIds = Array.from(document.querySelectorAll('.conciliar-check:checked')).map(cb => cb.value);
         if (selectedIds.length === 0) {
-            alert('Por favor, selecione pelo menos uma despesa para conciliar.');
+            showToast('Por favor, selecione pelo menos uma despesa para conciliar.', 'warning');
             return;
         }
         document.getElementById('conciliarCount').textContent = selectedIds.length;
-        await loadBancosForDropdown('conciliarBanco');
+        await loadBancosForDropdown('conciliarBanco', true); // Apenas bancos ativos
         document.getElementById('conciliarDate').value = new Date().toISOString().split('T')[0];
         conciliarModal.classList.add('active');
     }
-    function closeConciliarModal() { conciliarModal.classList.remove('active'); }
+    const closeConciliarModal = window.closeConciliarModal = () => { conciliarModal.classList.remove('active'); }
 
-    async function conciliarDespesasEmMassa() {
+    const conciliarDespesasEmMassa = window.conciliarDespesasEmMassa = async () => {
         const selectedIds = Array.from(document.querySelectorAll('.conciliar-check:checked')).map(cb => cb.value);
         const conciliarDate = document.getElementById('conciliarDate').value;
         const bancoSelect = document.getElementById('conciliarBanco');
@@ -1813,77 +2271,139 @@
         const bancoName = bancoSelect.options[bancoSelect.selectedIndex]?.text || '';
 
         if (!conciliarDate || !bancoId) {
-            alert('Por favor, preencha a data e o banco.');
+            showToast('Por favor, preencha a data e o banco.', 'error');
             return;
         }
 
-        const batch = db.batch();
-        selectedIds.forEach(id => {
-            const docRef = db.collection('despesas').doc(id);
-            batch.update(docRef, { 
-                isConciliada: true,
-                dataConciliacao: conciliarDate,
-                bancoId: bancoId,
-                bancoName: bancoName
+        try {
+            let totalDespesas = 0;
+            const despesasPromises = selectedIds.map(id => getDoc(doc(db, 'despesas', id)));
+            const despesasDocs = await Promise.all(despesasPromises);
+            
+            despesasDocs.forEach(docSnap => {
+                if (docSnap.exists()) {
+                    totalDespesas += parseFloat(docSnap.data().value);
+                }
             });
-        });
-        await batch.commit();
-        
-        closeConciliarModal();
-        loadPorConciliar();
-        loadDespesas();
-    }
-    
-    function exportarLancamento() {
-        const selectedRows = Array.from(document.querySelectorAll('.conciliar-check:checked')).map(cb => cb.closest('tr'));
-        if (selectedRows.length === 0) {
-            alert('Por favor, selecione despesas para exportar.');
-            return;
-        }
-        let total = 0;
-        let content = `<h1>Folha de Lançamento</h1><p>Data: ${new Date().toLocaleDateString('pt-PT')}</p><table border="1" style="width:100%; border-collapse: collapse;"><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Valor</th></tr></thead><tbody>`;
-        selectedRows.forEach(row => {
-            const cells = row.cells;
-            const value = parseFloat(cells[4].textContent.replace('€', '').replace('.', '').replace(',', '.'));
-            total += value;
-            content += `<tr><td>${cells[1].textContent}</td><td>${cells[2].textContent}</td><td>${cells[3].textContent}</td><td>${cells[4].textContent}</td></tr>`;
-        });
-        content += `</tbody><tfoot><tr><td colspan="3" style="text-align:right;"><strong>Total</strong></td><td><strong>€${total.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</strong></td></tr></tfoot></table>`;
-        
-        const win = window.open('', 'Print', 'height=600,width=800');
-        win.document.write('<html><head><title>Folha de Lançamento</title></head><body>');
-        win.document.write(content);
-        win.document.write('</body></html>');
-        win.document.close();
-        win.print();
-    }
 
-    async function loadBancos() {
+            const bancoRef = doc(db, 'bancos', bancoId);
+            await runTransaction(db, async (transaction) => {
+                const bancoDoc = await transaction.get(bancoRef);
+                if (!bancoDoc.exists()) {
+                    throw "Banco não encontrado!";
+                }
+                const novoSaldo = parseFloat(bancoDoc.data().balance) - totalDespesas;
+                transaction.update(bancoRef, { balance: novoSaldo });
+                
+                const movimentoRef = doc(collection(db, 'bancos', bancoId, 'movimentos'));
+                transaction.set(movimentoRef, {
+                    data: conciliarDate,
+                    valor: -totalDespesas,
+                    tipo: 'Despesa Conciliada',
+                    descricao: `Conciliação de ${selectedIds.length} despesas`,
+                    createdAt: serverTimestamp()
+                });
+
+                selectedIds.forEach(id => {
+                    const docRef = doc(db, 'despesas', id);
+                    transaction.update(docRef, { 
+                        isConciliada: true,
+                        dataConciliacao: conciliarDate,
+                        bancoId: bancoId,
+                        bancoName: bancoName
+                    });
+                });
+            });
+
+            // Geração do PDF após a transação ser bem-sucedida
+            const pdf = new jsPDF();
+            pdf.text("Nota de Lançamento de Despesas", 14, 16);
+            pdf.setFontSize(10);
+            pdf.text(`Data de Conciliação: ${conciliarDate}`, 14, 22);
+            pdf.text(`Conta Bancária: ${bancoName}`, 14, 28);
+
+            const tableData = [];
+            despesasDocs.forEach(docSnap => {
+                if (docSnap.exists()) {
+                    const d = docSnap.data();
+                    tableData.push([d.date, d.description, d.type, `€${parseFloat(d.value).toFixed(2)}`]);
+                }
+            });
+
+            pdf.autoTable({
+                startY: 35,
+                head: [['Data', 'Descrição', 'Tipo', 'Valor']],
+                body: tableData,
+                foot: [['', '', 'Total', `€${totalDespesas.toFixed(2)}`]],
+                theme: 'striped'
+            });
+
+            pdf.save(`conciliacao_${conciliarDate}.pdf`);
+
+            showToast('Despesas conciliadas e PDF gerado com sucesso!', 'success');
+            closeConciliarModal();
+            loadPorConciliar();
+            loadDespesas();
+            loadBancos();
+            loadMovimentos();
+
+        } catch (error) {
+            console.error("Erro na conciliação:", error);
+            showToast("Erro na conciliação. Tente novamente.", "error");
+        }
+    };
+    
+    async function loadBancos(apenasAtivos = false) {
         const tableBody = document.getElementById('bancosTable').querySelector('tbody');
         tableBody.innerHTML = '';
-        const snapshot = await db.collection('bancos').orderBy('name').get();
+        let q = apenasAtivos ? query(collection(db, 'bancos'), where('status', '==', 'Ativo')) : query(collection(db, 'bancos'));
+        const snapshot = await getDocs(q);
+
+        let bancos = [];
         snapshot.forEach(doc => {
-            const d = doc.data();
+            bancos.push({ id: doc.id, ...doc.data() });
+        });
+
+        bancos.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        bancos.forEach(d => {
             const row = tableBody.insertRow();
             row.innerHTML = `
                 <td>${d.name}</td>
                 <td>${d.iban || '-'}</td>
-                <td>€${parseFloat(d.balance || 0).toLocaleString('pt-PT')}</td>
+                <td>€${parseFloat(d.balance || 0).toLocaleString('pt-PT', {minimumFractionDigits: 2})}</td>
+                <td><span style="color: ${d.status === 'Ativo' ? 'var(--color-success)' : 'var(--color-danger)'}">${d.status}</span></td>
                 <td class="actions-cell">
-                    <button onclick="openFormModal('banco', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('bancos', '${doc.id}', d.name, loadBancos)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                    <button onclick="toggleBancoStatus('${d.id}', '${d.status}')" title="${d.status === 'Ativo' ? 'Desativar' : 'Ativar'}"><i class="ph ph-power"></i></button>
+                    <button onclick="openFormModal('banco', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
                 </td>
             `;
         });
     }
+
+    const toggleBancoStatus = window.toggleBancoStatus = async (id, currentStatus) => {
+        const newStatus = currentStatus === 'Ativo' ? 'Inativo' : 'Ativo';
+        await updateDoc(doc(db, 'bancos', id), { status: newStatus });
+        showToast(`Estado do banco alterado para ${newStatus}.`, 'info');
+        loadBancos();
+    }
     
-    async function loadBancosForDropdown(selectId) {
+    async function loadBancosForDropdown(selectId, apenasAtivos = false) {
         const select = document.getElementById(selectId);
         if (!select) return;
         select.innerHTML = '<option value="">Selecione um banco</option>';
-        const snapshot = await db.collection('bancos').orderBy('name').get();
+        let q = apenasAtivos ? query(collection(db, 'bancos'), where('status', '==', 'Ativo')) : query(collection(db, 'bancos'));
+        const snapshot = await getDocs(q);
+
+        let bancos = [];
         snapshot.forEach(doc => {
-            select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
+            bancos.push({ id: doc.id, ...doc.data() });
+        });
+
+        bancos.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        bancos.forEach(d => {
+            select.innerHTML += `<option value="${d.id}">${d.name}</option>`;
         });
     }
 
@@ -1892,6 +2412,7 @@
             <label>Nome do Banco</label><input type="text" id="bancoName" required>
             <label>IBAN</label><input type="text" id="bancoIban">
             <label>Saldo Inicial</label><input type="number" id="bancoBalance" step="0.01" required>
+            <label>Estado</label><select id="bancoStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
                 <button type="submit" class="btn-primary">Guardar</button>
@@ -1903,32 +2424,87 @@
         const data = {
             name: document.getElementById('bancoName').value,
             iban: document.getElementById('bancoIban').value,
-            balance: document.getElementById('bancoBalance').value,
+            balance: parseFloat(document.getElementById('bancoBalance').value),
+            status: document.getElementById('bancoStatus').value,
         };
-        const action = id ? db.collection('bancos').doc(id).update(data) : db.collection('bancos').add(data);
-        await action;
-        closeFormModal();
-        loadBancos();
+        try {
+            if (id) {
+                await updateDoc(doc(db, 'bancos', id), data);
+            } else {
+                await addDoc(collection(db, 'bancos'), data);
+            }
+            showToast('Conta bancária guardada com sucesso!', 'success');
+            closeFormModal();
+            loadBancos();
+        } catch (error) {
+            console.error("Erro ao guardar conta bancária:", error);
+            showToast("Erro ao guardar conta bancária.", "error");
+        }
     }
 
     async function populateBancoForm(id) {
-        const doc = await db.collection('bancos').doc(id).get();
-        if (doc.exists) {
-            const d = doc.data();
+        const docSnap = await getDoc(doc(db, 'bancos', id));
+        if (docSnap.exists()) {
+            const d = docSnap.data();
             document.getElementById('bancoName').value = d.name;
             document.getElementById('bancoIban').value = d.iban;
             document.getElementById('bancoBalance').value = d.balance;
+            document.getElementById('bancoStatus').value = d.status || 'Ativo';
+        }
+    }
+
+    async function loadMovimentos() {
+        const tableBody = document.getElementById('movimentosTable').querySelector('tbody');
+        tableBody.innerHTML = '<tr><td colspan="5">A carregar movimentos...</td></tr>';
+        
+        try {
+            const q = query(collectionGroup(db, 'movimentos'));
+            const snapshot = await getDocs(q);
+            
+            if (snapshot.empty) {
+                tableBody.innerHTML = '<tr><td colspan="5">Nenhum movimento encontrado.</td></tr>';
+                return;
+            }
+
+            let movimentos = [];
+            snapshot.forEach(docSnap => {
+                movimentos.push(docSnap.data());
+            });
+
+            movimentos.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            tableBody.innerHTML = '';
+            movimentos.forEach(d => {
+                const valor = parseFloat(d.valor || 0);
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${d.data}</td>
+                    <td>${d.descricao}</td>
+                    <td style="color: ${valor > 0 ? 'var(--color-success)' : 'var(--color-danger)'}">${valor.toLocaleString('pt-PT', {style: 'currency', currency: 'EUR'})}</td>
+                    <td>${d.tipo}</td>
+                    <td>
+                        ${d.url ? `<a href="${d.url}" target="_blank" class="btn-primary" style="padding: .4em .8em; text-decoration: none;">Ver PDF</a>` : '-'}
+                    </td>
+                `;
+            });
+        } catch (error) {
+            console.error("Erro ao carregar movimentos:", error);
+            tableBody.innerHTML = '<tr><td colspan="5">Erro ao carregar movimentos. Verifique a consola.</td></tr>';
+            showToast("Erro ao carregar movimentos.", "error");
         }
     }
 
     // --- RELATÓRIOS ---
-    let contractTypeChartInstance = null;
     async function loadRelatoriosData() {
+        await loadPartnersForDropdown('fornecedores', 'reportFornecedor');
+        await loadComerciaisForDropdown('reportComercial');
+        await loadPartnersForDropdown('financeiras', 'reportFinanceira');
+
         const performanceTableBody = document.getElementById('comercialPerformanceTable').querySelector('tbody');
         performanceTableBody.innerHTML = '<tr><td colspan="3">A calcular...</td></tr>';
 
-        const comerciaisSnapshot = await db.collection('comerciais').get();
-        const contratosSnapshot = await db.collection('contratos').where('fase', '==', 'Ativo').get();
+        const comerciaisSnapshot = await getDocs(collection(db, 'comerciais'));
+        const contratosSnapshot = await getDocs(query(collection(db, 'contratos'), where('fase', '==', 'Ativo')));
 
         const performanceData = {};
         comerciaisSnapshot.forEach(doc => {
@@ -1959,7 +2535,7 @@
         }
 
         const contractTypes = {};
-        const allContratosSnapshot = await db.collection('contratos').get();
+        const allContratosSnapshot = await getDocs(collection(db, 'contratos'));
         allContratosSnapshot.forEach(doc => {
             const type = doc.data().type || 'Indefinido';
             contractTypes[type] = (contractTypes[type] || 0) + 1;
@@ -1973,7 +2549,7 @@
                 labels: Object.keys(contractTypes),
                 datasets: [{
                     data: Object.values(contractTypes),
-                    backgroundColor: ['#c8b89c', '#6c757d', '#a99a8b', '#d1ccc0', '#8a959d'],
+                    backgroundColor: ['#C8B89C', '#212529', '#CAD2D8', '#F59E0B', '#10B981'],
                     hoverOffset: 4
                 }]
             },
@@ -1992,7 +2568,8 @@
     async function loadMilestones(contractId, containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = 'A carregar etapas...';
-        const snapshot = await db.collection('contratos').doc(contractId).collection('milestones').orderBy('createdAt').get();
+        const q = query(collection(db, 'contratos', contractId, 'milestones'), orderBy('createdAt'));
+        const snapshot = await getDocs(q);
         
         if (snapshot.empty) {
             container.innerHTML = '<p>Nenhuma etapa definida.</p>';
@@ -2000,13 +2577,13 @@
         }
 
         container.innerHTML = '';
-        snapshot.forEach(doc => {
-            const d = doc.data();
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
             const item = document.createElement('div');
             item.className = `milestone-item ${d.completed ? 'completed' : ''}`;
             item.innerHTML = `
-                <input type="checkbox" id="milestone-${doc.id}" ${d.completed ? 'checked' : ''} onchange="toggleMilestone('${contractId}', '${doc.id}', this.checked)">
-                <label for="milestone-${doc.id}">${d.description}</label>
+                <input type="checkbox" id="milestone-${docSnap.id}" ${d.completed ? 'checked' : ''} onchange="toggleMilestone('${contractId}', '${docSnap.id}', this.checked)">
+                <label for="milestone-${docSnap.id}">${d.description}</label>
             `;
             container.appendChild(item);
         });
@@ -2020,21 +2597,19 @@
         const description = descInput.value.trim();
         if (!description) return;
 
-        // 1. Criar a etapa (milestone)
-        await db.collection('contratos').doc(contractId).collection('milestones').add({
+        await addDoc(collection(db, 'contratos', contractId, 'milestones'), {
             description: description,
             completed: false,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: serverTimestamp()
         });
 
-        // 2. Se houver responsável ou prazo, criar a tarefa associada
         const owner = ownerInput.value.trim();
         const dueDate = dueDateInput.value;
         if (owner || dueDate) {
-            const contractDoc = await db.collection('contratos').doc(contractId).get();
+            const contractDoc = await getDoc(doc(db, 'contratos', contractId));
             const contractData = contractDoc.data();
             
-            await db.collection('tarefas').add({
+            await addDoc(collection(db, 'tarefas'), {
                 title: description,
                 owner: owner,
                 dueDate: dueDate,
@@ -2043,22 +2618,19 @@
                 clientId: contractData.clientId || '',
                 contractId: contractId,
             });
-            // Atualizar a lista de tarefas em background
             loadTasks();
             loadDashboardData();
         }
-
-        // Limpar os campos do formulário
+        showToast('Etapa adicionada com sucesso!', 'success');
         descInput.value = '';
         ownerInput.value = '';
         dueDateInput.value = '';
         
-        // Recarregar a lista de etapas
         loadMilestones(contractId, 'milestonesList');
     }
 
-    async function toggleMilestone(contractId, milestoneId, isCompleted) {
-        await db.collection('contratos').doc(contractId).collection('milestones').doc(milestoneId).update({
+    const toggleMilestone = window.toggleMilestone = async (contractId, milestoneId, isCompleted) => {
+        await updateDoc(doc(db, 'contratos', contractId, 'milestones', milestoneId), {
             completed: isCompleted
         });
         loadMilestones(contractId, 'milestonesList');
@@ -2069,7 +2641,8 @@
         const container = document.getElementById('documentTrackingList');
         container.innerHTML = '<p>A procurar propostas pendentes...</p>';
 
-        const snapshot = await db.collection('contratos').where('type', '==', 'Crédito').get();
+        const q = query(collection(db, 'contratos'), where('type', '==', 'Crédito'));
+        const snapshot = await getDocs(q);
         
         const pendingContracts = [];
         snapshot.forEach(doc => {
@@ -2124,29 +2697,373 @@
         });
     }
 
-    async function updateContractFromDashboard(contractId, field, value) {
+    const updateContractFromDashboard = window.updateContractFromDashboard = async (contractId, field, value) => {
         const updateData = {};
         updateData[field] = value;
-        await db.collection('contratos').doc(contractId).update(updateData);
+        await updateDoc(doc(db, 'contratos', contractId), updateData);
         
-        const doc = await db.collection('contratos').doc(contractId).get();
-        const data = doc.data();
+        const fieldName = field === 'dataEntregaFornecedor' ? 'Fornecedor -> THE WAY' : 'THE WAY -> Financeira';
+        const note = `Data de entrega de documentos (${fieldName}) atualizada para ${value}.`;
+        await handleInteractionSubmit('contratos', contractId, note);
+
+        const docSnap = await getDoc(doc(db, 'contratos', contractId));
+        const data = docSnap.data();
         if (data.dataEntregaFornecedor && data.dataEntregaFinanceira) {
             loadDocumentTrackingWidget();
         }
     }
 
-    async function updateContractChecklistFromDashboard(contractId, field, docName, isChecked) {
-        const docRef = db.collection('contratos').doc(contractId);
+    const updateContractChecklistFromDashboard = window.updateContractChecklistFromDashboard = async (contractId, field, docName, isChecked) => {
+        const docRef = doc(db, 'contratos', contractId);
         if (isChecked) {
-            await docRef.update({
-                [field]: firebase.firestore.FieldValue.arrayUnion(docName)
-            });
+            await updateDoc(docRef, { [field]: arrayUnion(docName) });
         } else {
-            await docRef.update({
-                [field]: firebase.firestore.FieldValue.arrayRemove(docName)
-            });
+            await updateDoc(docRef, { [field]: arrayRemove(docName) });
         }
+        
+        const fieldName = field === 'checklistDocsFornecedor' ? 'Fornecedor -> THE WAY' : 'THE WAY -> Financeira';
+        const status = isChecked ? 'recebido' : 'não recebido';
+        const note = `Documento '${docName}' (${fieldName}) marcado como ${status}.`;
+        await handleInteractionSubmit('contratos', contractId, note);
+    }
+
+    // --- GESTÃO DE DOCUMENTOS ---
+    async function handleFileUpload(collectionName, docId, file) {
+        const progressBar = document.getElementById('upload-progress');
+        const uploadForm = document.getElementById('upload-form');
+        
+        if (!file) return;
+
+        progressBar.style.display = 'block';
+        uploadForm.style.display = 'none';
+
+        const filePath = `${collectionName}/${docId}/${Date.now()}_${file.name}`;
+        const fileRef = ref(storage, filePath);
+        
+        try {
+            const snapshot = await uploadBytes(fileRef, file);
+            const url = await getDownloadURL(snapshot.ref);
+            await addDoc(collection(db, collectionName, docId, 'documentos'), {
+                name: file.name,
+                url: url,
+                path: filePath,
+                uploadedAt: serverTimestamp()
+            });
+            
+            showToast('Ficheiro enviado com sucesso!', 'success');
+            loadDocuments(collectionName, docId, 'documentList');
+        } catch (error) {
+            console.error("Erro no upload: ", error);
+            showToast("Ocorreu um erro ao enviar o ficheiro.", "error");
+        } finally {
+            progressBar.style.display = 'none';
+            uploadForm.style.display = 'flex';
+            document.getElementById('file-input').value = '';
+        }
+    }
+
+    async function loadDocuments(collectionName, docId, elementId) {
+        const container = document.getElementById(elementId);
+        if (!container) return;
+        container.innerHTML = '<li>A carregar documentos...</li>';
+        
+        const q = query(collection(db, collectionName, docId, 'documentos'), orderBy('uploadedAt', 'desc'));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+            container.innerHTML = '<li>Nenhum documento encontrado.</li>';
+            return;
+        }
+
+        container.innerHTML = '';
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
+            const date = d.uploadedAt ? d.uploadedAt.toDate().toLocaleDateString('pt-PT') : '';
+            const item = document.createElement('li');
+            item.innerHTML = `
+                <a href="${d.url}" target="_blank" title="Abrir ${d.name}"><i class="ph ph-file-arrow-down"></i> ${d.name}</a>
+                <div>
+                    <span class="file-date">${date}</span>
+                    <button class="btn-danger" style="padding: .2em .5em; font-size: .8em;" onclick="deleteDocument('${collectionName}', '${docId}', '${docSnap.id}', '${d.path}')" title="Eliminar">
+                        <i class="ph ph-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    const deleteDocument = window.deleteDocument = (collectionName, parentId, docId, filePath) => {
+        showConfirmModal('Tem a certeza que quer eliminar este documento? Esta ação é irreversível.', async () => {
+            try {
+                await deleteDoc(doc(db, collectionName, parentId, 'documentos', docId));
+                await deleteObject(ref(storage, filePath));
+                showToast('Documento eliminado com sucesso.', 'info');
+                loadDocuments(collectionName, parentId, 'documentList');
+            } catch (error) {
+                console.error("Erro ao eliminar documento:", error);
+                showToast("Erro ao eliminar o documento.", "error");
+            }
+        });
+    }
+
+    // --- FUNÇÕES DE COMISSÕES (REFACTOR) ---
+    async function loadComissoes() {
+        const tableBody = document.getElementById('comissoesTable').querySelector('tbody');
+        tableBody.innerHTML = '<tr><td colspan="6">A carregar comissões...</td></tr>';
+        
+        const q = query(collection(db, 'contratos'), where('commissionStatus', '==', 'Não Paga'));
+        const snapshot = await getDocs(q);
+
+        const monthlyGroups = {};
+
+        snapshot.forEach(docSnap => {
+            const contract = docSnap.data();
+            const valor = parseFloat(contract.comissaoRecebida || 0);
+            if (valor <= 0 || !contract.startDate) return;
+
+            let payerId = null;
+            let payerName = 'N/D';
+            let payerType = 'cliente';
+
+            if (contract.type === 'Crédito' && contract.financeiraId) {
+                payerId = contract.financeiraId;
+                payerName = partnersData.financeiras[payerId] || 'Financeira';
+                payerType = 'financeira';
+            } else if (contract.type === 'Seguro' && contract.seguradoraId) {
+                payerId = contract.seguradoraId;
+                payerName = partnersData.seguradoras[payerId] || 'Seguradora';
+                payerType = 'seguradora';
+            } else if (['Legalização Automóvel', 'Consultoria Financeira'].includes(contract.type) && contract.clientId) {
+                payerId = contract.clientId;
+                payerName = partnersData.clientes[payerId] || 'Cliente';
+                payerType = 'cliente';
+            }
+
+            if (!payerId) return;
+
+            const date = new Date(contract.startDate);
+            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            const groupKey = `${payerId}_${monthKey}`;
+
+            if (!monthlyGroups[groupKey]) {
+                monthlyGroups[groupKey] = {
+                    payerName: payerName,
+                    month: monthKey,
+                    total: 0,
+                    contractIds: [],
+                    count: 0
+                };
+            }
+            monthlyGroups[groupKey].total += valor;
+            monthlyGroups[groupKey].contractIds.push(docSnap.id);
+            monthlyGroups[groupKey].count++;
+        });
+
+        if (Object.keys(monthlyGroups).length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6">Nenhuma comissão por liquidar.</td></tr>';
+            return;
+        }
+
+        tableBody.innerHTML = '';
+        for (const key in monthlyGroups) {
+            const group = monthlyGroups[key];
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td><input type="checkbox" class="comissao-check" data-group-key="${key}"></td>
+                <td>${group.payerName}</td>
+                <td>${group.month}</td>
+                <td>${group.count}</td>
+                <td>${group.total.toLocaleString('pt-PT', {style: 'currency', currency: 'EUR'})}</td>
+                <td>Por Liquidar</td>
+            `;
+            row.querySelector('.comissao-check').dataset.contracts = JSON.stringify(group.contractIds);
+            row.querySelector('.comissao-check').dataset.total = group.total;
+        }
+    }
+
+    const toggleAllComissoes = window.toggleAllComissoes = (checked) => {
+        document.querySelectorAll('.comissao-check:not(:disabled)').forEach(cb => cb.checked = checked);
+    }
+
+    const openComissaoModal = window.openComissaoModal = async () => {
+        const selectedGroups = Array.from(document.querySelectorAll('.comissao-check:checked'));
+        if (selectedGroups.length === 0) {
+            showToast('Por favor, selecione pelo menos um grupo de comissões para liquidar.', 'warning');
+            return;
+        }
+        document.getElementById('comissaoCount').textContent = selectedGroups.length;
+        document.getElementById('comissaoDataPagamento').value = new Date().toISOString().split('T')[0];
+        await loadBancosForDropdown('comissaoBanco', true);
+        comissaoModal.classList.add('active');
+    }
+    const closeComissaoModal = window.closeComissaoModal = () => { comissaoModal.classList.remove('active'); }
+
+    const liquidarComissoes = window.liquidarComissoes = async () => {
+        const selectedCheckboxes = Array.from(document.querySelectorAll('.comissao-check:checked'));
+        const faturaNumero = document.getElementById('comissaoFatura').value;
+        const dataPagamento = document.getElementById('comissaoDataPagamento').value;
+        const bancoSelect = document.getElementById('comissaoBanco');
+        const bancoId = bancoSelect.value;
+
+        if (!faturaNumero || !bancoId || !dataPagamento) {
+            showToast('Por favor, preencha todos os campos.', 'error');
+            return;
+        }
+
+        try {
+            const bancoRef = doc(db, 'bancos', bancoId);
+
+            for (const cb of selectedCheckboxes) {
+                const totalComissao = parseFloat(cb.dataset.total);
+                const contractIds = JSON.parse(cb.dataset.contracts);
+
+                await runTransaction(db, async (transaction) => {
+                    const bancoDoc = await transaction.get(bancoRef);
+                    if (!bancoDoc.exists()) throw "Banco não encontrado!";
+                    
+                    const novoSaldo = parseFloat(bancoDoc.data().balance) + totalComissao;
+                    transaction.update(bancoRef, { balance: novoSaldo });
+
+                    const movimentoRef = doc(collection(db, 'bancos', bancoId, 'movimentos'));
+                    transaction.set(movimentoRef, {
+                        data: dataPagamento,
+                        valor: totalComissao,
+                        tipo: 'Comissão',
+                        descricao: `Recebimento Fatura ${faturaNumero} (${contractIds.length} contratos)`,
+                        createdAt: serverTimestamp()
+                    });
+
+                    contractIds.forEach(id => {
+                        const docRef = doc(db, 'contratos', id);
+                        transaction.update(docRef, {
+                            commissionStatus: 'Paga',
+                            faturaNumero: faturaNumero,
+                            dataPagamentoComissao: dataPagamento,
+                            bancoRecepcaoId: bancoId,
+                        });
+                    });
+                });
+            }
+            
+            showToast('Comissões liquidadas com sucesso!', 'success');
+            closeComissaoModal();
+            loadComissoes();
+            loadBancos();
+            loadMovimentos();
+        } catch (error) {
+            console.error("Erro ao liquidar comissões:", error);
+            showToast("Erro ao liquidar comissões.", "error");
+        }
+    }
+
+    // --- FUNÇÕES DE RELATÓRIOS ---
+    const exportReport = window.exportReport = async () => {
+        const reportType = document.getElementById('reportType').value;
+        const startDate = document.getElementById('reportStartDate').value;
+        const endDate = document.getElementById('reportEndDate').value;
+        const fornecedorId = document.getElementById('reportFornecedor').value;
+        const comercialId = document.getElementById('reportComercial').value;
+        const financeiraId = document.getElementById('reportFinanceira').value;
+        const freelancerName = document.getElementById('reportFreelancer').value;
+
+        const pdf = new jsPDF();
+        let title = '';
+        let head = [];
+        let body = [];
+
+        let queryConstraints = [];
+        if (startDate) queryConstraints.push(where('startDate', '>=', startDate));
+        if (endDate) queryConstraints.push(where('startDate', '<=', endDate));
+        if (comercialId) queryConstraints.push(where('commercialId', '==', comercialId));
+        if (fornecedorId) queryConstraints.push(where('fornecedorId', '==', fornecedorId));
+        if (financeiraId) queryConstraints.push(where('financeiraId', '==', financeiraId));
+
+        let finalQuery = query(collection(db, 'contratos'), ...queryConstraints);
+
+        const snapshot = await getDocs(finalQuery);
+        let data = [];
+        snapshot.forEach(doc => data.push({id: doc.id, ...doc.data()}));
+
+        switch(reportType) {
+            case 'comissoes':
+                title = 'Mapa de Comissões';
+                head = [['Cliente', 'Tipo', 'Comercial', 'Comissão Paga', 'Comissão Recebida', 'Estado']];
+                data.forEach(d => {
+                    body.push([
+                        d.clientName,
+                        d.type,
+                        d.commercialName,
+                        `€${parseFloat(d.comissaoPagar || 0).toFixed(2)}`,
+                        `€${parseFloat(d.comissaoRecebida || 0).toFixed(2)}`,
+                        d.commissionStatus || 'Não Paga'
+                    ]);
+                });
+                break;
+            case 'producao':
+                title = 'Mapa de Produção Interno';
+                head = [['Cliente', 'Tipo', 'Comercial', 'Fornecedor', 'Financeira', 'Valor']];
+                 data.forEach(d => {
+                    body.push([
+                        d.clientName,
+                        d.type,
+                        d.commercialName,
+                        partnersData.fornecedores[d.fornecedorId] || '-',
+                        partnersData.financeiras[d.financeiraId] || '-',
+                        `€${parseFloat(d.valorFinanciado || 0).toFixed(2)}`
+                    ]);
+                });
+                break;
+            case 'freelance':
+                title = `Mapa de Freelance - ${freelancerName}`;
+                head = [['Cliente', 'Tipo Seguro', 'Apólice', 'Comissão']];
+                let freelanceConstraints = [where('type', '==', 'Seguro'), where('isFreelancer', '==', true)];
+                if (freelancerName) {
+                    freelanceConstraints.push(where('freelancerName', '==', freelancerName));
+                }
+                const freelanceQuery = query(collection(db, 'contratos'), ...freelanceConstraints);
+                const freelanceSnapshot = await getDocs(freelanceQuery);
+                freelanceSnapshot.forEach(doc => {
+                    const d = doc.data();
+                    body.push([
+                        d.clientName,
+                        d.tipoSeguro,
+                        d.apolice,
+                        `€${parseFloat(d.comissaoRecebida || 0).toFixed(2)}`
+                    ]);
+                });
+                break;
+            case 'pendentes':
+                title = 'Mapa de Pendentes';
+                head = [['Cliente', 'Tipo', 'Comercial', 'Descrição Pendente']];
+                const tasksQuery = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
+                const tasksSnapshot = await getDocs(tasksQuery);
+                const taskPromises = tasksSnapshot.docs.map(async taskDoc => {
+                    const task = taskDoc.data();
+                    if(task.contractId) {
+                        const contractDoc = await getDoc(doc(db, 'contratos', task.contractId));
+                        if(contractDoc.exists()) {
+                            const contract = contractDoc.data();
+                            if (fornecedorId && contract.fornecedorId !== fornecedorId) return;
+                            if (comercialId && contract.commercialId !== comercialId) return;
+                            if (financeiraId && contract.financeiraId !== financeiraId) return;
+                            
+                             body.push([
+                                contract.clientName,
+                                contract.type,
+                                contract.commercialName,
+                                task.title
+                            ]);
+                        }
+                    }
+                });
+                await Promise.all(taskPromises);
+                break;
+        }
+
+        pdf.text(title, 14, 16);
+        pdf.autoTable({ startY: 22, head: head, body: body });
+        pdf.save(`${title.replace(/ /g, '_')}.pdf`);
     }
 
   </script>
