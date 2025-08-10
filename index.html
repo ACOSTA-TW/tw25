@@ -1080,7 +1080,7 @@
     document.getElementById('confirmModalNo').onclick = () => { confirmModal.classList.remove('active'); };
 
     // --- DASHBOARD ---
-    async function loadDashboardData() {
+    const loadDashboardData = window.loadDashboardData = async () => {
         const today = new Date();
         document.getElementById('dashboard-update-time').textContent = `Última atualização: hoje às ${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
 
@@ -1209,7 +1209,7 @@
         evt.currentTarget.classList.add('active');
     }
 
-    async function loadPartners() {
+    const loadPartners = window.loadPartners = async () => {
         loadPartnerData('fornecedores');
         loadPartnerData('financeiras');
         loadPartnerData('seguradoras');
@@ -1285,7 +1285,7 @@
     }
 
     // --- TAREFAS ---
-    async function loadTasks() {
+    const loadTasks = window.loadTasks = async () => {
         const tableBody = document.getElementById('tasksTable').querySelector('tbody');
         tableBody.innerHTML = '';
         const q = query(collection(db, 'tarefas'), orderBy('dueDate'));
@@ -1841,7 +1841,7 @@
         }); 
     }
     
-    async function loadClients(searchTerm = '') {
+    const loadClients = window.loadClients = async (searchTerm = '') => {
         const tableBody = document.getElementById('clientTable').querySelector('tbody');
         tableBody.innerHTML = '<tr><td colspan="7">A carregar clientes...</td></tr>';
         
@@ -1890,7 +1890,7 @@
         });
     }
 
-    async function loadContracts(searchTerm = '') {
+    const loadContracts = window.loadContracts = async (searchTerm = '') => {
         const tableBody = document.getElementById('contractTable').querySelector('tbody');
         tableBody.innerHTML = '<tr><td colspan="7">A carregar contratos...</td></tr>';
 
@@ -1982,7 +1982,7 @@
             document.getElementById('comercialStatus').value = d.status || 'Ativo'; 
         } 
     }
-    async function loadComerciais() {
+    const loadComerciais = window.loadComerciais = async () => {
         if (!currentUserData || currentUserData.role !== 'Administrador') return;
         const tableBody = document.getElementById('comerciaisTable').querySelector('tbody');
         tableBody.innerHTML = '';
@@ -2056,7 +2056,7 @@
         if (tabName === 'movimentos') loadMovimentos();
     }
 
-    function loadFinanceiraModule() {
+    const loadFinanceiraModule = window.loadFinanceiraModule = () => {
         loadFinanceiraDashboard();
         const financeTabs = document.querySelector('#finance-tabs');
         if (financeTabs) {
@@ -2123,7 +2123,7 @@
         if (tablePagarBody.innerHTML === '') tablePagarBody.innerHTML = '<tr><td colspan="2">Nenhum valor a pagar este mês.</td></tr>';
     }
 
-    async function loadDespesas() {
+    const loadDespesas = window.loadDespesas = async () => {
         const tableBody = document.getElementById('despesasTable').querySelector('tbody');
         tableBody.innerHTML = '';
         const q = query(collection(db, 'despesas'), orderBy('date', 'desc'));
@@ -2353,7 +2353,7 @@
         }
     };
     
-    async function loadBancos(apenasAtivos = false) {
+    const loadBancos = window.loadBancos = async (apenasAtivos = false) => {
         const tableBody = document.getElementById('bancosTable').querySelector('tbody');
         tableBody.innerHTML = '';
         let q = apenasAtivos ? query(collection(db, 'bancos'), where('status', '==', 'Ativo')) : query(collection(db, 'bancos'));
@@ -2495,7 +2495,7 @@
     }
 
     // --- RELATÓRIOS ---
-    async function loadRelatoriosData() {
+    const loadRelatoriosData = window.loadRelatoriosData = async () => {
         await loadPartnersForDropdown('fornecedores', 'reportFornecedor');
         await loadComerciaisForDropdown('reportComercial');
         await loadPartnersForDropdown('financeiras', 'reportFinanceira');
@@ -2637,7 +2637,7 @@
     }
 
     // --- WIDGET DE CONTROLO DE DOCUMENTOS ---
-    async function loadDocumentTrackingWidget() {
+    const loadDocumentTrackingWidget = window.loadDocumentTrackingWidget = async () => {
         const container = document.getElementById('documentTrackingList');
         container.innerHTML = '<p>A procurar propostas pendentes...</p>';
 
@@ -2957,7 +2957,48 @@
         }
     }
 
-    // --- FUNÇÕES DE RELATÓRIOS ---
+    // --- FUNÇÕES DE RELATÓRIOS (COM BASE) ---
+    function generatePdfWithBase(title, head, body) {
+        const doc = new jsPDF();
+        const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.get('height');
+        const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.get('width');
+
+        doc.autoTable({
+            head: head,
+            body: body,
+            startY: 25, // Começa a tabela abaixo do cabeçalho
+            didDrawPage: function (data) {
+                // --- CABEÇALHO ---
+                doc.setFontSize(20);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
+                doc.text("THE WAY", data.settings.margin.left, 15);
+
+                // Título do Documento
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary').trim());
+                doc.text(title, pageWidth / 2, 20, { align: 'center' });
+
+                // --- RODAPÉ ---
+                const pageCount = doc.internal.getNumberOfPages();
+                doc.setFontSize(8);
+                doc.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary').trim());
+
+                // Data de Geração
+                const dateStr = `Gerado em: ${new Date().toLocaleDateString('pt-PT')}`;
+                doc.text(dateStr, data.settings.margin.left, pageHeight - 10);
+
+                // Número da Página
+                const pageNumStr = `Página ${data.pageNumber} de ${pageCount}`;
+                doc.text(pageNumStr, pageWidth - data.settings.margin.right, pageHeight - 10, { align: 'right' });
+            },
+            margin: { top: 30 } // Aumentar margem para o cabeçalho
+        });
+
+        doc.save(`${title.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    }
+
     const exportReport = window.exportReport = async () => {
         const reportType = document.getElementById('reportType').value;
         const startDate = document.getElementById('reportStartDate').value;
@@ -2967,7 +3008,6 @@
         const financeiraId = document.getElementById('reportFinanceira').value;
         const freelancerName = document.getElementById('reportFreelancer').value;
 
-        const pdf = new jsPDF();
         let title = '';
         let head = [];
         let body = [];
@@ -2980,7 +3020,6 @@
         if (financeiraId) queryConstraints.push(where('financeiraId', '==', financeiraId));
 
         let finalQuery = query(collection(db, 'contratos'), ...queryConstraints);
-
         const snapshot = await getDocs(finalQuery);
         let data = [];
         snapshot.forEach(doc => data.push({id: doc.id, ...doc.data()}));
@@ -3061,9 +3100,7 @@
                 break;
         }
 
-        pdf.text(title, 14, 16);
-        pdf.autoTable({ startY: 22, head: head, body: body });
-        pdf.save(`${title.replace(/ /g, '_')}.pdf`);
+        generatePdfWithBase(title, head, body);
     }
 
   </script>
