@@ -237,7 +237,7 @@
     .toast.error { background-color: var(--color-danger); }
     .toast.info { background-color: var(--color-secondary); }
 
-    /* Outros estilos específicos... (mantidos do original para brevidade) */
+    /* Outros estilos específicos... */
     #detailsModalBody .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
     #detailsModalBody h4 { margin-top: 1.5em; margin-bottom: .5em; border-bottom: 1px solid var(--color-border); padding-bottom: .5em; }
     #interactionHistory, #contractInteractionHistory, #partnerInteractionHistory { max-height: 200px; overflow-y: auto; border: 1px solid var(--color-border); border-radius: 8px; padding: 1em; background: #F9FAFB; }
@@ -253,7 +253,7 @@
     .tabs button.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .service-details { display: none; margin-top: 1.5em; border-top: 1px solid var(--color-border); padding-top: 1.5em; }
+    .service-details, .credit-type-details { display: none; margin-top: 1.5em; border-top: 1px solid var(--color-border); padding-top: 1.5em; }
     .tasks-list .task-item, .renewals-list .renewal-item { display: flex; justify-content: space-between; align-items: center; padding: .8em 0; border-bottom: 1px solid var(--color-border); }
     .tasks-list .task-item:hover, .renewals-list .renewal-item:hover { background-color: var(--color-background); }
     .tasks-list .task-item:last-child, .renewals-list .renewal-item:last-child { border-bottom: none; }
@@ -727,15 +727,18 @@
 
   <!-- FIREBASE SDKS (MODULAR) -->
   <script type="module">
-    // Importações do Firebase v9+ Modular SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+    // Importações do Firebase v11+ Modular SDK (Versão Atualizada)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
     // Inicialização do jsPDF
     const { jsPDF } = window.jspdf;
 
+    // AVISO: A sua chave de API está visível no código do lado do cliente.
+    // Para um ambiente de produção, é recomendado proteger esta chave usando
+    // App Check ou movendo a lógica sensível para um backend (Cloud Functions).
     const firebaseConfig = {
       apiKey: "AIzaSyA0xYVjKFIv0pJaYksNmh_SKEJJL7bLZbw",
       authDomain: "tw25-1dbb3.firebaseapp.com",
@@ -1453,7 +1456,36 @@
     }
 
     // --- Funções de ajuda e genéricas ---
-    function getClientFormHTML() { return `<form id="clientForm"><div class="row"><div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div><div class="col"><label>Email</label><input type="email" id="clientEmail" /></div></div><div class="row"><div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div><div class="col"><label>NIF*</label><input type="text" id="clientNif" maxlength="9" required /></div></div><label>Morada</label><input type="text" id="clientAddress" /><div class="row"><div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div><div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div></div><div class="row"><div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div><div class="col"><label>Comercial Responsável</label><select id="clientManager"></select></div></div><div class="row"><div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div><div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div></div><label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`; }
+    function getClientFormHTML() { 
+        return `<form id="clientForm">
+            <div class="row">
+                <div class="col"><label>Nome Completo</label><input type="text" id="clientName" required /></div>
+                <div class="col"><label>Email</label><input type="email" id="clientEmail" /></div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Telefone</label><input type="tel" id="clientPhone" /></div>
+                <div class="col"><label>NIF*</label><input type="text" id="clientNif" maxlength="9" required /></div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Data de Nascimento</label><input type="date" id="clientDob" /></div>
+            </div>
+            <label>Morada</label><input type="text" id="clientAddress" />
+            <div class="row">
+                <div class="col"><label>Código Postal</label><input type="text" id="clientPostalCode" /></div>
+                <div class="col"><label>Localidade</label><input type="text" id="clientCity" /></div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Tipo de Serviço</label><select id="clientServiceType"><option value="">Selecionar</option><option value="Crédito">Crédito</option><option value="Seguro">Seguro</option><option value="Consultoria">Consultoria</option><option value="Legalização">Legalização</option></select></div>
+                <div class="col"><label>Comercial Responsável</label><select id="clientManager"></select></div>
+            </div>
+            <div class="row">
+                <div class="col"><label>Data de Criação</label><input type="date" id="clientCreationDate" readonly /></div>
+                <div class="col"><label>RGPD Assinado?</label><select id="clientRgpd"><option value="Sim">Sim</option><option value="Não">Não</option></select></div>
+            </div>
+            <label>Observações Internas</label><textarea id="clientInternalNotes" rows="3"></textarea>
+            <div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div>
+        </form>`; 
+    }
     
     async function handleClientFormSubmit(id) {
         const nif = document.getElementById('clientNif').value.trim();
@@ -1489,6 +1521,7 @@
             email: email, 
             phone: document.getElementById('clientPhone').value.trim(), 
             nif: nif, 
+            dob: document.getElementById('clientDob').value,
             address: document.getElementById('clientAddress').value.trim(), 
             postalCode: document.getElementById('clientPostalCode').value.trim(), 
             city: document.getElementById('clientCity').value.trim(), 
@@ -1525,6 +1558,7 @@
             document.getElementById('clientEmail').value = d.email || ''; 
             document.getElementById('clientPhone').value = d.phone || ''; 
             document.getElementById('clientNif').value = d.nif || ''; 
+            document.getElementById('clientDob').value = d.dob || '';
             document.getElementById('clientAddress').value = d.address || ''; 
             document.getElementById('clientPostalCode').value = d.postalCode || ''; 
             document.getElementById('clientCity').value = d.city || ''; 
@@ -1573,22 +1607,38 @@
                 <h4>Detalhes do Crédito</h4>
                  <div class="row">
                     <div class="col"><label>Nº Proposta</label><input type="text" id="creditoProposta"></div>
-                    <div class="col"><label>Matrícula</label><input type="text" id="creditoMatricula"></div>
                 </div>
                 <div class="row">
                     <div class="col"><label>Fornecedor</label><select id="creditoFornecedor"></select></div>
                     <div class="col"><label>Financeira</label><select id="creditoFinanceira"></select></div>
                 </div>
                 <div class="row">
-                    <div class="col"><label>Tipo de Crédito</label><input type="text" id="creditoTipo" placeholder="Ex: Pessoal, Automóvel"></div>
+                    <div class="col">
+                        <label>Tipo de Crédito</label>
+                        <select id="creditoTipo" onchange="handleCreditTypeChange(this.value)">
+                            <option value="">Selecione</option>
+                            <option value="Automovel">Automóvel</option>
+                            <option value="Consumo">Consumo</option>
+                            <option value="Habitacao">Habitação</option>
+                        </select>
+                    </div>
                     <div class="col"><label>Valor Financiado (€)</label><input type="number" id="creditoValorFinanciado" oninput="calculateComissaoPagar()"></div>
                 </div>
+                
+                <!-- Campos Dinâmicos para Tipo de Crédito -->
+                <div id="creditoAutomovelFields" class="credit-type-details"><label>Matrícula</label><input type="text" id="creditoMatricula"></div>
+                <div id="creditoConsumoFields" class="credit-type-details"><label>Artigo</label><input type="text" id="creditoArtigo"></div>
+                <div id="creditoHabitacaoFields" class="credit-type-details row">
+                    <div class="col"><label>Código Postal</label><input type="text" id="creditoHabitacaoCP"></div>
+                    <div class="col"><label>Área (m²)</label><input type="number" id="creditoHabitacaoArea"></div>
+                </div>
+
                 <div class="row">
-                    <div class="col"><label>Comissão (%)</label><input type="number" id="creditoComissaoPercent" oninput="calculateComissaoPagar()"></div>
+                    <div class="col"><label>Comissão (%)</label><input type="number" id="creditoComissaoPercent" step="0.01" oninput="calculateComissaoPagar()"></div>
                     <div class="col"><label>Comissão a Pagar</label><input type="text" id="creditoComissaoPagar" readonly style="background-color: #eee;"></div>
                 </div>
                 <div class="row">
-                    <div class="col"><label>Comissão Recebida (€)</label><input type="number" id="creditoComissaoRecebida"></div>
+                    <div class="col"><label>Comissão Recebida (€)</label><input type="number" id="creditoComissaoRecebida" step="0.01"></div>
                 </div>
                  <div class="row">
                     <div class="col"><label>Data entrega fornecedor</label><input type="date" id="creditoDataFornecedor"></div>
@@ -1705,6 +1755,13 @@
         if (serviceType === 'Consultoria Financeira') document.getElementById('detailsConsultoria').style.display = 'block';
     }
 
+    const handleCreditTypeChange = window.handleCreditTypeChange = (creditType) => {
+        document.querySelectorAll('.credit-type-details').forEach(div => div.style.display = 'none');
+        if(creditType) {
+            document.getElementById(`credito${creditType}Fields`).style.display = 'block';
+        }
+    }
+
     const calculateComissaoPagar = window.calculateComissaoPagar = () => {
         const valorFinanciado = parseFloat(document.getElementById('creditoValorFinanciado').value) || 0;
         const comissaoPercent = parseFloat(document.getElementById('creditoComissaoPercent').value) || 0;
@@ -1745,33 +1802,55 @@
             commissionStatus: 'Não Paga' 
         }; 
         
-        switch(contractType) {
-            case 'Crédito':
-                // ... (código existente para crédito)
-                break;
-            case 'Seguro':
-                 const fracionamento = document.getElementById('seguroFracionamento').value;
-                 let nextRenewalDate = new Date(startDate);
-                 switch(fracionamento) {
-                    case 'Mensal': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 1); break;
-                    case 'Trimestral': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 3); break;
-                    case 'Semestral': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 6); break;
-                    case 'Anual': nextRenewalDate.setFullYear(nextRenewalDate.getFullYear() + 1); break;
-                 }
-                 Object.assign(data, {
-                    tipoSeguro: document.getElementById('seguroTipo').value,
-                    seguradoraId: document.getElementById('seguroSeguradora').value,
-                    apolice: document.getElementById('seguroApolice').value,
-                    matricula: document.getElementById('seguroMatricula').value,
-                    premioComercial: document.getElementById('seguroPremioComercial').value,
-                    fracionamento: fracionamento,
-                    comissaoRecebida: document.getElementById('seguroComissao').value,
-                    nextRenewalDate: nextRenewalDate.toISOString().split('T')[0],
-                    isFreelancer: document.getElementById('seguroIsFreelancer').checked,
-                    freelancerName: document.getElementById('seguroFreelancerName').value,
-                 });
-                break;
-            // ... (outros cases)
+        if (contractType === 'Crédito') {
+            const creditoTipo = document.getElementById('creditoTipo').value;
+            Object.assign(data, {
+                numeroProposta: document.getElementById('creditoProposta').value,
+                fornecedorId: document.getElementById('creditoFornecedor').value,
+                financeiraId: document.getElementById('creditoFinanceira').value,
+                valorFinanciado: document.getElementById('creditoValorFinanciado').value,
+                comissaoPercent: document.getElementById('creditoComissaoPercent').value,
+                comissaoPagar: (parseFloat(document.getElementById('creditoValorFinanciado').value || 0) * parseFloat(document.getElementById('creditoComissaoPercent').value || 0) / 100),
+                comissaoRecebida: document.getElementById('creditoComissaoRecebida').value,
+                dataEntregaFornecedor: document.getElementById('creditoDataFornecedor').value,
+                dataEntregaFinanceira: document.getElementById('creditoDataFinanceira').value,
+                documentosEmFalta: document.getElementById('creditoDocsFaltaCheck').checked,
+                documentosEmFaltaDesc: document.getElementById('creditoDocsFalta').value,
+                checklistDocs: Array.from(document.querySelectorAll('input[name="creditoChecklist"]:checked')).map(cb => cb.value),
+                creditoRealizado: document.getElementById('creditoRealizado').checked,
+                creditoTipo: creditoTipo
+            });
+
+            if (creditoTipo === 'Automovel') {
+                data.creditoMatricula = document.getElementById('creditoMatricula').value;
+            } else if (creditoTipo === 'Consumo') {
+                data.creditoArtigo = document.getElementById('creditoArtigo').value;
+            } else if (creditoTipo === 'Habitacao') {
+                data.creditoHabitacaoCP = document.getElementById('creditoHabitacaoCP').value;
+                data.creditoHabitacaoArea = document.getElementById('creditoHabitacaoArea').value;
+            }
+        }
+        else if (contractType === 'Seguro') {
+             const fracionamento = document.getElementById('seguroFracionamento').value;
+             let nextRenewalDate = new Date(startDate);
+             switch(fracionamento) {
+                case 'Mensal': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 1); break;
+                case 'Trimestral': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 3); break;
+                case 'Semestral': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 6); break;
+                case 'Anual': nextRenewalDate.setFullYear(nextRenewalDate.getFullYear() + 1); break;
+             }
+             Object.assign(data, {
+                tipoSeguro: document.getElementById('seguroTipo').value,
+                seguradoraId: document.getElementById('seguroSeguradora').value,
+                apolice: document.getElementById('seguroApolice').value,
+                matricula: document.getElementById('seguroMatricula').value,
+                premioComercial: document.getElementById('seguroPremioComercial').value,
+                fracionamento: fracionamento,
+                comissaoRecebida: document.getElementById('seguroComissao').value,
+                nextRenewalDate: nextRenewalDate.toISOString().split('T')[0],
+                isFreelancer: document.getElementById('seguroIsFreelancer').checked,
+                freelancerName: document.getElementById('seguroFreelancerName').value,
+             });
         }
 
         try {
@@ -1802,25 +1881,45 @@
 
             await handleContractTypeChange(d.type);
 
-            switch(d.type) {
-                case 'Crédito':
-                    // ... (código existente)
-                    break;
-                case 'Seguro':
-                    document.getElementById('seguroTipo').value = d.tipoSeguro || '';
-                    document.getElementById('seguroSeguradora').value = d.seguradoraId || '';
-                    document.getElementById('seguroApolice').value = d.apolice || '';
-                    document.getElementById('seguroMatricula').value = d.matricula || '';
-                    document.getElementById('seguroPremioComercial').value = d.premioComercial || '';
-                    document.getElementById('seguroFracionamento').value = d.fracionamento || 'Anual';
-                    document.getElementById('seguroComissao').value = d.comissaoRecebida || '';
-                    if (d.isFreelancer) {
-                        document.getElementById('seguroIsFreelancer').checked = true;
-                        document.getElementById('seguroFreelancerContainer').style.display = 'block';
-                        document.getElementById('seguroFreelancerName').value = d.freelancerName || '';
+            if (d.type === 'Crédito') {
+                document.getElementById('creditoProposta').value = d.numeroProposta || '';
+                document.getElementById('creditoFornecedor').value = d.fornecedorId || '';
+                document.getElementById('creditoFinanceira').value = d.financeiraId || '';
+                document.getElementById('creditoValorFinanciado').value = d.valorFinanciado || '';
+                document.getElementById('creditoComissaoPercent').value = d.comissaoPercent || '';
+                document.getElementById('creditoComissaoRecebida').value = d.comissaoRecebida || '';
+                document.getElementById('creditoDataFornecedor').value = d.dataEntregaFornecedor || '';
+                document.getElementById('creditoDataFinanceira').value = d.dataEntregaFinanceira || '';
+                document.getElementById('creditoDocsFaltaCheck').checked = d.documentosEmFalta || false;
+                document.getElementById('creditoDocsFalta').value = d.documentosEmFaltaDesc || '';
+                document.getElementById('creditoRealizado').checked = d.creditoRealizado || false;
+                if(d.creditoTipo) {
+                    document.getElementById('creditoTipo').value = d.creditoTipo;
+                    handleCreditTypeChange(d.creditoTipo);
+                    if (d.creditoTipo === 'Automovel') {
+                        document.getElementById('creditoMatricula').value = d.creditoMatricula || '';
+                    } else if (d.creditoTipo === 'Consumo') {
+                        document.getElementById('creditoArtigo').value = d.creditoArtigo || '';
+                    } else if (d.creditoTipo === 'Habitacao') {
+                        document.getElementById('creditoHabitacaoCP').value = d.creditoHabitacaoCP || '';
+                        document.getElementById('creditoHabitacaoArea').value = d.creditoHabitacaoArea || '';
                     }
-                    break;
-                // ... (outros cases)
+                }
+                calculateComissaoPagar();
+            }
+            else if (d.type === 'Seguro') {
+                document.getElementById('seguroTipo').value = d.tipoSeguro || '';
+                document.getElementById('seguroSeguradora').value = d.seguradoraId || '';
+                document.getElementById('seguroApolice').value = d.apolice || '';
+                document.getElementById('seguroMatricula').value = d.matricula || '';
+                document.getElementById('seguroPremioComercial').value = d.premioComercial || '';
+                document.getElementById('seguroFracionamento').value = d.fracionamento || 'Anual';
+                document.getElementById('seguroComissao').value = d.comissaoRecebida || '';
+                if (d.isFreelancer) {
+                    document.getElementById('seguroIsFreelancer').checked = true;
+                    document.getElementById('seguroFreelancerContainer').style.display = 'block';
+                    document.getElementById('seguroFreelancerName').value = d.freelancerName || '';
+                }
             }
         } 
     }
@@ -2678,8 +2777,13 @@
                 `;
             });
         } catch (error) {
+            // MELHORIA: Adicionada mensagem de erro mais específica.
             console.error("Erro ao carregar movimentos:", error);
-            tableBody.innerHTML = '<tr><td colspan="5">Erro ao carregar movimentos. Verifique a consola.</td></tr>';
+            let errorMessage = 'Erro ao carregar movimentos. Verifique a consola.';
+            if (error.code === 'failed-precondition') {
+                errorMessage = `Erro: A consulta requer um índice. Por favor, aceda à consola do Firebase, encontre o link no erro na consola do browser e crie o índice para a coleção 'movimentos'.`;
+            }
+            tableBody.innerHTML = `<tr><td colspan="5">${errorMessage}</td></tr>`;
             showToast("Erro ao carregar movimentos.", "error");
         }
     }
