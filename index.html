@@ -95,11 +95,14 @@
         margin: 0; font-size: 2em; font-weight: 700; display: flex; align-items: center; gap: .5em;
     }
     .header-actions { display: flex; gap: 1em; align-items: center; }
-    .search-bar, .filter-bar select, .filter-bar input {
+    .search-bar, .filter-bar select, .filter-bar input, .filter-bar .btn-secondary {
         padding: .8em 1.2em; border-radius: 8px; border: 1.5px solid var(--color-border);
-        font-size: 1em; width: 250px; background: var(--color-surface);
+        font-size: 1em; background: var(--color-surface);
         transition: border-color .2s, box-shadow .2s;
     }
+     .search-bar, .filter-bar select, .filter-bar input {
+        width: 250px;
+     }
     .search-bar:focus, .filter-bar select:focus, .filter-bar input:focus {
         outline: none;
         border-color: var(--color-primary);
@@ -179,8 +182,8 @@
     }
     .modal-footer { margin-top: 2em; display: flex; justify-content: flex-end; gap: 1em; }
     .modal-footer button { padding: .9em 2.2em; }
-    .modal-footer .btn-secondary { background: var(--color-border); color: var(--color-text-primary); box-shadow: none; }
-    .modal-footer .btn-secondary:hover { background: #D1D5DB; }
+    .modal-footer .btn-secondary, .btn-secondary { background: var(--color-border); color: var(--color-text-primary); box-shadow: none; }
+    .modal-footer .btn-secondary:hover, .btn-secondary:hover { background: #D1D5DB; }
     
     /* Dashboard & Reports Styles */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
@@ -277,6 +280,34 @@
     #upload-form { margin-top: 1em; display: flex; gap: 1em; }
     #upload-form input[type="file"] { flex-grow: 1; }
     #upload-progress { width: 100%; margin-top: .5em; display: none; }
+    
+    /* Estilos para Relatórios */
+    .report-card {
+        background: var(--color-surface);
+        border-radius: 12px;
+        padding: 2em;
+        margin-bottom: 1.5em;
+        box-shadow: 0 4px 25px #0000000a;
+    }
+    .report-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5em;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 1em;
+    }
+    .report-card-header h4 {
+        margin: 0;
+        font-size: 1.4em;
+    }
+    .report-card-body {
+        min-height: 100px;
+    }
+    #freelancer-search-container {
+        display: none;
+        margin-top: 1em;
+    }
 
     @media(max-width:1200px){
         .dashboard-grid, .reports-grid { grid-template-columns: 1fr; }
@@ -508,7 +539,7 @@
         </div>
         <div class="tabs" id="finance-tabs">
             <button class="active" onclick="openFinanceTab(event, 'financeira-dashboard')">Dashboard Mensal</button>
-            <button onclick="openFinanceTab(event, 'financeira-comissoes')">Comissões</button>
+            <button onclick="openFinanceTab(event, 'financeira-comissoes')">Comissões e Ganhos</button>
             <button onclick="openFinanceTab(event, 'financeira-despesas')">Despesas</button>
             <button onclick="openFinanceTab(event, 'financeira-por-conciliar')">Por Conciliar</button>
             <button onclick="openFinanceTab(event, 'financeira-banco')">Contas Bancárias</button>
@@ -516,13 +547,17 @@
 
         <div id="financeira-dashboard" class="tab-content active">
             <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div class="title">Comissões a Receber (s/ IVA)</div>
-                    <div class="value" id="kpi-comissoes-receber">€0.00</div>
+                 <div class="kpi-card">
+                    <div class="title">Comissões Crédito (Mês)</div>
+                    <div class="value" id="kpi-comissoes-credito">€0.00</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="title">Comissões a Pagar (c/ IVA)</div>
-                    <div class="value" id="kpi-comissoes-pagar">€0.00</div>
+                    <div class="title">Comissões Seguros (Mês)</div>
+                    <div class="value" id="kpi-comissoes-seguros">€0.00</div>
+                </div>
+                 <div class="kpi-card">
+                    <div class="title">Outros Ganhos (Mês)</div>
+                    <div class="value" id="kpi-outros-ganhos">€0.00</div>
                 </div>
                 <div class="kpi-card">
                     <div class="title">Total Despesas (Mês)</div>
@@ -548,14 +583,33 @@
         </div>
         
         <div id="financeira-comissoes" class="tab-content">
-            <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
-                <button class="btn-primary" onclick="openComissaoModal()"><i class="ph ph-check-circle"></i> Liquidar Comissões</button>
+            <div class="tabs">
+                <button class="active" onclick="openComissaoSubTab(event, 'comissoes-contratos')">Comissões de Contratos</button>
+                <button onclick="openComissaoSubTab(event, 'comissoes-outros-ganhos')">Outros Ganhos</button>
             </div>
-            <div class="table-container">
-                <table class="data-table" id="comissoesTable">
-                    <thead><tr><th><input type="checkbox" onchange="toggleAllComissoes(this.checked)"></th><th>Paga por</th><th>Mês Referência</th><th>Nº Contratos</th><th>Valor Total</th><th>Estado</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+
+            <div id="comissoes-contratos" class="tab-content active">
+                <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="openComissaoModal()"><i class="ph ph-check-circle"></i> Liquidar Comissões</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="comissoesTable">
+                        <thead><tr><th><input type="checkbox" onchange="toggleAllComissoes(this.checked)"></th><th>Paga por</th><th>Mês Referência</th><th>Nº Contratos</th><th>Valor Total</th><th>Estado</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="comissoes-outros-ganhos" class="tab-content">
+                <div class="header-actions" style="margin-bottom: 1.5em; justify-content: flex-end;">
+                    <button class="btn-primary" onclick="openFormModal('ganho')"><i class="ph ph-plus"></i> Adicionar Ganho</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table" id="outrosGanhosTable">
+                        <thead><tr><th>Data</th><th>Descrição</th><th>Parceiro</th><th>Valor Bruto</th><th>Retenção</th><th>Valor Líquido</th><th>Ações</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -570,7 +624,7 @@
                 </table>
             </div>
         </div>
-
+        
         <div id="financeira-por-conciliar" class="tab-content">
             <div class="header-actions" style="margin-bottom: 1.5em; justify-content: space-between; align-items: center;">
                 <h3>Despesas por Conciliar</h3>
@@ -616,65 +670,86 @@
       <!-- Relatórios -->
       <div id="relatorios-section" class="main-content">
         <div class="section-header">
-          <h2><i class="ph ph-chart-bar"></i>Relatórios e Exportação</h2>
+            <h2><i class="ph ph-chart-bar"></i>Relatórios</h2>
         </div>
-        
-        <div class="report-widget">
-            <h4>Exportar Mapas</h4>
-            <div class="filter-bar">
-                <div>
-                    <label for="reportType">Tipo de Relatório</label>
-                    <select id="reportType">
-                        <option value="comissoes">Mapa de Comissões</option>
-                        <option value="producao">Mapa de Produção Interno</option>
-                        <option value="freelance">Mapa de Freelance</option>
-                        <option value="pendentes">Mapa de Pendentes</option>
-                    </select>
+
+        <div class="filter-bar">
+            <div>
+                <label>Período de Tempo</label>
+                <div style="display: flex; gap: 1em;">
+                    <input type="date" id="filter-start-date" style="width: auto;">
+                    <input type="date" id="filter-end-date" style="width: auto;">
                 </div>
-                <div>
-                    <label for="reportStartDate">Data Início</label>
-                    <input type="date" id="reportStartDate">
-                </div>
-                <div>
-                    <label for="reportEndDate">Data Fim</label>
-                    <input type="date" id="reportEndDate">
-                </div>
-                <div>
-                    <label for="reportFornecedor">Fornecedor</label>
-                    <select id="reportFornecedor"><option value="">Todos</option></select>
-                </div>
-                <div>
-                    <label for="reportComercial">Comercial</label>
-                    <select id="reportComercial"><option value="">Todos</option></select>
-                </div>
-                <div>
-                    <label for="reportFinanceira">Financeira</label>
-                    <select id="reportFinanceira"><option value="">Todas</option></select>
-                </div>
-                <div id="reportFreelancerContainer" style="display:none;">
-                    <label for="reportFreelancer">Nome do Freelancer</label>
-                    <input type="text" id="reportFreelancer" placeholder="Nome do Freelancer">
-                </div>
-                <button class="btn-primary" onclick="exportReport()"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+            </div>
+            <div>
+                <label>Comercial</label>
+                <select id="filter-comercial"></select>
+            </div>
+            <div>
+                <label>Fornecedor</label>
+                <select id="filter-fornecedor"></select>
+            </div>
+            <div>
+                <label>Financeira</label>
+                <select id="filter-financeira"></select>
+            </div>
+            <div>
+                <button class="btn-primary" onclick="generateReports()"><i class="ph ph-funnel"></i> Filtrar</button>
+                <button class="btn-secondary" onclick="clearReportFilters()">Limpar</button>
             </div>
         </div>
 
-        <div class="reports-grid">
-            <div class="report-widget">
-                <h4>Desempenho por Comercial</h4>
-                <table class="data-table" id="comercialPerformanceTable">
-                    <thead><tr><th>Comercial</th><th>Nº Contratos</th><th>Volume Total</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+        <div id="reports-container">
+            <!-- Carta de Comissão -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <h4>Carta de Comissão</h4>
+                    <button class="btn-primary" onclick="exportPdf('comissao')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+                </div>
+                <div class="report-card-body" id="report-comissao">
+                    <p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>
+                </div>
             </div>
-            <div class="report-widget">
-                <h4>Distribuição de Contratos</h4>
-                <div class="chart-container" style="padding: 0; box-shadow: none;">
-                    <canvas id="contractTypeChart"></canvas>
+
+            <!-- Mapa de Produção Interno -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <h4>Mapa de Produção Interno</h4>
+                    <button class="btn-primary" onclick="exportPdf('producao-interno')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+                </div>
+                <div class="report-card-body" id="report-producao-interno">
+                     <p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>
+                </div>
+            </div>
+
+            <!-- Carta de Pendentes -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <h4>Carta de Pendentes</h4>
+                    <button class="btn-primary" onclick="exportPdf('pendentes')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+                </div>
+                <div class="report-card-body" id="report-pendentes">
+                     <p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>
+                </div>
+            </div>
+
+            <!-- Mapa de Produção - Freelance -->
+            <div class="report-card">
+                <div class="report-card-header">
+                    <h4>Mapa de Produção - Freelance</h4>
+                    <button class="btn-primary" onclick="exportPdf('producao-freelance')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+                </div>
+                <div class="report-card-body" id="report-producao-freelance">
+                    <p>Selecione os filtros e clique em "Filtrar". Depois, procure por um freelancer para ver os resultados.</p>
+                    <div id="freelancer-search-container">
+                        <input type="search" id="search-freelance" class="search-bar" placeholder="Pesquisar por nome do Freelancer...">
+                    </div>
+                    <div id="freelance-results"></div>
                 </div>
             </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -714,6 +789,13 @@
               <div class="col"><label>Data de Pagamento</label><input type="date" id="comissaoDataPagamento" required></div>
             </div>
             <label>Banco de Recebimento</label><select id="comissaoBanco" required></select>
+            <div style="margin-top: 1em;">
+                <label><input type="checkbox" id="comissaoRetencaoCheck" onchange="document.getElementById('comissaoRetencaoOptions').style.display = this.checked ? 'block' : 'none'"> Com retenção?</label>
+                <div id="comissaoRetencaoOptions" style="display:none; margin-top: .5em; padding-left: 1.5em;">
+                    <label style="font-weight: normal; margin-right: 1em;"><input type="radio" name="comissaoRetencaoPercent" value="0.23" checked> 23%</label>
+                    <label style="font-weight: normal;"><input type="radio" name="comissaoRetencaoPercent" value="0.25"> 25%</label>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn-secondary" onclick="closeComissaoModal()">Cancelar</button>
@@ -730,7 +812,7 @@
     // Importações do Firebase v11+ Modular SDK (Versão Atualizada)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
     // Inicialização do jsPDF
@@ -760,6 +842,7 @@
     let currentFormSubmitHandler = null;
     let creditChartInstance = null;
     let contractTypeChartInstance = null;
+    let cachedReportData = []; // Cache para os dados filtrados dos relatórios
     
     // Objeto com os tipos de seguro e comissões
     const insuranceTypes = {
@@ -852,7 +935,7 @@
         const isAdmin = currentUserData.role === 'Administrador';
         document.getElementById('nav-comercial').style.display = isAdmin ? 'flex' : 'none';
         document.getElementById('nav-financeira').style.display = isAdmin ? 'flex' : 'none';
-        document.getElementById('nav-relatorios').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('nav-relatorios').style.display = isAdmin ? 'flex' : 'none'; // Apenas Admin vê relatórios
     }
 
     document.getElementById('loginForm').onsubmit = e => {
@@ -871,10 +954,7 @@
     function setupEventListeners() {
         document.getElementById('search-clientes').addEventListener('input', (e) => loadClients(e.target.value));
         document.getElementById('search-contratos').addEventListener('input', (e) => loadContracts(e.target.value));
-        document.getElementById('reportType').addEventListener('change', (e) => {
-            const freelancerInput = document.getElementById('reportFreelancerContainer');
-            freelancerInput.style.display = e.target.value === 'freelance' ? 'block' : 'none';
-        });
+        document.getElementById('search-freelance').addEventListener('input', (e) => renderFreelanceReport(cachedReportData, e.target.value));
     }
 
     function loadAllData() {
@@ -898,7 +978,7 @@
         
         if (sectionId === 'dashboard') loadDashboardData();
         if (sectionId === 'financeira') loadFinanceiraModule();
-        if (sectionId === 'relatorios') loadRelatoriosData();
+        if (sectionId === 'relatorios') setupReportsModule();
     }
 
     const formModal = document.getElementById('formModal');
@@ -923,6 +1003,7 @@
             case 'comercial': formHTML = getComercialFormHTML(); break;
             case 'despesa': formHTML = getDespesaFormHTML(); break;
             case 'banco': formHTML = getBancoFormHTML(); break;
+            case 'ganho': formHTML = getGanhoFormHTML(); break;
         }
         formModalBody.innerHTML = formHTML;
 
@@ -936,6 +1017,7 @@
             if (type === 'comercial') await populateComercialForm(id);
             if (type === 'despesa') await populateDespesaForm(id);
             if (type === 'banco') await populateBancoForm(id);
+            if (type === 'ganho') await populateGanhoForm(id);
         } else {
             if (type === 'cliente') {
                 document.getElementById('clientCreationDate').value = new Date().toISOString().split('T')[0];
@@ -946,6 +1028,11 @@
             if (type === 'despesa') {
                 document.getElementById('despesaDate').value = new Date().toISOString().split('T')[0];
                 await loadBancosForDropdown('despesaBanco');
+            }
+            if (type === 'ganho') {
+                 document.getElementById('ganhoData').value = new Date().toISOString().split('T')[0];
+                 await loadBancosForDropdown('ganhoBanco');
+                 await loadPartnersForDropdown('financeiras', 'ganhoParceiro');
             }
         }
         
@@ -962,6 +1049,7 @@
                 case 'comercial': await handleComercialFormSubmit(id); break;
                 case 'despesa': await handleDespesaFormSubmit(id); break;
                 case 'banco': await handleBancoFormSubmit(id); break;
+                case 'ganho': await handleGanhoFormSubmit(id); break;
             }
         };
         form.addEventListener('submit', currentFormSubmitHandler);
@@ -1334,16 +1422,19 @@
             const d = doc.data();
             const row = tableBody.insertRow();
             let cells = '';
-            let editType = type.slice(0, -1);
-            if (type === 'financeiras') editType = 'financeira';
-
+            
+            let editType;
             if (type === 'fornecedores') {
+                editType = 'fornecedor';
                 cells = `<td>${d.name}</td><td>${d.equipment}</td><td>${d.contactPerson}</td><td>${d.email}</td>`;
             } else if (type === 'financeiras') {
+                editType = 'financeira';
                 cells = `<td>${d.name}</td><td>${d.commercialName}</td><td>${d.commercialContact}</td><td>${d.commercialEmail}</td><td>${d.commissionEmail}</td>`;
             } else if (type === 'seguradoras') {
+                editType = 'seguradora';
                 cells = `<td>${d.name}</td><td>${d.commercialName}</td><td>${d.commercialContact}</td><td>${d.commercialEmail}</td>`;
             }
+
             row.innerHTML = `${cells}<td class="actions-cell">
                 <button onclick="openDetailsModal('partner', '${doc.id}', '${type}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
                 <button onclick="openFormModal('${editType}', '${doc.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
@@ -1780,28 +1871,28 @@
         });
     }
 
-    async function handleContractFormSubmit(id) { 
-        const clientSelect = document.getElementById('contractClient'); 
-        const commercialSelect = document.getElementById('contractCommercial'); 
+    async function handleContractFormSubmit(id) {
+        const clientSelect = document.getElementById('contractClient');
+        const commercialSelect = document.getElementById('contractCommercial');
         const contractType = document.getElementById('contractType').value;
         const startDate = document.getElementById('contractDate').value;
-        
+
         if (!startDate) {
             showToast('A data de início do contrato é obrigatória.', 'error');
             return;
         }
 
-        let data = { 
-            clientId: clientSelect.value, 
-            clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '', 
-            commercialId: commercialSelect.value, 
-            commercialName: commercialSelect.options[commercialSelect.selectedIndex]?.text || '', 
-            type: contractType, 
+        let data = {
+            clientId: clientSelect.value,
+            clientName: clientSelect.options[clientSelect.selectedIndex]?.text || '',
+            commercialId: commercialSelect.value,
+            commercialName: commercialSelect.options[commercialSelect.selectedIndex]?.text || '',
+            type: contractType,
             fase: document.getElementById('contractFase').value,
-            startDate: startDate, 
-            commissionStatus: 'Não Paga' 
-        }; 
-        
+            startDate: startDate,
+            commissionStatus: 'Não Paga'
+        };
+
         if (contractType === 'Crédito') {
             const creditoTipo = document.getElementById('creditoTipo').value;
             Object.assign(data, {
@@ -1829,17 +1920,24 @@
                 data.creditoHabitacaoCP = document.getElementById('creditoHabitacaoCP').value;
                 data.creditoHabitacaoArea = document.getElementById('creditoHabitacaoArea').value;
             }
-        }
-        else if (contractType === 'Seguro') {
-             const fracionamento = document.getElementById('seguroFracionamento').value;
-             let nextRenewalDate = new Date(startDate);
-             switch(fracionamento) {
-                case 'Mensal': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 1); break;
-                case 'Trimestral': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 3); break;
-                case 'Semestral': nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 6); break;
-                case 'Anual': nextRenewalDate.setFullYear(nextRenewalDate.getFullYear() + 1); break;
-             }
-             Object.assign(data, {
+        } else if (contractType === 'Seguro') {
+            const fracionamento = document.getElementById('seguroFracionamento').value;
+            let nextRenewalDate = new Date(startDate);
+            switch (fracionamento) {
+                case 'Mensal':
+                    nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 1);
+                    break;
+                case 'Trimestral':
+                    nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 3);
+                    break;
+                case 'Semestral':
+                    nextRenewalDate.setMonth(nextRenewalDate.getMonth() + 6);
+                    break;
+                case 'Anual':
+                    nextRenewalDate.setFullYear(nextRenewalDate.getFullYear() + 1);
+                    break;
+            }
+            Object.assign(data, {
                 tipoSeguro: document.getElementById('seguroTipo').value,
                 seguradoraId: document.getElementById('seguroSeguradora').value,
                 apolice: document.getElementById('seguroApolice').value,
@@ -1850,24 +1948,53 @@
                 nextRenewalDate: nextRenewalDate.toISOString().split('T')[0],
                 isFreelancer: document.getElementById('seguroIsFreelancer').checked,
                 freelancerName: document.getElementById('seguroFreelancerName').value,
-             });
+            });
         }
 
         try {
+            let contractId = id;
             if (id) {
                 await updateDoc(doc(db, 'contratos', id), data);
             } else {
-                await addDoc(collection(db, 'contratos'), data);
+                const newDocRef = await addDoc(collection(db, 'contratos'), data);
+                contractId = newDocRef.id;
             }
+
+            // CORREÇÃO: Criar tarefa automaticamente se houver documentos em falta
+            if (data.type === 'Crédito' && data.documentosEmFalta && data.documentosEmFaltaDesc) {
+                const q = query(collection(db, 'tarefas'),
+                    where('contractId', '==', contractId),
+                    where('autoTaskType', '==', 'documentos_em_falta'));
+                const existingTaskSnapshot = await getDocs(q);
+
+                if (existingTaskSnapshot.empty) {
+                    const taskData = {
+                        title: `Documentos em falta: Contrato ${data.clientName}`,
+                        description: data.documentosEmFaltaDesc,
+                        owner: data.commercialName,
+                        dueDate: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0], // Prazo de 7 dias
+                        priority: 'Alta',
+                        status: 'Pendente',
+                        clientId: data.clientId,
+                        contractId: contractId,
+                        autoTaskType: 'documentos_em_falta'
+                    };
+                    await addDoc(collection(db, 'tarefas'), taskData);
+                    showToast('Tarefa para documentos em falta criada automaticamente.', 'info');
+                }
+            }
+
             showToast(`Contrato ${id ? 'atualizado' : 'adicionado'} com sucesso!`, 'success');
-            closeFormModal(); 
-            loadContracts(); 
-            loadDashboardData(); 
+            closeFormModal();
+            loadContracts();
+            loadDashboardData();
+            loadTasks(); // Recarregar tarefas
         } catch (error) {
             console.error("Erro ao guardar contrato:", error);
             showToast("Erro ao guardar contrato.", "error");
         }
     }
+
 
     async function populateContractForm(id) { 
         const docSnap = await getDoc(doc(db, 'contratos', id)); 
@@ -1953,7 +2080,10 @@
             status: document.getElementById('taskStatus').value, 
             clientId: document.getElementById('taskClient').value, 
             contractId: document.getElementById('taskContract').value, 
+            createdAt: id ? null : serverTimestamp() // Adiciona timestamp na criação
         }; 
+        if(id) delete data.createdAt; // Não atualiza o timestamp
+
         try {
             if (id) {
                 await updateDoc(doc(db, 'tarefas', id), data);
@@ -2275,18 +2405,27 @@
 
     // --- GESTÃO FINANCEIRA ---
     const openFinanceTab = window.openFinanceTab = (evt, tabName) => {
-        document.querySelectorAll('#financeira-section .tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('#financeira-section .tabs button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('#financeira-section > .tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('#financeira-section > .tabs button').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
         evt.currentTarget.classList.add('active');
 
         if(tabName === 'financeira-dashboard') loadFinanceiraDashboard();
-        if(tabName === 'financeira-comissoes') loadComissoes();
+        if(tabName === 'financeira-comissoes') openComissaoSubTab({currentTarget: document.querySelector('#financeira-comissoes .tabs button.active') || document.querySelector('#financeira-comissoes .tabs button')}, 'comissoes-contratos');
         if(tabName === 'financeira-despesas') loadDespesas();
         if(tabName === 'financeira-por-conciliar') loadPorConciliar();
         if(tabName === 'financeira-banco') openBancoSubTab({currentTarget: document.querySelector('#financeira-banco .tabs button.active') || document.querySelector('#financeira-banco .tabs button')}, 'contas');
     }
     
+    const openComissaoSubTab = window.openComissaoSubTab = (evt, tabName) => {
+        document.querySelectorAll('#financeira-comissoes .tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('#financeira-comissoes .tabs button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        evt.currentTarget.classList.add('active');
+        if(tabName === 'comissoes-contratos') loadComissoes();
+        if(tabName === 'comissoes-outros-ganhos') loadOutrosGanhos();
+    }
+
     const openBancoSubTab = window.openBancoSubTab = (evt, tabName) => {
         document.querySelectorAll('#financeira-banco .tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('#financeira-banco .tabs button').forEach(btn => btn.classList.remove('active'));
@@ -2310,43 +2449,56 @@
     }
     
     async function loadFinanceiraDashboard() {
-        const contratosSnapshot = await getDocs(query(collection(db, 'contratos'), where('fase', '==', 'Ativo')));
-        const despesasSnapshot = await getDocs(collection(db, 'despesas'));
-        
-        let totalReceber = 0;
-        let totalPagar = 0;
-        let aReceberFinanceira = {};
-        let aPagarFornecedor = {};
         const today = new Date();
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
 
+        const contratosSnapshot = await getDocs(query(collection(db, 'contratos'), where('fase', '==', 'Ativo')));
+        const despesasSnapshot = await getDocs(collection(db, 'despesas'));
+        const outrosGanhosSnapshot = await getDocs(collection(db, 'outrosGanhos'));
+        
+        let comissoesCredito = 0;
+        let comissoesSeguros = 0;
+        let outrosGanhos = 0;
+        let aReceberFinanceira = {};
+        let aPagarFornecedor = {};
+
         contratosSnapshot.forEach(doc => {
             const d = doc.data();
-            if(d.type === 'Crédito') {
-                totalReceber += parseFloat(d.comissaoRecebida || 0);
-                totalPagar += parseFloat(d.comissaoPagar || 0);
+            const contractDate = new Date(d.startDate);
+            if (contractDate.getMonth() !== currentMonth || contractDate.getFullYear() !== currentYear) return;
 
-                const contractDate = new Date(d.startDate);
-                if (contractDate.getMonth() === currentMonth && contractDate.getFullYear() === currentYear) {
-                    if(d.financeiraId) {
-                        aReceberFinanceira[d.financeiraId] = (aReceberFinanceira[d.financeiraId] || 0) + parseFloat(d.comissaoRecebida || 0);
-                    }
-                    if(d.fornecedorId) {
-                        aPagarFornecedor[d.fornecedorId] = (aPagarFornecedor[d.fornecedorId] || 0) + parseFloat(d.comissaoPagar || 0);
-                    }
+            if(d.type === 'Crédito') {
+                comissoesCredito += parseFloat(d.comissaoRecebida || 0);
+                if(d.financeiraId) {
+                    aReceberFinanceira[d.financeiraId] = (aReceberFinanceira[d.financeiraId] || 0) + parseFloat(d.comissaoRecebida || 0);
+                }
+                if(d.fornecedorId) {
+                    aPagarFornecedor[d.fornecedorId] = (aPagarFornecedor[d.fornecedorId] || 0) + parseFloat(d.comissaoPagar || 0);
                 }
             } else if (d.type === 'Seguro') {
-                totalReceber += parseFloat(d.comissaoRecebida || 0);
+                comissoesSeguros += parseFloat(d.comissaoRecebida || 0);
             }
         });
 
-        document.getElementById('kpi-comissoes-receber').textContent = `€${totalReceber.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
-        document.getElementById('kpi-comissoes-pagar').textContent = `€${(totalPagar * 1.23).toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+        outrosGanhosSnapshot.forEach(doc => {
+            const d = doc.data();
+            const ganhoDate = new Date(d.date);
+             if (ganhoDate.getMonth() === currentMonth && ganhoDate.getFullYear() === currentYear) {
+                outrosGanhos += parseFloat(d.valorBruto || 0);
+             }
+        });
+
+        document.getElementById('kpi-comissoes-credito').textContent = `€${comissoesCredito.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+        document.getElementById('kpi-comissoes-seguros').textContent = `€${comissoesSeguros.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
+        document.getElementById('kpi-outros-ganhos').textContent = `€${outrosGanhos.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
         
         let totalDespesas = 0;
         despesasSnapshot.forEach(doc => {
-            totalDespesas += parseFloat(doc.data().value || 0);
+             const despesaDate = new Date(doc.data().date);
+             if (despesaDate.getMonth() === currentMonth && despesaDate.getFullYear() === currentYear) {
+                totalDespesas += parseFloat(doc.data().value || 0);
+             }
         });
         document.getElementById('kpi-total-despesas').textContent = `€${totalDespesas.toLocaleString('pt-PT', {minimumFractionDigits: 2})}`;
 
@@ -2822,77 +2974,6 @@
         });
     }
 
-
-    // --- RELATÓRIOS ---
-    const loadRelatoriosData = window.loadRelatoriosData = async () => {
-        await loadPartnersForDropdown('fornecedores', 'reportFornecedor');
-        await loadComerciaisForDropdown('reportComercial');
-        await loadPartnersForDropdown('financeiras', 'reportFinanceira');
-
-        const performanceTableBody = document.getElementById('comercialPerformanceTable').querySelector('tbody');
-        performanceTableBody.innerHTML = '<tr><td colspan="3">A calcular...</td></tr>';
-
-        const comerciaisSnapshot = await getDocs(collection(db, 'comerciais'));
-        const contratosSnapshot = await getDocs(query(collection(db, 'contratos'), where('fase', '==', 'Ativo')));
-
-        const performanceData = {};
-        comerciaisSnapshot.forEach(doc => {
-            performanceData[doc.id] = {
-                name: `${doc.data().firstName} ${doc.data().lastName}`,
-                contractCount: 0,
-                totalValue: 0
-            };
-        });
-
-        contratosSnapshot.forEach(doc => {
-            const contrato = doc.data();
-            if (contrato.commercialId && performanceData[contrato.commercialId]) {
-                performanceData[contrato.commercialId].contractCount++;
-                performanceData[contrato.commercialId].totalValue += parseFloat(contrato.valorFinanciado || 0);
-            }
-        });
-
-        performanceTableBody.innerHTML = '';
-        for (const id in performanceData) {
-            const data = performanceData[id];
-            const row = performanceTableBody.insertRow();
-            row.innerHTML = `
-                <td>${data.name}</td>
-                <td>${data.contractCount}</td>
-                <td>€${data.totalValue.toLocaleString('pt-PT')}</td>
-            `;
-        }
-
-        const contractTypes = {};
-        const allContratosSnapshot = await getDocs(collection(db, 'contratos'));
-        allContratosSnapshot.forEach(doc => {
-            const type = doc.data().type || 'Indefinido';
-            contractTypes[type] = (contractTypes[type] || 0) + 1;
-        });
-
-        const ctx = document.getElementById('contractTypeChart').getContext('2d');
-        if (contractTypeChartInstance) contractTypeChartInstance.destroy();
-        contractTypeChartInstance = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: Object.keys(contractTypes),
-                datasets: [{
-                    data: Object.values(contractTypes),
-                    backgroundColor: ['#C8B89C', '#212529', '#CAD2D8', '#F59E0B', '#10B981'],
-                    hoverOffset: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                }
-            }
-        });
-    }
-
     // --- MILESTONES (ETAPAS DO CONTRATO) ---
     async function loadMilestones(contractId, containerId) {
         const container = document.getElementById(containerId);
@@ -3235,6 +3316,9 @@
         const dataPagamento = document.getElementById('comissaoDataPagamento').value;
         const bancoSelect = document.getElementById('comissaoBanco');
         const bancoId = bancoSelect.value;
+        const temRetencao = document.getElementById('comissaoRetencaoCheck').checked;
+        const retencaoPercent = temRetencao ? parseFloat(document.querySelector('input[name="comissaoRetencaoPercent"]:checked').value) : 0;
+
 
         if (!faturaNumero || !bancoId || !dataPagamento) {
             showToast('Por favor, preencha todos os campos.', 'error');
@@ -3245,20 +3329,22 @@
             const bancoRef = doc(db, 'bancos', bancoId);
 
             for (const cb of selectedCheckboxes) {
-                const totalComissao = parseFloat(cb.dataset.total);
+                const totalComissaoBruta = parseFloat(cb.dataset.total);
+                const valorRetencao = totalComissaoBruta * retencaoPercent;
+                const valorLiquido = totalComissaoBruta - valorRetencao;
                 const contractIds = JSON.parse(cb.dataset.contracts);
 
                 await runTransaction(db, async (transaction) => {
                     const bancoDoc = await transaction.get(bancoRef);
                     if (!bancoDoc.exists()) throw "Banco não encontrado!";
                     
-                    const novoSaldo = parseFloat(bancoDoc.data().balance) + totalComissao;
+                    const novoSaldo = parseFloat(bancoDoc.data().balance) + valorLiquido;
                     transaction.update(bancoRef, { balance: novoSaldo });
 
                     const movimentoRef = doc(collection(db, 'bancos', bancoId, 'movimentos'));
                     transaction.set(movimentoRef, {
                         data: dataPagamento,
-                        valor: totalComissao,
+                        valor: valorLiquido,
                         tipo: 'Comissão',
                         descricao: `Recebimento Fatura ${faturaNumero} (${contractIds.length} contratos)`,
                         createdAt: serverTimestamp()
@@ -3271,6 +3357,9 @@
                             faturaNumero: faturaNumero,
                             dataPagamentoComissao: dataPagamento,
                             bancoRecepcaoId: bancoId,
+                            temRetencao: temRetencao,
+                            retencaoPercent: retencaoPercent * 100,
+                            valorLiquidoComissao: valorLiquido
                         });
                     });
                 });
@@ -3287,150 +3376,432 @@
         }
     }
 
-    // --- FUNÇÕES DE RELATÓRIOS (COM BASE) ---
-    function generatePdfWithBase(title, head, body) {
-        const doc = new jsPDF();
-        const pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.get('height');
-        const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.get('width');
-
-        doc.autoTable({
-            head: head,
-            body: body,
-            startY: 25, // Começa a tabela abaixo do cabeçalho
-            didDrawPage: function (data) {
-                // --- CABEÇALHO ---
-                doc.setFontSize(20);
-                doc.setFont('helvetica', 'bold');
-                doc.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim());
-                doc.text("THE WAY", data.settings.margin.left, 15);
-
-                // Título do Documento
-                doc.setFontSize(12);
-                doc.setFont('helvetica', 'normal');
-                doc.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--color-text-primary').trim());
-                doc.text(title, pageWidth / 2, 20, { align: 'center' });
-
-                // --- RODAPÉ ---
-                const pageCount = doc.internal.getNumberOfPages();
-                doc.setFontSize(8);
-                doc.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--color-text-secondary').trim());
-
-                // Data de Geração
-                const dateStr = `Gerado em: ${new Date().toLocaleDateString('pt-PT')}`;
-                doc.text(dateStr, data.settings.margin.left, pageHeight - 10);
-
-                // Número da Página
-                const pageNumStr = `Página ${data.pageNumber} de ${pageCount}`;
-                doc.text(pageNumStr, pageWidth - data.settings.margin.right, pageHeight - 10, { align: 'right' });
-            },
-            margin: { top: 30 } // Aumentar margem para o cabeçalho
-        });
-
-        doc.save(`${title.replace(/ /g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+    // --- FUNÇÕES DE OUTROS GANHOS ---
+    function getGanhoFormHTML() {
+        return `<form id="ganhoForm">
+            <div class="row">
+                <div class="col"><label>Data</label><input type="date" id="ganhoData" required></div>
+                <div class="col"><label>Valor Bruto</label><input type="number" id="ganhoValor" step="0.01" required></div>
+            </div>
+            <label>Descrição</label><input type="text" id="ganhoDescricao" required placeholder="Ex: Rapel Anual">
+            <div class="row">
+                 <div class="col"><label>Parceiro (Opcional)</label><select id="ganhoParceiro"></select></div>
+                 <div class="col"><label>Banco</label><select id="ganhoBanco" required></select></div>
+            </div>
+             <div>
+                <label><input type="checkbox" id="ganhoRetencaoCheck" onchange="document.getElementById('ganhoRetencaoOptions').style.display = this.checked ? 'block' : 'none'"> Com retenção?</label>
+                <div id="ganhoRetencaoOptions" style="display:none; margin-top: .5em; padding-left: 1.5em;">
+                    <label style="font-weight: normal; margin-right: 1em;"><input type="radio" name="ganhoRetencaoPercent" value="0.23" checked> 23%</label>
+                    <label style="font-weight: normal;"><input type="radio" name="ganhoRetencaoPercent" value="0.25"> 25%</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Guardar Ganho</button>
+            </div>
+        </form>`;
     }
 
-    const exportReport = window.exportReport = async () => {
-        const reportType = document.getElementById('reportType').value;
-        const startDate = document.getElementById('reportStartDate').value;
-        const endDate = document.getElementById('reportEndDate').value;
-        const fornecedorId = document.getElementById('reportFornecedor').value;
-        const comercialId = document.getElementById('reportComercial').value;
-        const financeiraId = document.getElementById('reportFinanceira').value;
-        const freelancerName = document.getElementById('reportFreelancer').value;
+    async function handleGanhoFormSubmit(id) {
+        const valorBruto = parseFloat(document.getElementById('ganhoValor').value);
+        const temRetencao = document.getElementById('ganhoRetencaoCheck').checked;
+        const retencaoPercent = temRetencao ? parseFloat(document.querySelector('input[name="ganhoRetencaoPercent"]:checked').value) : 0;
+        const valorRetencao = valorBruto * retencaoPercent;
+        const valorLiquido = valorBruto - valorRetencao;
 
-        let title = '';
-        let head = [];
-        let body = [];
+        const bancoSelect = document.getElementById('ganhoBanco');
+        const parceiroSelect = document.getElementById('ganhoParceiro');
 
-        let queryConstraints = [];
-        if (startDate) queryConstraints.push(where('startDate', '>=', startDate));
-        if (endDate) queryConstraints.push(where('startDate', '<=', endDate));
-        if (comercialId) queryConstraints.push(where('commercialId', '==', comercialId));
-        if (fornecedorId) queryConstraints.push(where('fornecedorId', '==', fornecedorId));
-        if (financeiraId) queryConstraints.push(where('financeiraId', '==', financeiraId));
+        const data = {
+            date: document.getElementById('ganhoData').value,
+            description: document.getElementById('ganhoDescricao').value,
+            valorBruto: valorBruto,
+            temRetencao: temRetencao,
+            retencaoPercent: retencaoPercent * 100,
+            valorLiquido: valorLiquido,
+            bancoId: bancoSelect.value,
+            bancoName: bancoSelect.options[bancoSelect.selectedIndex]?.text || '',
+            parceiroId: parceiroSelect.value,
+            parceiroName: parceiroSelect.options[parceiroSelect.selectedIndex]?.text || '',
+        };
 
-        let finalQuery = query(collection(db, 'contratos'), ...queryConstraints);
-        const snapshot = await getDocs(finalQuery);
-        let data = [];
-        snapshot.forEach(doc => data.push({id: doc.id, ...doc.data()}));
-
-        switch(reportType) {
-            case 'comissoes':
-                title = 'Mapa de Comissões';
-                head = [['Cliente', 'Tipo', 'Comercial', 'Comissão Paga', 'Comissão Recebida', 'Estado']];
-                data.forEach(d => {
-                    body.push([
-                        d.clientName,
-                        d.type,
-                        d.commercialName,
-                        `€${parseFloat(d.comissaoPagar || 0).toFixed(2)}`,
-                        `€${parseFloat(d.comissaoRecebida || 0).toFixed(2)}`,
-                        d.commissionStatus || 'Não Paga'
-                    ]);
-                });
-                break;
-            case 'producao':
-                title = 'Mapa de Produção Interno';
-                head = [['Cliente', 'Tipo', 'Comercial', 'Fornecedor', 'Financeira', 'Valor']];
-                 data.forEach(d => {
-                    body.push([
-                        d.clientName,
-                        d.type,
-                        d.commercialName,
-                        partnersData.fornecedores[d.fornecedorId] || '-',
-                        partnersData.financeiras[d.financeiraId] || '-',
-                        `€${parseFloat(d.valorFinanciado || 0).toFixed(2)}`
-                    ]);
-                });
-                break;
-            case 'freelance':
-                title = `Mapa de Freelance - ${freelancerName}`;
-                head = [['Cliente', 'Tipo Seguro', 'Apólice', 'Comissão']];
-                let freelanceConstraints = [where('type', '==', 'Seguro'), where('isFreelancer', '==', true)];
-                if (freelancerName) {
-                    freelanceConstraints.push(where('freelancerName', '==', freelancerName));
-                }
-                const freelanceQuery = query(collection(db, 'contratos'), ...freelanceConstraints);
-                const freelanceSnapshot = await getDocs(freelanceQuery);
-                freelanceSnapshot.forEach(doc => {
-                    const d = doc.data();
-                    body.push([
-                        d.clientName,
-                        d.tipoSeguro,
-                        d.apolice,
-                        `€${parseFloat(d.comissaoRecebida || 0).toFixed(2)}`
-                    ]);
-                });
-                break;
-            case 'pendentes':
-                title = 'Mapa de Pendentes';
-                head = [['Cliente', 'Tipo', 'Comercial', 'Descrição Pendente']];
-                const tasksQuery = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
-                const tasksSnapshot = await getDocs(tasksQuery);
-                const taskPromises = tasksSnapshot.docs.map(async taskDoc => {
-                    const task = taskDoc.data();
-                    if(task.contractId) {
-                        const contractDoc = await getDoc(doc(db, 'contratos', task.contractId));
-                        if(contractDoc.exists()) {
-                            const contract = contractDoc.data();
-                            if (fornecedorId && contract.fornecedorId !== fornecedorId) return;
-                            if (comercialId && contract.commercialId !== comercialId) return;
-                            if (financeiraId && contract.financeiraId !== financeiraId) return;
-                            
-                             body.push([
-                                contract.clientName,
-                                contract.type,
-                                contract.commercialName,
-                                task.title
-                            ]);
-                        }
-                    }
-                });
-                await Promise.all(taskPromises);
-                break;
+        if(!data.date || !data.bancoId || isNaN(valorBruto)) {
+            showToast('Por favor, preencha a data, valor e banco.', 'error');
+            return;
         }
 
-        generatePdfWithBase(title, head, body);
+        try {
+            const bancoRef = doc(db, 'bancos', data.bancoId);
+            await runTransaction(db, async (transaction) => {
+                 const bancoDoc = await transaction.get(bancoRef);
+                 if (!bancoDoc.exists()) throw "Banco não encontrado!";
+
+                 const novoSaldo = parseFloat(bancoDoc.data().balance) + valorLiquido;
+                 transaction.update(bancoRef, { balance: novoSaldo });
+
+                 const movimentoRef = doc(collection(db, 'bancos', data.bancoId, 'movimentos'));
+                 transaction.set(movimentoRef, {
+                    data: data.date,
+                    valor: valorLiquido,
+                    tipo: 'Outro Ganho',
+                    descricao: data.description,
+                    createdAt: serverTimestamp()
+                 });
+
+                 if (id) {
+                    // Lógica para editar (precisaria reverter o movimento antigo)
+                    await updateDoc(doc(db, 'outrosGanhos', id), data);
+                 } else {
+                    await addDoc(collection(db, 'outrosGanhos'), data);
+                 }
+            });
+
+            showToast('Ganho registado com sucesso!', 'success');
+            closeFormModal();
+            loadOutrosGanhos();
+            loadFinanceiraDashboard();
+            loadBancos();
+            loadMovimentos();
+
+        } catch (error) {
+            console.error("Erro ao registar ganho:", error);
+            showToast("Erro ao registar ganho.", "error");
+        }
+    }
+
+    async function loadOutrosGanhos() {
+        const tableBody = document.getElementById('outrosGanhosTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+        const q = query(collection(db, 'outrosGanhos'), orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${d.date}</td>
+                <td>${d.description}</td>
+                <td>${d.parceiroName || '-'}</td>
+                <td>€${d.valorBruto.toLocaleString('pt-PT')}</td>
+                <td>${d.temRetencao ? `${d.retencaoPercent}%` : 'N/A'}</td>
+                <td>€${d.valorLiquido.toLocaleString('pt-PT')}</td>
+                <td class="actions-cell">
+                    <button class="btn-danger" onclick="deleteItem('outrosGanhos', '${docSnap.id}', 'este ganho', loadOutrosGanhos)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                </td>
+            `;
+        });
+    }
+    
+    // --- MÓDULO DE RELATÓRIOS ---
+    const setupReportsModule = window.setupReportsModule = async () => {
+        // Carregar dropdowns para os filtros
+        const comercialSelect = document.getElementById('filter-comercial');
+        comercialSelect.innerHTML = '<option value="">Todos</option>';
+        await loadComerciaisForDropdown('filter-comercial');
+
+        const fornecedorSelect = document.getElementById('filter-fornecedor');
+        fornecedorSelect.innerHTML = '<option value="">Todos</option>';
+        await loadPartnersForDropdown('fornecedores', 'filter-fornecedor');
+        
+        const financeiraSelect = document.getElementById('filter-financeira');
+        financeiraSelect.innerHTML = '<option value="">Todas</option>';
+        await loadPartnersForDropdown('financeiras', 'filter-financeira');
+    }
+
+    const clearReportFilters = window.clearReportFilters = () => {
+        document.getElementById('filter-start-date').value = '';
+        document.getElementById('filter-end-date').value = '';
+        document.getElementById('filter-comercial').value = '';
+        document.getElementById('filter-fornecedor').value = '';
+        document.getElementById('filter-financeira').value = '';
+        document.getElementById('search-freelance').value = '';
+        
+        // Limpar resultados
+        const initialText = '<p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>';
+        document.getElementById('report-comissao').innerHTML = initialText;
+        document.getElementById('report-producao-interno').innerHTML = initialText;
+        document.getElementById('report-pendentes').innerHTML = initialText;
+        document.getElementById('report-producao-freelance').innerHTML = initialText.replace('gerar o relatório', 'ver os resultados');
+        document.getElementById('freelancer-search-container').style.display = 'none';
+        document.getElementById('freelance-results').innerHTML = '';
+        cachedReportData = [];
+    }
+    
+    const generateReports = window.generateReports = async () => {
+        showToast('A gerar relatórios...', 'info');
+        
+        // 1. Obter valores dos filtros
+        const startDate = document.getElementById('filter-start-date').value;
+        const endDate = document.getElementById('filter-end-date').value;
+        const commercialId = document.getElementById('filter-comercial').value;
+        const fornecedorId = document.getElementById('filter-fornecedor').value;
+        const financeiraId = document.getElementById('filter-financeira').value;
+        
+        // 2. Fetch ALL contracts and filter on the client-side to avoid index errors
+        const contractsQuery = query(collection(db, 'contratos'));
+        const contractsSnapshot = await getDocs(contractsQuery);
+        let allContracts = [];
+        contractsSnapshot.forEach(doc => {
+            allContracts.push({ id: doc.id, ...doc.data() });
+        });
+
+        // 3. Filter the data in JavaScript
+        cachedReportData = allContracts.filter(contract => {
+            if (startDate && contract.startDate < startDate) return false;
+            if (endDate && contract.startDate > endDate) return false;
+            if (commercialId && contract.commercialId !== commercialId) return false;
+            if (fornecedorId && contract.fornecedorId !== fornecedorId) return false;
+            if (financeiraId && contract.financeiraId !== financeiraId) return false;
+            return true;
+        });
+        
+        // 4. Gerar e renderizar cada relatório
+        renderComissaoReport(cachedReportData);
+        renderProducaoInternoReport(cachedReportData);
+        await renderPendentesReport(); // Este é assíncrono e separado
+        renderFreelanceReport(cachedReportData);
+        
+        document.getElementById('freelancer-search-container').style.display = 'block';
+
+        showToast('Relatórios gerados com sucesso!', 'success');
+    }
+    
+    // --- Funções de Renderização dos Relatórios ---
+    function renderComissaoReport(data) {
+        const container = document.getElementById('report-comissao');
+        let totalComissao = 0;
+        data.forEach(contract => {
+            totalComissao += parseFloat(contract.comissaoRecebida || 0);
+        });
+        
+        const iva = totalComissao * 0.23;
+        const totalFinal = totalComissao + iva;
+        
+        container.innerHTML = `
+            <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="kpi-card">
+                    <div class="title">Total Comissões</div>
+                    <div class="value">€${totalComissao.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="title">IVA (23%)</div>
+                    <div class="value">€${iva.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="title">Total a Faturar</div>
+                    <div class="value">€${totalFinal.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderProducaoInternoReport(data) {
+        const container = document.getElementById('report-producao-interno');
+        const creditContracts = data.filter(c => c.type === 'Crédito');
+        
+        if(creditContracts.length === 0) {
+            container.innerHTML = '<p>Nenhum contrato de crédito encontrado para os filtros selecionados.</p>';
+            return;
+        }
+
+        let tableHTML = `
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>Cliente</th><th>Matrícula</th><th>Valor Financiado</th><th>% Comissão</th><th>Comissão</th></tr></thead>
+                    <tbody>`;
+        
+        creditContracts.forEach(c => {
+            const clientNameParts = c.clientName.split(' ');
+            const displayName = clientNameParts.length > 1 ? `${clientNameParts[0]} ${clientNameParts[clientNameParts.length - 1]}` : c.clientName;
+            
+            tableHTML += `
+                <tr>
+                    <td>${displayName}</td>
+                    <td>${c.creditoMatricula || '-'}</td>
+                    <td>€${parseFloat(c.valorFinanciado || 0).toLocaleString('pt-PT')}</td>
+                    <td>${c.comissaoPercent || 0}%</td>
+                    <td>€${parseFloat(c.comissaoRecebida || 0).toLocaleString('pt-PT')}</td>
+                </tr>
+            `;
+        });
+        
+        tableHTML += `</tbody></table></div>`;
+        container.innerHTML = tableHTML;
+    }
+
+    async function renderPendentesReport() {
+        const container = document.getElementById('report-pendentes');
+        const q = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+            container.innerHTML = '<p>Nenhuma tarefa pendente encontrada.</p>';
+            return;
+        }
+
+        let tableHTML = `
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>Pendente</th><th>Responsável</th><th>Dias em Aberto</th></tr></thead>
+                    <tbody>`;
+        
+        const today = new Date();
+        snapshot.forEach(doc => {
+            const task = doc.data();
+            let daysOpen = 'N/D';
+            if(task.createdAt && task.createdAt.toDate) {
+                const createdDate = task.createdAt.toDate();
+                const diffTime = Math.abs(today - createdDate);
+                daysOpen = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+
+            tableHTML += `
+                <tr>
+                    <td>${task.title}</td>
+                    <td>${task.owner || 'N/D'}</td>
+                    <td>${daysOpen}</td>
+                </tr>
+            `;
+        });
+
+        tableHTML += `</tbody></table></div>`;
+        container.innerHTML = tableHTML;
+    }
+
+    function renderFreelanceReport(data, searchTerm = '') {
+        const container = document.getElementById('freelance-results');
+        const freelanceContracts = data.filter(c => c.isFreelancer && c.freelancerName);
+        
+        if(freelanceContracts.length === 0) {
+            container.innerHTML = '<p>Nenhuma produção de freelancer encontrada para os filtros selecionados.</p>';
+            return;
+        }
+
+        let filtered = freelanceContracts;
+        if (searchTerm) {
+            const lowerSearchTerm = searchTerm.toLowerCase();
+            filtered = freelanceContracts.filter(c => c.freelancerName.toLowerCase().includes(lowerSearchTerm));
+        }
+
+        if(filtered.length === 0) {
+            container.innerHTML = `<p>Nenhum resultado para a pesquisa "${searchTerm}".</p>`;
+            return;
+        }
+        
+        let tableHTML = `
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>Freelancer</th><th>Cliente</th><th>Matrícula</th></tr></thead>
+                    <tbody>`;
+        
+        filtered.forEach(c => {
+            tableHTML += `
+                <tr>
+                    <td>${c.freelancerName}</td>
+                    <td>${c.clientName}</td>
+                    <td>${c.matricula || '-'}</td>
+                </tr>
+            `;
+        });
+        
+        tableHTML += `</tbody></table></div>`;
+        container.innerHTML = tableHTML;
+    }
+
+    // --- Funções de Exportação PDF ---
+    const exportPdf = window.exportPdf = async (reportType) => {
+        const doc = new jsPDF();
+        const today = new Date().toLocaleDateString('pt-PT');
+        
+        // Cabeçalho Padrão
+        doc.setFontSize(18);
+        doc.text("THE WAY", 14, 22);
+        doc.setFontSize(11);
+        doc.text("Relatório Interno", 14, 30);
+        doc.text(`Data: ${today}`, 150, 22);
+
+        if (reportType === 'comissao') {
+            let totalComissao = 0;
+            cachedReportData.forEach(c => totalComissao += parseFloat(c.comissaoRecebida || 0));
+            const iva = totalComissao * 0.23;
+            const totalFinal = totalComissao + iva;
+            
+            doc.setFontSize(14);
+            doc.text("Carta de Comissão", 14, 50);
+            doc.autoTable({
+                startY: 60,
+                head: [['Descrição', 'Valor']],
+                body: [
+                    ['Soma das Comissões', `€${totalComissao.toFixed(2)}`],
+                    ['IVA (23%)', `€${iva.toFixed(2)}`],
+                ],
+                foot: [['TOTAL', `€${totalFinal.toFixed(2)}`]],
+                theme: 'striped'
+            });
+            doc.save(`carta_comissao_${today}.pdf`);
+
+        } else if (reportType === 'producao-interno') {
+            const creditContracts = cachedReportData.filter(c => c.type === 'Crédito');
+            const body = creditContracts.map(c => {
+                const clientNameParts = c.clientName.split(' ');
+                const displayName = clientNameParts.length > 1 ? `${clientNameParts[0]} ${clientNameParts[clientNameParts.length - 1]}` : c.clientName;
+                return [
+                    displayName,
+                    c.creditoMatricula || '-',
+                    `€${parseFloat(c.valorFinanciado || 0).toFixed(2)}`,
+                    `${c.comissaoPercent || 0}%`,
+                    `€${parseFloat(c.comissaoRecebida || 0).toFixed(2)}`
+                ];
+            });
+            doc.text("Mapa de Produção Interno", 14, 50);
+            doc.autoTable({
+                startY: 60,
+                head: [['Cliente', 'Matrícula', 'Valor Financiado', '% Comissão', 'Comissão']],
+                body: body,
+                theme: 'striped'
+            });
+            doc.save(`mapa_producao_interno_${today}.pdf`);
+
+        } else if (reportType === 'pendentes') {
+            const q = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
+            const snapshot = await getDocs(q);
+            const body = [];
+            const todayDate = new Date();
+            snapshot.forEach(d => {
+                const task = d.data();
+                let daysOpen = 'N/D';
+                if(task.createdAt && task.createdAt.toDate) {
+                    const createdDate = task.createdAt.toDate();
+                    daysOpen = Math.ceil(Math.abs(todayDate - createdDate) / (1000 * 60 * 60 * 24));
+                }
+                body.push([task.title, task.owner || 'N/D', daysOpen]);
+            });
+            doc.text("Carta de Pendentes", 14, 50);
+            doc.autoTable({
+                startY: 60,
+                head: [['Pendente', 'Responsável', 'Dias em Aberto']],
+                body: body,
+                theme: 'striped'
+            });
+            doc.save(`carta_pendentes_${today}.pdf`);
+
+        } else if (reportType === 'producao-freelance') {
+            const searchTerm = document.getElementById('search-freelance').value;
+            let freelanceContracts = cachedReportData.filter(c => c.isFreelancer && c.freelancerName);
+            if(searchTerm) {
+                freelanceContracts = freelanceContracts.filter(c => c.freelancerName.toLowerCase().includes(searchTerm.toLowerCase()));
+            }
+            const body = freelanceContracts.map(c => [c.freelancerName, c.clientName, c.matricula || '-']);
+            
+            doc.text("Mapa de Produção - Freelance", 14, 50);
+            if(searchTerm) doc.text(`Filtro: ${searchTerm}`, 14, 56);
+            doc.autoTable({
+                startY: 65,
+                head: [['Freelancer', 'Cliente', 'Matrícula']],
+                body: body,
+                theme: 'striped'
+            });
+            doc.save(`mapa_freelance_${today}.pdf`);
+        }
     }
 
   </script>
