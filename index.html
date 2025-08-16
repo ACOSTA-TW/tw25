@@ -4,15 +4,11 @@
   <meta charset="UTF-8">
   <title>THE WAY - Gestão Completa</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fontes Google -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Ícones Phosphor -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <!-- Chart.js para Gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- jsPDF para exportar PDFs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
   <style>
@@ -95,14 +91,11 @@
         margin: 0; font-size: 2em; font-weight: 700; display: flex; align-items: center; gap: .5em;
     }
     .header-actions { display: flex; gap: 1em; align-items: center; }
-    .search-bar, .filter-bar select, .filter-bar input, .filter-bar .btn-secondary {
+    .search-bar, .filter-bar select, .filter-bar input {
         padding: .8em 1.2em; border-radius: 8px; border: 1.5px solid var(--color-border);
-        font-size: 1em; background: var(--color-surface);
+        font-size: 1em; width: 250px; background: var(--color-surface);
         transition: border-color .2s, box-shadow .2s;
     }
-     .search-bar, .filter-bar select, .filter-bar input {
-        width: 250px;
-     }
     .search-bar:focus, .filter-bar select:focus, .filter-bar input:focus {
         outline: none;
         border-color: var(--color-primary);
@@ -122,6 +115,8 @@
         background: var(--color-surface); border-radius: 12px;
         padding: 1em; box-shadow: 0 4px 25px #0000000a;
         overflow-x: auto;
+        position: relative; /* Para o spinner */
+        min-height: 200px; /* Para o spinner ser visível */
     }
     .data-table { width: 100%; border-collapse: collapse; }
     .data-table th, .data-table td {
@@ -143,6 +138,36 @@
     .actions-cell button:hover { color: var(--color-primary); transform: scale(1.1); }
     .actions-cell button.btn-danger:hover { color: var(--color-danger); }
     .actions-cell i { font-size: 1.4em; }
+
+    /* Paginação */
+    .pagination-container {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 1em 0; font-size: .9em; color: var(--color-text-secondary);
+    }
+    .pagination-container button {
+        background: var(--color-surface); border: 1px solid var(--color-border);
+        padding: .5em 1em; border-radius: 6px; cursor: pointer;
+        transition: background .2s, color .2s;
+    }
+    .pagination-container button:hover:not(:disabled) {
+        background: var(--color-primary); color: var(--color-surface);
+    }
+    .pagination-container button:disabled {
+        opacity: 0.5; cursor: not-allowed;
+    }
+
+    /* Spinner de Carregamento */
+    .loading-spinner {
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--color-primary);
+        border-radius: 50%;
+        width: 40px; height: 40px;
+        animation: spin 1s linear infinite;
+        display: none; /* Escondido por defeito */
+    }
+    @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
     /* Modal Styles */
     .modal-overlay {
@@ -182,8 +207,8 @@
     }
     .modal-footer { margin-top: 2em; display: flex; justify-content: flex-end; gap: 1em; }
     .modal-footer button { padding: .9em 2.2em; }
-    .modal-footer .btn-secondary, .btn-secondary { background: var(--color-border); color: var(--color-text-primary); box-shadow: none; }
-    .modal-footer .btn-secondary:hover, .btn-secondary:hover { background: #D1D5DB; }
+    .modal-footer .btn-secondary { background: var(--color-border); color: var(--color-text-primary); box-shadow: none; }
+    .modal-footer .btn-secondary:hover { background: #D1D5DB; }
     
     /* Dashboard & Reports Styles */
     .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5em; margin-bottom: 2em; }
@@ -280,34 +305,58 @@
     #upload-form { margin-top: 1em; display: flex; gap: 1em; }
     #upload-form input[type="file"] { flex-grow: 1; }
     #upload-progress { width: 100%; margin-top: .5em; display: none; }
-    
-    /* Estilos para Relatórios */
-    .report-card {
+
+    /* Estilos do Módulo de Relatórios Reformulado */
+    #report-results-container {
         background: var(--color-surface);
-        border-radius: 12px;
         padding: 2em;
-        margin-bottom: 1.5em;
+        border-radius: 12px;
         box-shadow: 0 4px 25px #0000000a;
+        min-height: 300px;
     }
-    .report-card-header {
+    .report-header {
+        margin-bottom: 2em;
+        padding-bottom: 1em;
+        border-bottom: 1px solid var(--color-border);
+    }
+    .report-header h4 {
+        margin: 0 0 .5em 0;
+        font-size: .9em;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+    }
+    .report-header p {
+        margin: 0;
+        line-height: 1.6;
+    }
+    .commission-letter {
+        font-size: 1.1em;
+        line-height: 1.8;
+    }
+    .commission-letter h3 {
+        font-size: 1.8em;
+        margin-bottom: 1em;
+        color: var(--color-primary);
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: .5em;
+    }
+    .commission-letter .summary-item {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5em;
+        padding: .8em 0;
         border-bottom: 1px solid var(--color-border);
-        padding-bottom: 1em;
     }
-    .report-card-header h4 {
-        margin: 0;
-        font-size: 1.4em;
+    .commission-letter .summary-item strong {
+        font-weight: 600;
     }
-    .report-card-body {
-        min-height: 100px;
-    }
-    #freelancer-search-container {
-        display: none;
+    .commission-letter .total {
         margin-top: 1em;
+        padding-top: 1em;
+        border-top: 2px solid var(--color-text-primary);
+        font-size: 1.2em;
+        font-weight: 700;
     }
+
 
     @media(max-width:1200px){
         .dashboard-grid, .reports-grid { grid-template-columns: 1fr; }
@@ -333,7 +382,6 @@
 </head>
 <body>
 
-  <!-- ECRÃ DE LOGIN -->
   <div id="login-container">
     <div id="login-section">
       <div class="logo">THE WAY</div>
@@ -348,7 +396,6 @@
     </div>
   </div>
 
-  <!-- ESTRUTURA PRINCIPAL (escondida até ao login) -->
   <div id="app-container" style="display: none;">
     <div class="sidebar">
       <div class="logo-box">
@@ -368,8 +415,7 @@
     </div>
 
     <div class="main-container">
-       <!-- Dashboard -->
-      <div id="dashboard-section" class="main-content">
+       <div id="dashboard-section" class="main-content">
           <div class="section-header">
               <h2>Dashboard</h2>
               <div id="dashboard-update-time"></div>
@@ -420,7 +466,6 @@
           </div>
       </div>
 
-      <!-- Clientes -->
       <div id="clientes-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-users"></i>Gestão de Clientes</h2>
@@ -429,15 +474,16 @@
             <button class="btn-primary" onclick="openFormModal('cliente')"><i class="ph ph-plus"></i> Adicionar Novo</button>
           </div>
         </div>
-        <div class="table-container">
+        <div class="table-container" id="clientTableContainer">
+            <div class="loading-spinner"></div>
             <table class="data-table" id="clientTable">
                 <thead><tr><th>Nome</th><th>NIF</th><th>Comercial</th><th>RGPD</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
+        <div class="pagination-container" id="clientPagination"></div>
       </div>
       
-      <!-- Contratos -->
       <div id="contratos-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-file-text"></i>Gestão de Contratos</h2>
@@ -446,31 +492,33 @@
             <button class="btn-primary" onclick="openFormModal('contrato')"><i class="ph ph-plus"></i> Adicionar Novo</button>
           </div>
         </div>
-        <div class="table-container">
+        <div class="table-container" id="contractTableContainer">
+            <div class="loading-spinner"></div>
             <table class="data-table" id="contractTable">
                 <thead><tr><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Fase</th><th>Data de Início</th><th>Comercial</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
+        <div class="pagination-container" id="contractPagination"></div>
       </div>
 
-      <!-- Tarefas -->
-       <div id="tarefas-section" class="main-content">
+      <div id="tarefas-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-list-checks"></i>Tarefas / Pendentes</h2>
           <div class="header-actions">
             <button class="btn-primary" onclick="openFormModal('tarefa')"><i class="ph ph-plus"></i> Adicionar Nova Tarefa</button>
           </div>
         </div>
-        <div class="table-container">
+        <div class="table-container" id="tasksTableContainer">
+            <div class="loading-spinner"></div>
             <table class="data-table" id="tasksTable">
                 <thead><tr><th>Título</th><th>Responsável</th><th>Prazo</th><th>Prioridade</th><th>Estado</th><th>Ações</th></tr></thead>
                 <tbody></tbody>
             </table>
         </div>
+        <div class="pagination-container" id="tasksPagination"></div>
       </div>
 
-      <!-- Parceiros -->
       <div id="parceiros-section" class="main-content">
           <div class="section-header">
               <h2><i class="ph ph-handshake"></i>Parceiros</h2>
@@ -516,7 +564,6 @@
           </div>
       </div>
       
-      <!-- Gestão Comercial -->
       <div id="comercial-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-briefcase"></i>Gestão de Equipa</h2>
@@ -532,7 +579,6 @@
         </div>
       </div>
       
-      <!-- Gestão Financeira -->
       <div id="financeira-section" class="main-content">
         <div class="section-header">
           <h2><i class="ph ph-bank"></i>Gestão Financeira</h2>
@@ -666,94 +712,52 @@
             </div>
         </div>
       </div>
-      
-      <!-- Relatórios -->
+
       <div id="relatorios-section" class="main-content">
-        <div class="section-header">
-            <h2><i class="ph ph-chart-bar"></i>Relatórios</h2>
-        </div>
-
-        <div class="filter-bar">
-            <div>
-                <label>Período de Tempo</label>
-                <div style="display: flex; gap: 1em;">
-                    <input type="date" id="filter-start-date" style="width: auto;">
-                    <input type="date" id="filter-end-date" style="width: auto;">
-                </div>
-            </div>
-            <div>
-                <label>Comercial</label>
-                <select id="filter-comercial"></select>
-            </div>
-            <div>
-                <label>Fornecedor</label>
-                <select id="filter-fornecedor"></select>
-            </div>
-            <div>
-                <label>Financeira</label>
-                <select id="filter-financeira"></select>
-            </div>
-            <div>
-                <button class="btn-primary" onclick="generateReports()"><i class="ph ph-funnel"></i> Filtrar</button>
-                <button class="btn-secondary" onclick="clearReportFilters()">Limpar</button>
-            </div>
-        </div>
-
-        <div id="reports-container">
-            <!-- Carta de Comissão -->
-            <div class="report-card">
-                <div class="report-card-header">
-                    <h4>Carta de Comissão</h4>
-                    <button class="btn-primary" onclick="exportPdf('comissao')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
-                </div>
-                <div class="report-card-body" id="report-comissao">
-                    <p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>
-                </div>
-            </div>
-
-            <!-- Mapa de Produção Interno -->
-            <div class="report-card">
-                <div class="report-card-header">
-                    <h4>Mapa de Produção Interno</h4>
-                    <button class="btn-primary" onclick="exportPdf('producao-interno')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
-                </div>
-                <div class="report-card-body" id="report-producao-interno">
-                     <p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>
-                </div>
-            </div>
-
-            <!-- Carta de Pendentes -->
-            <div class="report-card">
-                <div class="report-card-header">
-                    <h4>Carta de Pendentes</h4>
-                    <button class="btn-primary" onclick="exportPdf('pendentes')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
-                </div>
-                <div class="report-card-body" id="report-pendentes">
-                     <p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>
-                </div>
-            </div>
-
-            <!-- Mapa de Produção - Freelance -->
-            <div class="report-card">
-                <div class="report-card-header">
-                    <h4>Mapa de Produção - Freelance</h4>
-                    <button class="btn-primary" onclick="exportPdf('producao-freelance')"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
-                </div>
-                <div class="report-card-body" id="report-producao-freelance">
-                    <p>Selecione os filtros e clique em "Filtrar". Depois, procure por um freelancer para ver os resultados.</p>
-                    <div id="freelancer-search-container">
-                        <input type="search" id="search-freelance" class="search-bar" placeholder="Pesquisar por nome do Freelancer...">
-                    </div>
-                    <div id="freelance-results"></div>
-                </div>
-            </div>
-        </div>
+          <div class="section-header">
+              <h2><i class="ph ph-file-search"></i>Extração de Mapas</h2>
+          </div>
+          <div class="filter-bar">
+              <div>
+                  <label>Tipo de Mapa</label>
+                  <select id="reportTypeSelect" onchange="toggleReportFilters()">
+                      <option value="cartaComissao">Carta de Comissão (Fornecedor)</option>
+                      <option value="mapaProducaoInterno">Mapa de Produção (Fornecedor)</option>
+                      <option value="cartaPendentes">Carta de Pendentes</option>
+                      <option value="mapaProducaoFreelance">Mapa de Produção - Freelance</option>
+                  </select>
+              </div>
+              <div>
+                  <label>Data Início</label>
+                  <input type="date" id="reportStartDate">
+              </div>
+              <div>
+                  <label>Data Fim</label>
+                  <input type="date" id="reportEndDate">
+              </div>
+              <div class="report-filter" data-report="cartaComissao mapaProducaoInterno">
+                  <label>Fornecedor</label>
+                  <select id="reportFornecedor"><option value="">-- Selecione --</option></select>
+              </div>
+              <div class="report-filter" data-report="mapaProducaoFreelance" style="display: none;">
+                  <label>Nome do Freelance</label>
+                  <input type="text" id="reportFreelancerName" placeholder="Digite o nome exato...">
+              </div>
+          </div>
+          <div class="header-actions" style="margin-top: 1.5em;">
+              <button class="btn-primary" onclick="generateReport()"><i class="ph ph-magnifying-glass"></i> Gerar Mapa</button>
+              <button class="btn-primary" onclick="exportReportToPDF()" style="background-color: var(--color-secondary);"><i class="ph ph-file-pdf"></i> Exportar PDF</button>
+          </div>
+          <hr style="margin: 2em 0; border-color: var(--color-border);">
+          <div id="report-results-container">
+              <div class="loading-spinner"></div>
+              <p>Selecione os filtros e clique em "Gerar Mapa" para ver os resultados.</p>
+          </div>
       </div>
-
+      
     </div>
   </div>
 
-  <!-- MODAIS -->
   <div id="formModal" class="modal-overlay">
     <div class="modal-box"><div class="modal-header"><h3 id="formModalTitle"></h3><button class="close-btn" onclick="closeFormModal()">&times;</button></div><div id="formModalBody" class="modal-body"></div></div>
   </div>
@@ -804,15 +808,13 @@
     </div>
   </div>
 
-  <!-- Toast Container -->
   <div id="toast-container"></div>
 
-  <!-- FIREBASE SDKS (MODULAR) -->
   <script type="module">
     // Importações do Firebase v11+ Modular SDK (Versão Atualizada)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, runTransaction, writeBatch, collectionGroup, arrayUnion, arrayRemove, limit, startAfter, endBefore, limitToLast,getCountFromServer } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
 
     // Inicialização do jsPDF
@@ -842,7 +844,6 @@
     let currentFormSubmitHandler = null;
     let creditChartInstance = null;
     let contractTypeChartInstance = null;
-    let cachedReportData = []; // Cache para os dados filtrados dos relatórios
     
     // Objeto com os tipos de seguro e comissões
     const insuranceTypes = {
@@ -904,13 +905,13 @@
       const loginContainer = document.getElementById('login-container');
       const appContainer = document.getElementById('app-container');
       if (user) {
-        const q = query(collection(db, 'comerciais'), where('email', '==', user.email), limit(1));
-        const comecialSnapshot = await getDocs(q);
+        const userDocRef = doc(db, 'comerciais', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
         
-        if (!comecialSnapshot.empty) {
-            const doc = comecialSnapshot.docs[0];
-            currentUserData = { id: doc.id, ...doc.data() };
+        if (userDocSnap.exists()) {
+            currentUserData = { id: user.uid, ...userDocSnap.data() };
         } else {
+            // Fallback para administradores ou utilizadores criados apenas na Auth
             currentUserData = { id: user.uid, email: user.email, role: 'Administrador', firstName: 'Admin' };
             console.warn("Utilizador autenticado mas sem perfil na coleção 'comerciais'. A assumir função de Administrador.");
         }
@@ -935,7 +936,7 @@
         const isAdmin = currentUserData.role === 'Administrador';
         document.getElementById('nav-comercial').style.display = isAdmin ? 'flex' : 'none';
         document.getElementById('nav-financeira').style.display = isAdmin ? 'flex' : 'none';
-        document.getElementById('nav-relatorios').style.display = isAdmin ? 'flex' : 'none'; // Apenas Admin vê relatórios
+        document.getElementById('nav-relatorios').style.display = isAdmin ? 'flex' : 'none';
     }
 
     document.getElementById('loginForm').onsubmit = e => {
@@ -954,7 +955,6 @@
     function setupEventListeners() {
         document.getElementById('search-clientes').addEventListener('input', (e) => loadClients(e.target.value));
         document.getElementById('search-contratos').addEventListener('input', (e) => loadContracts(e.target.value));
-        document.getElementById('search-freelance').addEventListener('input', (e) => renderFreelanceReport(cachedReportData, e.target.value));
     }
 
     function loadAllData() {
@@ -978,7 +978,7 @@
         
         if (sectionId === 'dashboard') loadDashboardData();
         if (sectionId === 'financeira') loadFinanceiraModule();
-        if (sectionId === 'relatorios') setupReportsModule();
+        if (sectionId === 'relatorios') setupReports();
     }
 
     const formModal = document.getElementById('formModal');
@@ -1394,7 +1394,8 @@
             const snapshot = await getDocs(collection(db, type));
             snapshot.forEach(doc => {
                 const data = doc.data();
-                partnersData[type][doc.id] = data.name || `${data.firstName} ${data.lastName}`;
+                partnersData[type][doc.id] = data; // Store the whole object
+                partnersData[type][doc.id].name = data.name || `${data.firstName} ${data.lastName}`;
             });
         }
     }
@@ -1693,7 +1694,6 @@
                 </div>
             </div>
 
-            <!-- Detalhes Crédito -->
             <div id="detailsCredito" class="service-details">
                 <h4>Detalhes do Crédito</h4>
                  <div class="row">
@@ -1716,7 +1716,6 @@
                     <div class="col"><label>Valor Financiado (€)</label><input type="number" id="creditoValorFinanciado" oninput="calculateComissaoPagar()"></div>
                 </div>
                 
-                <!-- Campos Dinâmicos para Tipo de Crédito -->
                 <div id="creditoAutomovelFields" class="credit-type-details"><label>Matrícula</label><input type="text" id="creditoMatricula"></div>
                 <div id="creditoConsumoFields" class="credit-type-details"><label>Artigo</label><input type="text" id="creditoArtigo"></div>
                 <div id="creditoHabitacaoFields" class="credit-type-details row">
@@ -1750,7 +1749,6 @@
                 <label style="margin-top: 1em;"><input type="checkbox" id="creditoRealizado"> Crédito realizado?</label>
             </div>
 
-            <!-- Detalhes Seguro -->
             <div id="detailsSeguro" class="service-details">
                 <h4>Detalhes do Seguro</h4>
                 <div class="row">
@@ -1779,7 +1777,6 @@
                 <div id="seguroFreelancerContainer" style="display:none;"><input type="text" id="seguroFreelancerName" placeholder="Nome do Freelancer"></div>
             </div>
 
-            <!-- Detalhes Legalização Automóvel -->
             <div id="detailsLegalizacao" class="service-details">
                 <h4>Detalhes da Legalização</h4>
                 <div class="row">
@@ -1792,7 +1789,6 @@
                 </div>
             </div>
 
-            <!-- Detalhes Consultoria Financeira -->
             <div id="detailsConsultoria" class="service-details">
                 <h4>Detalhes da Consultoria</h4>
                 <label>Diagnóstico Financeiro Feito?</label>
@@ -1901,7 +1897,7 @@
                 financeiraId: document.getElementById('creditoFinanceira').value,
                 valorFinanciado: document.getElementById('creditoValorFinanciado').value,
                 comissaoPercent: document.getElementById('creditoComissaoPercent').value,
-                comissaoPagar: (parseFloat(document.getElementById('creditoValorFinanciado').value || 0) * parseFloat(document.getElementById('creditoComissaoPercent').value || 0) / 100),
+                comissaoAPagar: (parseFloat(document.getElementById('creditoValorFinanciado').value || 0) * parseFloat(document.getElementById('creditoComissaoPercent').value || 0) / 100),
                 comissaoRecebida: document.getElementById('creditoComissaoRecebida').value,
                 dataEntregaFornecedor: document.getElementById('creditoDataFornecedor').value,
                 dataEntregaFinanceira: document.getElementById('creditoDataFinanceira').value,
@@ -2080,14 +2076,12 @@
             status: document.getElementById('taskStatus').value, 
             clientId: document.getElementById('taskClient').value, 
             contractId: document.getElementById('taskContract').value, 
-            createdAt: id ? null : serverTimestamp() // Adiciona timestamp na criação
         }; 
-        if(id) delete data.createdAt; // Não atualiza o timestamp
-
         try {
             if (id) {
                 await updateDoc(doc(db, 'tarefas', id), data);
             } else {
+                data.creationDate = new Date().toISOString().split('T')[0]; // Adiciona data de criação
                 await addDoc(collection(db, 'tarefas'), data);
             }
             const note = `Tarefa '${data.title}' foi ${id ? 'atualizada' : 'criada'} com estado '${data.status}'.`; 
@@ -2217,100 +2211,169 @@
         }); 
     }
     
-    const loadClients = window.loadClients = async (searchTerm = '') => {
-        const tableBody = document.getElementById('clientTable').querySelector('tbody');
-        tableBody.innerHTML = '<tr><td colspan="5">A carregar clientes...</td></tr>';
-        
-        let initialQuery;
-        if (currentUserData && currentUserData.role === 'Comercial') {
-            initialQuery = query(collection(db, 'clientes'), where('managerId', '==', currentUserData.id), orderBy('name'));
-        } else {
-            initialQuery = query(collection(db, 'clientes'), orderBy('name'));
-        }
-        
-        const snapshot = await getDocs(initialQuery);
-        let clients = [];
-        snapshot.forEach(doc => {
-            clients.push({ id: doc.id, ...doc.data() });
-        });
-        
-        if (searchTerm) {
-            const lowerCaseSearchTerm = searchTerm.toLowerCase();
-            clients = clients.filter(client => 
-                (client.name && client.name.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                (client.nif && client.nif.toLowerCase().includes(lowerCaseSearchTerm))
-            );
-        }
+    // --- LÓGICA DE PAGINAÇÃO E CARREGAMENTO ---
+    const ITEMS_PER_PAGE = 15;
 
-        tableBody.innerHTML = '';
-        if (clients.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="5">Nenhum cliente encontrado.</td></tr>';
-            return;
-        }
-
-        clients.forEach(d => {
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${d.name || '-'}</td>
-                <td>${d.nif || '-'}</td>
-                <td>${d.managerName || '-'}</td>
-                <td>${d.rgpd || '-'}</td>
-                <td class="actions-cell">
-                    <button onclick="openDetailsModal('cliente', '${d.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
-                    <button onclick="openFormModal('cliente', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('clientes', '${d.id}', '${d.name}', loadClients)" title="Eliminar"><i class="ph ph-trash"></i></button>
-                </td>
-            `;
-        });
+    function showSpinner(containerId, show) {
+        const spinner = document.querySelector(`#${containerId} .loading-spinner`);
+        if (spinner) spinner.style.display = show ? 'block' : 'none';
     }
 
-    const loadContracts = window.loadContracts = async (searchTerm = '') => {
-        const tableBody = document.getElementById('contractTable').querySelector('tbody');
-        tableBody.innerHTML = '<tr><td colspan="7">A carregar contratos...</td></tr>';
+    async function paginateQuery(baseQuery, tableBody, renderRow, paginationContainer, page, searchTerm, searchFields) {
+        showSpinner(tableBody.parentElement.id, true);
+        
+        let finalQuery = baseQuery;
+        
+        // A pesquisa no cliente é mais complexa e não pode ser feita com 'where' de forma eficiente para substrings.
+        // A abordagem será carregar e filtrar no lado do cliente, mas para grandes datasets, isto deve ser otimizado
+        // com serviços como Algolia ou um campo de 'keywords' no Firestore.
+        // Por agora, a pesquisa será aplicada após a query inicial.
 
-        let initialQuery;
-        if (currentUserData && currentUserData.role === 'Comercial') {
-            initialQuery = query(collection(db, 'contratos'), where('commercialId', '==', currentUserData.id), orderBy('startDate', 'desc'));
+        const totalCount = (await getCountFromServer(baseQuery)).data().count;
+        const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+        
+        let querySnapshot;
+        if (page > 1) {
+            const prevQuery = query(baseQuery, limit((page - 1) * ITEMS_PER_PAGE));
+            const prevSnapshot = await getDocs(prevQuery);
+            const lastVisible = prevSnapshot.docs[prevSnapshot.docs.length - 1];
+            finalQuery = query(baseQuery, startAfter(lastVisible), limit(ITEMS_PER_PAGE));
         } else {
-            initialQuery = query(collection(db, 'contratos'), orderBy('startDate', 'desc'));
+            finalQuery = query(baseQuery, limit(ITEMS_PER_PAGE));
         }
-
-        const snapshot = await getDocs(initialQuery);
-        let contracts = [];
-        snapshot.forEach(doc => {
-            contracts.push({ id: doc.id, ...doc.data() });
-        });
+        
+        querySnapshot = await getDocs(finalQuery);
+        
+        let docs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         if (searchTerm) {
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
-            contracts = contracts.filter(contract => 
-                (contract.clientName && contract.clientName.toLowerCase().includes(lowerCaseSearchTerm)) ||
-                (contract.type && contract.type.toLowerCase().includes(lowerCaseSearchTerm))
+            docs = docs.filter(docData => 
+                searchFields.some(field => 
+                    docData[field] && docData[field].toLowerCase().includes(lowerCaseSearchTerm)
+                )
             );
         }
 
         tableBody.innerHTML = '';
-        if (contracts.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="7">Nenhum contrato encontrado.</td></tr>';
-            return;
+        if (docs.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="100%">Nenhum registo encontrado.</td></tr>`;
+        } else {
+            docs.forEach(d => renderRow(d));
         }
 
-        contracts.forEach(d => {
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${d.clientName || '-'}</td>
-                <td>${d.type || '-'}</td>
-                <td>€${parseFloat(d.valorFinanciado || d.value || 0).toLocaleString('pt-PT')}</td>
-                <td>${d.fase || '-'}</td>
-                <td>${d.startDate || '-'}</td>
-                <td>${d.commercialName || '-'}</td>
-                <td class="actions-cell">
-                    <button onclick="openDetailsModal('contrato', '${d.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
-                    <button onclick="openFormModal('contrato', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="btn-danger" onclick="deleteItem('contratos', '${d.id}', 'este contrato', loadContracts)" title="Eliminar"><i class="ph ph-trash"></i></button>
-                </td>
-            `;
-        });
+        renderPaginationControls(paginationContainer, page, totalPages);
+        showSpinner(tableBody.parentElement.id, false);
+    }
+
+    function renderPaginationControls(container, currentPage, totalPages) {
+        container.innerHTML = `
+            <div>Página ${currentPage} de ${totalPages}</div>
+            <div>
+                <button onclick="changePage('${container.id}', ${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Anterior</button>
+                <button onclick="changePage('${container.id}', ${currentPage + 1})" ${currentPage >= totalPages ? 'disabled' : ''}>Próximo</button>
+            </div>
+        `;
+    }
+
+    const changePage = window.changePage = (paginationId, newPage) => {
+        if (paginationId === 'clientPagination') loadClients(document.getElementById('search-clientes').value, newPage);
+        if (paginationId === 'contractPagination') loadContracts(document.getElementById('search-contratos').value, newPage);
+        // Adicionar outras tabelas aqui
+    }
+
+    const loadClients = window.loadClients = async (searchTerm = '', page = 1) => {
+        const tableBody = document.getElementById('clientTable').querySelector('tbody');
+        const paginationContainer = document.getElementById('clientPagination');
+        
+        let baseQuery;
+        if (currentUserData && currentUserData.role === 'Comercial') {
+            baseQuery = query(collection(db, 'clientes'), where('managerId', '==', currentUserData.id), orderBy('name'));
+        } else {
+            baseQuery = query(collection(db, 'clientes'), orderBy('name'));
+        }
+        
+        // Otimização: Se houver termo de pesquisa, é melhor filtrar no cliente por agora
+        // Para uma solução escalável, seria necessário um serviço de pesquisa como Algolia
+        if (searchTerm) {
+             const snapshot = await getDocs(baseQuery);
+             let clients = [];
+             snapshot.forEach(doc => clients.push({ id: doc.id, ...doc.data() }));
+             const lowerCaseSearchTerm = searchTerm.toLowerCase();
+             clients = clients.filter(client => 
+                (client.name && client.name.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                (client.nif && client.nif.toLowerCase().includes(lowerCaseSearchTerm))
+             );
+             
+             tableBody.innerHTML = '';
+             clients.forEach(renderClientRow);
+             paginationContainer.innerHTML = ''; // Esconde paginação na pesquisa
+        } else {
+             await paginateQuery(baseQuery, tableBody, renderClientRow, paginationContainer, page, searchTerm, ['name', 'nif']);
+        }
+    }
+
+    function renderClientRow(d) {
+        const tableBody = document.getElementById('clientTable').querySelector('tbody');
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+            <td>${d.name || '-'}</td>
+            <td>${d.nif || '-'}</td>
+            <td>${d.managerName || '-'}</td>
+            <td>${d.rgpd || '-'}</td>
+            <td class="actions-cell">
+                <button onclick="openDetailsModal('cliente', '${d.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+                <button onclick="openFormModal('cliente', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn-danger" onclick="deleteItem('clientes', '${d.id}', '${d.name}', loadClients)" title="Eliminar"><i class="ph ph-trash"></i></button>
+            </td>
+        `;
+    }
+
+    const loadContracts = window.loadContracts = async (searchTerm = '', page = 1) => {
+        const tableBody = document.getElementById('contractTable').querySelector('tbody');
+        const paginationContainer = document.getElementById('contractPagination');
+
+        let baseQuery;
+        if (currentUserData && currentUserData.role === 'Comercial') {
+            baseQuery = query(collection(db, 'contratos'), where('commercialId', '==', currentUserData.id), orderBy('startDate', 'desc'));
+        } else {
+            baseQuery = query(collection(db, 'contratos'), orderBy('startDate', 'desc'));
+        }
+        
+        if (searchTerm) {
+             const snapshot = await getDocs(baseQuery);
+             let contracts = [];
+             snapshot.forEach(doc => contracts.push({ id: doc.id, ...doc.data() }));
+             const lowerCaseSearchTerm = searchTerm.toLowerCase();
+             contracts = contracts.filter(c => 
+                (c.clientName && c.clientName.toLowerCase().includes(lowerCaseSearchTerm)) ||
+                (c.type && c.type.toLowerCase().includes(lowerCaseSearchTerm))
+             );
+             
+             tableBody.innerHTML = '';
+             contracts.forEach(renderContractRow);
+             paginationContainer.innerHTML = '';
+        } else {
+            await paginateQuery(baseQuery, tableBody, renderContractRow, paginationContainer, page, searchTerm, ['clientName', 'type']);
+        }
+    }
+
+    function renderContractRow(d) {
+        const tableBody = document.getElementById('contractTable').querySelector('tbody');
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+            <td>${d.clientName || '-'}</td>
+            <td>${d.type || '-'}</td>
+            <td>€${parseFloat(d.valorFinanciado || d.value || 0).toLocaleString('pt-PT')}</td>
+            <td>${d.fase || '-'}</td>
+            <td>${d.startDate || '-'}</td>
+            <td>${d.commercialName || '-'}</td>
+            <td class="actions-cell">
+                <button onclick="openDetailsModal('contrato', '${d.id}')" title="Ver Detalhes"><i class="ph ph-eye"></i></button>
+                <button onclick="openFormModal('contrato', '${d.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                <button class="btn-danger" onclick="deleteItem('contratos', '${d.id}', 'este contrato', loadContracts)" title="Eliminar"><i class="ph ph-trash"></i></button>
+            </td>
+        `;
     }
 
     function getComercialFormHTML() { return `<form id="comercialForm"><p style="font-size: .9em; color: var(--color-text-secondary);">Nota: A criação de um novo comercial aqui apenas cria o perfil. O login (email/password) deve ser criado separadamente no painel do Firebase Authentication por um administrador.</p><div class="row"><div class="col"><label>Primeiro Nome</label><input id="comercialFirstName" required></div><div class="col"><label>Último Nome</label><input id="comercialLastName" required></div></div><div class="row"><div class="col"><label>Email (deve corresponder ao login)</label><input id="comercialEmail" type="email" required></div><div class="col"><label>Função</label><select id="comercialRole"><option value="Comercial">Comercial</option><option value="Gestor de Equipa">Gestor de Equipa</option><option value="Administrador">Administrador</option></select></div></div><div class="row"><div class="col"><label>Telefone</label><input id="comercialPhone"></div><div class="col"><label>NIF</label><input id="comercialNif"></div></div><div class="row"><div class="col"><label>IBAN</label><input id="comercialIban"></div></div><div class="row"><div class="col"><label>Data de Início</label><input id="comercialStartDate" type="date"></div><div class="col"><label>Estado</label><select id="comercialStatus"><option value="Ativo">Ativo</option><option value="Inativo">Inativo</option></select></div></div><div class="modal-footer"><button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button><button type="submit" class="btn-primary">Guardar</button></div></form>`;}
@@ -2331,7 +2394,11 @@
             if (id) {
                 await updateDoc(doc(db, 'comerciais', id), data);
             } else {
-                await addDoc(collection(db, 'comerciais'), data);
+                // Para criar um novo comercial, o ID do documento deve corresponder ao UID da autenticação.
+                // Isto é um processo complexo para fazer no cliente e deve ser feito num backend (Cloud Function).
+                // Por agora, a criação manual na consola do Firebase é mais segura.
+                showToast("A criação de novos comerciais deve ser feita por um administrador no backend.", "error");
+                return;
             }
             showToast(`Comercial guardado com sucesso!`, 'success');
             closeFormModal(); 
@@ -2426,6 +2493,7 @@
         if(tabName === 'comissoes-outros-ganhos') loadOutrosGanhos();
     }
 
+    // FUNÇÃO CORRIGIDA - Adicionada verificação de 'evt' para evitar erros
     const openBancoSubTab = window.openBancoSubTab = (evt, tabName) => {
         document.querySelectorAll('#financeira-banco .tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('#financeira-banco .tabs button').forEach(btn => btn.classList.remove('active'));
@@ -2474,7 +2542,7 @@
                     aReceberFinanceira[d.financeiraId] = (aReceberFinanceira[d.financeiraId] || 0) + parseFloat(d.comissaoRecebida || 0);
                 }
                 if(d.fornecedorId) {
-                    aPagarFornecedor[d.fornecedorId] = (aPagarFornecedor[d.fornecedorId] || 0) + parseFloat(d.comissaoPagar || 0);
+                    aPagarFornecedor[d.fornecedorId] = (aPagarFornecedor[d.fornecedorId] || 0) + parseFloat(d.comissaoAPagar || 0);
                 }
             } else if (d.type === 'Seguro') {
                 comissoesSeguros += parseFloat(d.comissaoRecebida || 0);
@@ -2505,7 +2573,7 @@
         const tableReceberBody = document.getElementById('financeirasReceberTable').querySelector('tbody');
         tableReceberBody.innerHTML = '';
         for(const id in aReceberFinanceira) {
-            const name = partnersData.financeiras[id] || 'Desconhecida';
+            const name = partnersData.financeiras[id]?.name || 'Desconhecida';
             tableReceberBody.innerHTML += `<tr><td>${name}</td><td>€${aReceberFinanceira[id].toLocaleString('pt-PT')}</td></tr>`;
         }
         if (tableReceberBody.innerHTML === '') tableReceberBody.innerHTML = '<tr><td colspan="2">Nenhum valor a receber este mês.</td></tr>';
@@ -2513,7 +2581,7 @@
         const tablePagarBody = document.getElementById('fornecedoresPagarTable').querySelector('tbody');
         tablePagarBody.innerHTML = '';
         for(const id in aPagarFornecedor) {
-            const name = partnersData.fornecedores[id] || 'Desconhecido';
+            const name = partnersData.fornecedores[id]?.name || 'Desconhecido';
             tablePagarBody.innerHTML += `<tr><td>${name}</td><td>€${aPagarFornecedor[id].toLocaleString('pt-PT')}</td></tr>`;
         }
         if (tablePagarBody.innerHTML === '') tablePagarBody.innerHTML = '<tr><td colspan="2">Nenhum valor a pagar este mês.</td></tr>';
@@ -2586,45 +2654,65 @@
         }
     }
 
+    // FUNÇÃO CORRIGIDA - Adiciona transação para edição de despesas
     async function handleDespesaFormSubmit(id) {
-        const tipoDespesa = document.getElementById('despesaType').value;
         const bancoSelect = document.getElementById('despesaBanco');
         const data = {
             date: document.getElementById('despesaDate').value,
-            value: document.getElementById('despesaValue').value,
+            value: parseFloat(document.getElementById('despesaValue').value),
             description: document.getElementById('despesaDescription').value,
-            type: tipoDespesa,
+            type: document.getElementById('despesaType').value,
             isConciliada: document.getElementById('despesaIsConciliada').checked,
             bancoId: bancoSelect.value,
             bancoName: bancoSelect.options[bancoSelect.selectedIndex]?.text || '',
+            fornecedorId: document.getElementById('despesaFornecedor')?.value || null,
+            faturaNumero: document.getElementById('despesaFatura')?.value || null,
         };
-
-        let fornecedorId = null;
-        if (tipoDespesa === 'Comissões') {
-            const fornecedorSelect = document.getElementById('despesaFornecedor');
-            fornecedorId = fornecedorSelect.value;
-            data.fornecedorId = fornecedorId;
-            data.fornecedorName = fornecedorSelect.options[fornecedorSelect.selectedIndex]?.text || '';
-            data.faturaNumero = document.getElementById('despesaFatura').value;
-        }
 
         try {
             if (id) {
-                await updateDoc(doc(db, 'despesas', id), data);
+                // Lógica de EDIÇÃO com transação para corrigir o saldo do banco
+                const despesaRef = doc(db, 'despesas', id);
+                await runTransaction(db, async (transaction) => {
+                    const despesaDoc = await transaction.get(despesaRef);
+                    if (!despesaDoc.exists()) throw "Despesa não encontrada!";
+                    const dadosAntigos = despesaDoc.data();
+                    const valorAntigo = parseFloat(dadosAntigos.value || 0);
+
+                    // Só ajusta o saldo se a despesa estiver associada a um banco
+                    if (dadosAntigos.bancoId) {
+                        const bancoRef = doc(db, 'bancos', dadosAntigos.bancoId);
+                        const bancoDoc = await transaction.get(bancoRef);
+                        if (bancoDoc.exists()) {
+                            const saldoAtual = parseFloat(bancoDoc.data().balance);
+                            // 1. Reverte o valor antigo e aplica o novo (sinais opostos para despesa)
+                            const saldoFinal = saldoAtual + valorAntigo - data.value;
+                            transaction.update(bancoRef, { balance: saldoFinal });
+                        }
+                    }
+                    // 2. Atualiza o documento da despesa
+                    transaction.update(despesaRef, data);
+                });
             } else {
-                await addDoc(collection(db, 'despesas'), data);
+                // Lógica de CRIAÇÃO (mantém-se, mas garante que o valor é float)
+                const newDocRef = await addDoc(collection(db, 'despesas'), data);
+                // Se a despesa já for criada como conciliada, ajusta o saldo
+                if (data.isConciliada && data.bancoId) {
+                     const bancoRef = doc(db, 'bancos', data.bancoId);
+                     await runTransaction(db, async(transaction) => {
+                        const bancoDoc = await transaction.get(bancoRef);
+                        if (!bancoDoc.exists()) throw "Banco não encontrado!";
+                        const novoSaldo = parseFloat(bancoDoc.data().balance) - data.value;
+                        transaction.update(bancoRef, { balance: novoSaldo });
+                     });
+                }
             }
-
-            if (tipoDespesa === 'Comissões' && fornecedorId) {
-                const note = `Despesa de comissão registada (Fatura Nº ${data.faturaNumero || 'N/A'}) no valor de €${data.value}.`;
-                await handleInteractionSubmit('fornecedores', fornecedorId, note);
-            }
-
             showToast('Despesa guardada com sucesso!', 'success');
             closeFormModal();
             loadDespesas();
             loadPorConciliar();
             loadFinanceiraDashboard();
+            loadBancos();
         } catch (error) {
             console.error("Erro ao guardar despesa:", error);
             showToast("Erro ao guardar despesa.", "error");
@@ -2890,12 +2978,13 @@
         }
     }
 
+    // FUNÇÃO CORRIGIDA - Adiciona um alerta na consola se o índice do Firestore não existir.
     async function loadMovimentos() {
         const tableBody = document.getElementById('movimentosTable').querySelector('tbody');
         tableBody.innerHTML = '<tr><td colspan="5">A carregar movimentos...</td></tr>';
         
         try {
-            const q = query(collectionGroup(db, 'movimentos'));
+            const q = query(collectionGroup(db, 'movimentos'), orderBy('data', 'desc'));
             const snapshot = await getDocs(q);
             
             if (snapshot.empty) {
@@ -2912,7 +3001,8 @@
                 });
             });
 
-            movimentos.sort((a, b) => new Date(b.data) - new Date(a.data));
+            // A ordenação já é feita na query, mas podemos garantir aqui caso seja necessário
+            // movimentos.sort((a, b) => new Date(b.data) - new Date(a.data));
 
             tableBody.innerHTML = '';
             movimentos.forEach(d => {
@@ -2929,14 +3019,28 @@
                 `;
             });
         } catch (error) {
-            // MELHORIA: Adicionada mensagem de erro mais específica.
-            console.error("Erro ao carregar movimentos:", error);
-            let errorMessage = 'Erro ao carregar movimentos. Verifique a consola.';
-            if (error.code === 'failed-precondition') {
-                errorMessage = `Erro: A consulta requer um índice. Por favor, aceda à consola do Firebase, encontre o link no erro na consola do browser e crie o índice para a coleção 'movimentos'.`;
+            // VERIFICAÇÃO INTELIGENTE DO ERRO DE ÍNDICE
+            if (error.code === 'failed-precondition' && error.message.includes('index')) {
+                console.error(
+                    "**************** ERRO DO FIRESTORE DETETADO ****************\n" +
+                    "A consulta de 'movimentos' falhou porque precisa de um índice composto.\n\n" +
+                    "COMO RESOLVER:\n" +
+                    "1. Abra a consola de desenvolvimento do browser.\n" +
+                    "2. Procure o erro original do Firestore (a vermelho).\n" +
+                    "3. Esse erro conterá um LINK DIRETO para criar o índice. CLIQUE NESSE LINK.\n" +
+                    "4. Se não encontrar o link, crie o índice manualmente na sua consola Firebase:\n" +
+                    "   - Coleção: 'movimentos'\n" +
+                    "   - Campos: 'data' (Decrescente)\n" +
+                    "   - Âmbito: 'Grupo de Coleções'\n" +
+                    "5. Aguarde alguns minutos até o índice ser criado e depois recarregue a página.\n" +
+                    "****************************************************************"
+                );
+                tableBody.innerHTML = `<tr><td colspan="5">Erro: O índice necessário para esta consulta não existe. Verifique a consola de desenvolvimento (F12) para instruções.</td></tr>`;
+            } else {
+                console.error("Erro ao carregar movimentos:", error);
+                tableBody.innerHTML = `<tr><td colspan="5">Ocorreu um erro ao carregar os movimentos.</td></tr>`;
+                showToast("Erro ao carregar movimentos.", "error");
             }
-            tableBody.innerHTML = `<tr><td colspan="5">${errorMessage}</td></tr>`;
-            showToast("Erro ao carregar movimentos.", "error");
         }
     }
     
@@ -2973,6 +3077,296 @@
             }
         });
     }
+
+    // --- NOVAS FUNÇÕES FINANCEIRAS ---
+    const loadComissoes = window.loadComissoes = async () => {
+        const tableBody = document.getElementById('comissoesTable').querySelector('tbody');
+        tableBody.innerHTML = '<tr><td colspan="6">A carregar comissões...</td></tr>';
+
+        const q = query(collection(db, 'contratos'), where('commissionStatus', '==', 'Não Paga'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            tableBody.innerHTML = '<tr><td colspan="6">Nenhuma comissão por liquidar.</td></tr>';
+            return;
+        }
+
+        const comissoesAgrupadas = {};
+
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const comissao = parseFloat(d.comissaoRecebida || 0);
+            if (comissao === 0) return;
+
+            const partnerId = d.financeiraId || d.seguradoraId;
+            if (!partnerId) return;
+
+            const contractDate = new Date(d.startDate);
+            const mesReferencia = `${contractDate.getFullYear()}-${String(contractDate.getMonth() + 1).padStart(2, '0')}`;
+            const key = `${partnerId}_${mesReferencia}`;
+
+            if (!comissoesAgrupadas[key]) {
+                comissoesAgrupadas[key] = {
+                    partnerId: partnerId,
+                    partnerName: partnersData.financeiras[partnerId]?.name || partnersData.seguradoras[partnerId]?.name || 'Desconhecido',
+                    mesReferencia: mesReferencia,
+                    total: 0,
+                    count: 0,
+                    contractIds: []
+                };
+            }
+            comissoesAgrupadas[key].total += comissao;
+            comissoesAgrupadas[key].count++;
+            comissoesAgrupadas[key].contractIds.push(doc.id);
+        });
+
+        tableBody.innerHTML = '';
+        for (const key in comissoesAgrupadas) {
+            const group = comissoesAgrupadas[key];
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td><input type="checkbox" class="comissao-check" value="${key}" data-contracts='${JSON.stringify(group.contractIds)}'></td>
+                <td>${group.partnerName}</td>
+                <td>${group.mesReferencia}</td>
+                <td>${group.count}</td>
+                <td>${group.total.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}</td>
+                <td>Não Paga</td>
+            `;
+        }
+    };
+
+    const loadOutrosGanhos = window.loadOutrosGanhos = async () => {
+        const tableBody = document.getElementById('outrosGanhosTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+        const q = query(collection(db, 'outrosGanhos'), orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            tableBody.innerHTML = '<tr><td colspan="7">Nenhum ganho registado.</td></tr>';
+            return;
+        }
+
+        snapshot.forEach(docSnap => {
+            const d = docSnap.data();
+            const valorBruto = parseFloat(d.valorBruto || 0);
+            const retencao = parseFloat(d.retencao || 0);
+            const valorLiquido = valorBruto - retencao;
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${d.date}</td>
+                <td>${d.description}</td>
+                <td>${d.parceiroName || '-'}</td>
+                <td>${valorBruto.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}</td>
+                <td>${retencao.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}</td>
+                <td>${valorLiquido.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}</td>
+                <td class="actions-cell">
+                    <button onclick="openFormModal('ganho', '${docSnap.id}')" title="Editar"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="btn-danger" onclick="deleteItem('outrosGanhos', '${docSnap.id}', 'este ganho', loadOutrosGanhos)" title="Eliminar"><i class="ph ph-trash"></i></button>
+                </td>
+            `;
+        });
+    };
+
+    function getGanhoFormHTML() {
+        return `<form id="ganhoForm">
+            <div class="row">
+                <div class="col"><label>Data</label><input type="date" id="ganhoData" required></div>
+                <div class="col"><label>Parceiro (Financeira)</label><select id="ganhoParceiro"></select></div>
+            </div>
+            <label>Descrição</label><input type="text" id="ganhoDescricao" required>
+            <div class="row">
+                <div class="col"><label>Valor Bruto</label><input type="number" id="ganhoValorBruto" step="0.01" required></div>
+                <div class="col"><label>Retenção</label><input type="number" id="ganhoRetencao" step="0.01" value="0"></div>
+            </div>
+            <label>Banco de Recebimento</label><select id="ganhoBanco" required></select>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
+                <button type="submit" class="btn-primary">Guardar</button>
+            </div>
+        </form>`;
+    }
+
+    // FUNÇÃO CORRIGIDA - Adiciona transação para edição de ganhos
+    async function handleGanhoFormSubmit(id) {
+        const parceiroSelect = document.getElementById('ganhoParceiro');
+        const bancoSelect = document.getElementById('ganhoBanco');
+        const data = {
+            date: document.getElementById('ganhoData').value,
+            description: document.getElementById('ganhoDescricao').value,
+            parceiroId: parceiroSelect.value,
+            parceiroName: parceiroSelect.options[parceiroSelect.selectedIndex]?.text || '',
+            valorBruto: parseFloat(document.getElementById('ganhoValorBruto').value),
+            retencao: parseFloat(document.getElementById('ganhoRetencao').value),
+            bancoId: bancoSelect.value,
+            bancoName: bancoSelect.options[bancoSelect.selectedIndex]?.text || '',
+        };
+        const valorLiquidoNovo = data.valorBruto - data.retencao;
+
+        try {
+            if (id) {
+                // Lógica de EDIÇÃO com transação para corrigir o saldo
+                const ganhoRef = doc(db, 'outrosGanhos', id);
+                await runTransaction(db, async (transaction) => {
+                    const ganhoDoc = await transaction.get(ganhoRef);
+                    if (!ganhoDoc.exists()) throw "Ganho não encontrado!";
+                    
+                    const dadosAntigos = ganhoDoc.data();
+                    const valorLiquidoAntigo = parseFloat(dadosAntigos.valorBruto || 0) - parseFloat(dadosAntigos.retencao || 0);
+
+                    // Apenas ajusta o saldo se o ganho estiver associado a um banco
+                    if(dadosAntigos.bancoId) {
+                        const bancoRef = doc(db, 'bancos', dadosAntigos.bancoId);
+                        const bancoDoc = await transaction.get(bancoRef);
+                        if (bancoDoc.exists()) {
+                            const saldoAtual = parseFloat(bancoDoc.data().balance);
+                            // 1. Reverte o valor antigo e aplica o novo
+                            const saldoFinal = saldoAtual - valorLiquidoAntigo + valorLiquidoNovo;
+                            transaction.update(bancoRef, { balance: saldoFinal });
+                        }
+                    }
+                    // 2. Atualiza o documento do ganho
+                    transaction.update(ganhoRef, data);
+                });
+            } else {
+                // Lógica de CRIAÇÃO 
+                const newDocRef = await addDoc(collection(db, 'outrosGanhos'), data);
+                if (data.bancoId && valorLiquidoNovo !== 0) {
+                    const bancoRef = doc(db, 'bancos', data.bancoId);
+                    // Atualiza o saldo e cria o movimento numa transação
+                    await runTransaction(db, async (transaction) => {
+                        const bancoDoc = await transaction.get(bancoRef);
+                        if (!bancoDoc.exists()) throw "Banco não encontrado!";
+                        const novoSaldo = parseFloat(bancoDoc.data().balance) + valorLiquidoNovo;
+                        transaction.update(bancoRef, { balance: novoSaldo });
+                    });
+                    await addDoc(collection(db, 'bancos', data.bancoId, 'movimentos'), {
+                        data: data.date, valor: valorLiquidoNovo, tipo: 'Ganho',
+                        descricao: `Ganho: ${data.description}`, ganhoId: newDocRef.id, createdAt: serverTimestamp()
+                    });
+                }
+            }
+            showToast('Ganho guardado com sucesso!', 'success');
+            closeFormModal();
+            loadOutrosGanhos();
+            loadFinanceiraDashboard();
+            loadBancos();
+            loadMovimentos();
+        } catch (error) {
+            console.error("Erro ao guardar ganho:", error);
+            showToast("Erro ao guardar ganho.", "error");
+        }
+    }
+
+    async function populateGanhoForm(id) {
+        await loadPartnersForDropdown('financeiras', 'ganhoParceiro');
+        await loadBancosForDropdown('ganhoBanco');
+        const docSnap = await getDoc(doc(db, 'outrosGanhos', id));
+        if (docSnap.exists()) {
+            const d = docSnap.data();
+            document.getElementById('ganhoData').value = d.date;
+            document.getElementById('ganhoDescricao').value = d.description;
+            document.getElementById('ganhoParceiro').value = d.parceiroId || '';
+            document.getElementById('ganhoValorBruto').value = d.valorBruto;
+            document.getElementById('ganhoRetencao').value = d.retencao;
+            document.getElementById('ganhoBanco').value = d.bancoId;
+        }
+    }
+
+    const toggleAllComissoes = window.toggleAllComissoes = (checked) => {
+        document.querySelectorAll('.comissao-check').forEach(cb => cb.checked = checked);
+    }
+
+    const openComissaoModal = window.openComissaoModal = async () => {
+        const selectedCheckboxes = document.querySelectorAll('.comissao-check:checked');
+        if (selectedCheckboxes.length === 0) {
+            showToast('Selecione pelo menos um grupo de comissões para liquidar.', 'warning');
+            return;
+        }
+        document.getElementById('comissaoCount').textContent = selectedCheckboxes.length;
+        await loadBancosForDropdown('comissaoBanco', true);
+        document.getElementById('comissaoDataPagamento').value = new Date().toISOString().split('T')[0];
+        comissaoModal.classList.add('active');
+    }
+
+    const closeComissaoModal = window.closeComissaoModal = () => {
+        comissaoModal.classList.remove('active');
+    }
+
+    const liquidarComissoes = window.liquidarComissoes = async () => {
+        const selectedCheckboxes = document.querySelectorAll('.comissao-check:checked');
+        const fatura = document.getElementById('comissaoFatura').value;
+        const dataPagamento = document.getElementById('comissaoDataPagamento').value;
+        const bancoSelect = document.getElementById('comissaoBanco');
+        const bancoId = bancoSelect.value;
+        const comRetencao = document.getElementById('comissaoRetencaoCheck').checked;
+        const retencaoPercent = comRetencao ? parseFloat(document.querySelector('input[name="comissaoRetencaoPercent"]:checked').value) : 0;
+
+        if (!fatura || !dataPagamento || !bancoId) {
+            showToast('Preencha todos os campos: Fatura, Data e Banco.', 'error');
+            return;
+        }
+
+        const batch = writeBatch(db);
+        let totalRecebidoBruto = 0;
+        let allContractIds = [];
+        let partnerName = '';
+
+        for (const cb of selectedCheckboxes) {
+            const contractIds = JSON.parse(cb.getAttribute('data-contracts'));
+            allContractIds = allContractIds.concat(contractIds);
+
+            const row = cb.closest('tr');
+            const valorTotalText = row.cells[4].textContent;
+            const valorTotal = parseFloat(valorTotalText.replace('€', '').replace(/\./g, '').replace(',', '.'));
+            totalRecebidoBruto += valorTotal;
+            partnerName = row.cells[1].textContent;
+        }
+
+        allContractIds.forEach(id => {
+            const docRef = doc(db, 'contratos', id);
+            batch.update(docRef, {
+                commissionStatus: 'Paga',
+                faturaLiquidacao: fatura,
+                dataLiquidacao: dataPagamento
+            });
+        });
+
+        const valorRetencao = totalRecebidoBruto * retencaoPercent;
+        const valorLiquido = totalRecebidoBruto - valorRetencao;
+
+        const movimentoDesc = `Recebimento comissões ${partnerName} - Fatura ${fatura}`;
+        const movimentoRef = doc(collection(db, 'bancos', bancoId, 'movimentos'));
+        batch.set(movimentoRef, {
+            data: dataPagamento,
+            valor: valorLiquido,
+            tipo: 'Comissão',
+            descricao: movimentoDesc,
+            createdAt: serverTimestamp()
+        });
+        
+        try {
+            await batch.commit();
+
+            await runTransaction(db, async (transaction) => {
+                const bancoRef = doc(db, 'bancos', bancoId);
+                const bancoDoc = await transaction.get(bancoRef);
+                if (!bancoDoc.exists()) throw "Banco não encontrado!";
+                const novoSaldo = parseFloat(bancoDoc.data().balance) + valorLiquido;
+                transaction.update(bancoRef, { balance: novoSaldo });
+            });
+
+            showToast('Comissões liquidadas com sucesso!', 'success');
+            closeComissaoModal();
+            loadComissoes();
+            loadBancos();
+            loadMovimentos();
+            loadFinanceiraDashboard();
+        } catch (error) {
+            console.error("Erro ao liquidar comissões:", error);
+            showToast("Erro ao liquidar comissões.", "error");
+        }
+    }
+
 
     // --- MILESTONES (ETAPAS DO CONTRATO) ---
     async function loadMilestones(contractId, containerId) {
@@ -3072,8 +3466,8 @@
         const docList = ["Livrete", "Contrato", "DUA", "DAV", "MUA de compra", "MUA de venda", "Extinção de reserva"];
         
         pendingContracts.forEach(contract => {
-            const fornecedorName = partnersData.fornecedores[contract.fornecedorId] || 'N/D';
-            const financeiraName = partnersData.financeiras[contract.financeiraId] || 'N/D';
+            const fornecedorName = partnersData.fornecedores[contract.fornecedorId]?.name || 'N/D';
+            const financeiraName = partnersData.financeiras[contract.financeiraId]?.name || 'N/D';
 
             let checklistFornecedorHTML = docList.map(doc => `
                 <label><input type="checkbox" onchange="updateContractChecklistFromDashboard('${contract.id}', 'checklistDocsFornecedor', '${doc}', this.checked)" 
@@ -3173,6 +3567,34 @@
         }
     }
 
+    const deleteDocument = window.deleteDocument = (collectionName, docId, documentId, filePath) => {
+        showConfirmModal(`Tem a certeza que quer eliminar este documento?`, async () => {
+            try {
+                // Apagar ficheiro do Storage
+                if (filePath) {
+                    const fileRef = ref(storage, filePath);
+                    await deleteObject(fileRef);
+                }
+
+                // Apagar documento do Firestore
+                await deleteDoc(doc(db, collectionName, docId, 'documentos', documentId));
+                
+                showToast('Documento eliminado com sucesso.', 'info');
+                loadDocuments(collectionName, docId, 'documentList');
+            } catch (error) {
+                console.error("Erro ao eliminar documento:", error);
+                if (error.code === 'storage/object-not-found') {
+                     // Se o ficheiro não existe no storage, apenas apaga a referência no firestore
+                     await deleteDoc(doc(db, collectionName, docId, 'documentos', documentId));
+                     showToast('Referência do documento eliminada (ficheiro não encontrado no armazenamento).', 'info');
+                     loadDocuments(collectionName, docId, 'documentList');
+                } else {
+                    showToast("Erro ao eliminar o documento.", "error");
+                }
+            }
+        });
+    }
+
     async function loadDocuments(collectionName, docId, elementId) {
         const container = document.getElementById(elementId);
         if (!container) return;
@@ -3195,613 +3617,144 @@
                 <a href="${d.url}" target="_blank" title="Abrir ${d.name}"><i class="ph ph-file-arrow-down"></i> ${d.name}</a>
                 <div>
                     <span class="file-date">${date}</span>
-                    <button class="btn-danger" style="padding: .2em .5em; font-size: .8em;" onclick="deleteDocument('${collectionName}', '${docId}', '${docSnap.id}', '${d.path}')" title="Eliminar">
-                        <i class="ph ph-trash"></i>
-                    </button>
+                    <button class="btn-danger" style="padding: .2em .5em; font-size: .8em; margin-left: 1em;" onclick="deleteDocument('${collectionName}', '${docId}', '${docSnap.id}', '${d.path}')"><i class="ph ph-trash"></i></button>
                 </div>
             `;
             container.appendChild(item);
         });
     }
 
-    const deleteDocument = window.deleteDocument = (collectionName, parentId, docId, filePath) => {
-        showConfirmModal('Tem a certeza que quer eliminar este documento? Esta ação é irreversível.', async () => {
-            try {
-                await deleteDoc(doc(db, collectionName, parentId, 'documentos', docId));
-                await deleteObject(ref(storage, filePath));
-                showToast('Documento eliminado com sucesso.', 'info');
-                loadDocuments(collectionName, parentId, 'documentList');
-            } catch (error) {
-                console.error("Erro ao eliminar documento:", error);
-                showToast("Erro ao eliminar o documento.", "error");
+    // --- RELATÓRIOS ---
+    async function setupReports() {
+        await loadPartnersForDropdown('fornecedores', 'reportFornecedor');
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        document.getElementById('reportStartDate').value = firstDayOfMonth.toISOString().split('T')[0];
+        document.getElementById('reportEndDate').value = today.toISOString().split('T')[0];
+    }
+
+    const toggleReportFilters = window.toggleReportFilters = () => {
+        const selectedReport = document.getElementById('reportTypeSelect').value;
+        document.querySelectorAll('.report-filter').forEach(filter => {
+            const reports = filter.getAttribute('data-report').split(' ');
+            if (reports.includes(selectedReport)) {
+                filter.style.display = 'block';
+            } else {
+                filter.style.display = 'none';
             }
         });
     }
 
-    // --- FUNÇÕES DE COMISSÕES (REFACTOR) ---
-    async function loadComissoes() {
-        const tableBody = document.getElementById('comissoesTable').querySelector('tbody');
-        tableBody.innerHTML = '<tr><td colspan="6">A carregar comissões...</td></tr>';
+    const generateReport = window.generateReport = async () => {
+        const resultsContainer = document.getElementById('report-results-container');
+        resultsContainer.innerHTML = '<div class="loading-spinner" style="display: block;"></div>';
         
-        const q = query(collection(db, 'contratos'), where('commissionStatus', '==', 'Não Paga'));
+        const reportType = document.getElementById('reportTypeSelect').value;
+        const startDate = document.getElementById('reportStartDate').value;
+        const endDate = document.getElementById('reportEndDate').value;
+        
+        if (!startDate || !endDate) {
+            showToast('Por favor, selecione as datas de início e fim.', 'error');
+            resultsContainer.innerHTML = '<p>Por favor, selecione as datas de início e fim.</p>';
+            return;
+        }
+
+        let q = query(collection(db, 'contratos'), where('startDate', '>=', startDate), where('startDate', '<=', endDate));
         const snapshot = await getDocs(q);
+        const contracts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        const monthlyGroups = {};
-
-        snapshot.forEach(docSnap => {
-            const contract = docSnap.data();
-            const valor = parseFloat(contract.comissaoRecebida || 0);
-            if (valor <= 0 || !contract.startDate) return;
-
-            let payerId = null;
-            let payerName = 'N/D';
-            let payerType = 'cliente';
-
-            if (contract.type === 'Crédito' && contract.financeiraId) {
-                payerId = contract.financeiraId;
-                payerName = partnersData.financeiras[payerId] || 'Financeira';
-                payerType = 'financeira';
-            } else if (contract.type === 'Seguro' && contract.seguradoraId) {
-                payerId = contract.seguradoraId;
-                payerName = partnersData.seguradoras[payerId] || 'Seguradora';
-                payerType = 'seguradora';
-            } else if (['Legalização Automóvel', 'Consultoria Financeira'].includes(contract.type) && contract.clientId) {
-                payerId = contract.clientId;
-                payerName = partnersData.clientes[payerId] || 'Cliente';
-                payerType = 'cliente';
-            }
-
-            if (!payerId) return;
-
-            const date = new Date(contract.startDate);
-            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-            const groupKey = `${payerId}_${monthKey}`;
-
-            if (!monthlyGroups[groupKey]) {
-                monthlyGroups[groupKey] = {
-                    payerName: payerName,
-                    month: monthKey,
-                    total: 0,
-                    contractIds: [],
-                    count: 0
-                };
-            }
-            monthlyGroups[groupKey].total += valor;
-            monthlyGroups[groupKey].contractIds.push(docSnap.id);
-            monthlyGroups[groupKey].count++;
-        });
-
-        if (Object.keys(monthlyGroups).length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6">Nenhuma comissão por liquidar.</td></tr>';
-            return;
-        }
-
-        tableBody.innerHTML = '';
-        for (const key in monthlyGroups) {
-            const group = monthlyGroups[key];
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td><input type="checkbox" class="comissao-check" data-group-key="${key}"></td>
-                <td>${group.payerName}</td>
-                <td>${group.month}</td>
-                <td>${group.count}</td>
-                <td>${group.total.toLocaleString('pt-PT', {style: 'currency', currency: 'EUR'})}</td>
-                <td>Por Liquidar</td>
-            `;
-            row.querySelector('.comissao-check').dataset.contracts = JSON.stringify(group.contractIds);
-            row.querySelector('.comissao-check').dataset.total = group.total;
+        switch(reportType) {
+            case 'cartaComissao':
+                const fornecedorId = document.getElementById('reportFornecedor').value;
+                if (!fornecedorId) {
+                    resultsContainer.innerHTML = '<p>Por favor, selecione um fornecedor.</p>';
+                    return;
+                }
+                const filteredContracts = contracts.filter(c => c.fornecedorId === fornecedorId && c.type === 'Crédito');
+                resultsContainer.innerHTML = generateCommissionLetterHTML(fornecedorId, filteredContracts, startDate, endDate);
+                break;
+            // Adicionar outros casos de relatório aqui
+            default:
+                resultsContainer.innerHTML = '<p>Tipo de relatório não implementado.</p>';
         }
     }
 
-    const toggleAllComissoes = window.toggleAllComissoes = (checked) => {
-        document.querySelectorAll('.comissao-check:not(:disabled)').forEach(cb => cb.checked = checked);
-    }
+    function generateCommissionLetterHTML(fornecedorId, contracts, startDate, endDate) {
+        const fornecedor = partnersData.fornecedores[fornecedorId];
+        if (!fornecedor) return '<p>Fornecedor não encontrado.</p>';
 
-    const openComissaoModal = window.openComissaoModal = async () => {
-        const selectedGroups = Array.from(document.querySelectorAll('.comissao-check:checked'));
-        if (selectedGroups.length === 0) {
-            showToast('Por favor, selecione pelo menos um grupo de comissões para liquidar.', 'warning');
-            return;
-        }
-        document.getElementById('comissaoCount').textContent = selectedGroups.length;
-        document.getElementById('comissaoDataPagamento').value = new Date().toISOString().split('T')[0];
-        await loadBancosForDropdown('comissaoBanco', true);
-        comissaoModal.classList.add('active');
-    }
-    const closeComissaoModal = window.closeComissaoModal = () => { comissaoModal.classList.remove('active'); }
-
-    const liquidarComissoes = window.liquidarComissoes = async () => {
-        const selectedCheckboxes = Array.from(document.querySelectorAll('.comissao-check:checked'));
-        const faturaNumero = document.getElementById('comissaoFatura').value;
-        const dataPagamento = document.getElementById('comissaoDataPagamento').value;
-        const bancoSelect = document.getElementById('comissaoBanco');
-        const bancoId = bancoSelect.value;
-        const temRetencao = document.getElementById('comissaoRetencaoCheck').checked;
-        const retencaoPercent = temRetencao ? parseFloat(document.querySelector('input[name="comissaoRetencaoPercent"]:checked').value) : 0;
-
-
-        if (!faturaNumero || !bancoId || !dataPagamento) {
-            showToast('Por favor, preencha todos os campos.', 'error');
-            return;
-        }
-
-        try {
-            const bancoRef = doc(db, 'bancos', bancoId);
-
-            for (const cb of selectedCheckboxes) {
-                const totalComissaoBruta = parseFloat(cb.dataset.total);
-                const valorRetencao = totalComissaoBruta * retencaoPercent;
-                const valorLiquido = totalComissaoBruta - valorRetencao;
-                const contractIds = JSON.parse(cb.dataset.contracts);
-
-                await runTransaction(db, async (transaction) => {
-                    const bancoDoc = await transaction.get(bancoRef);
-                    if (!bancoDoc.exists()) throw "Banco não encontrado!";
-                    
-                    const novoSaldo = parseFloat(bancoDoc.data().balance) + valorLiquido;
-                    transaction.update(bancoRef, { balance: novoSaldo });
-
-                    const movimentoRef = doc(collection(db, 'bancos', bancoId, 'movimentos'));
-                    transaction.set(movimentoRef, {
-                        data: dataPagamento,
-                        valor: valorLiquido,
-                        tipo: 'Comissão',
-                        descricao: `Recebimento Fatura ${faturaNumero} (${contractIds.length} contratos)`,
-                        createdAt: serverTimestamp()
-                    });
-
-                    contractIds.forEach(id => {
-                        const docRef = doc(db, 'contratos', id);
-                        transaction.update(docRef, {
-                            commissionStatus: 'Paga',
-                            faturaNumero: faturaNumero,
-                            dataPagamentoComissao: dataPagamento,
-                            bancoRecepcaoId: bancoId,
-                            temRetencao: temRetencao,
-                            retencaoPercent: retencaoPercent * 100,
-                            valorLiquidoComissao: valorLiquido
-                        });
-                    });
-                });
-            }
-            
-            showToast('Comissões liquidadas com sucesso!', 'success');
-            closeComissaoModal();
-            loadComissoes();
-            loadBancos();
-            loadMovimentos();
-        } catch (error) {
-            console.error("Erro ao liquidar comissões:", error);
-            showToast("Erro ao liquidar comissões.", "error");
-        }
-    }
-
-    // --- FUNÇÕES DE OUTROS GANHOS ---
-    function getGanhoFormHTML() {
-        return `<form id="ganhoForm">
-            <div class="row">
-                <div class="col"><label>Data</label><input type="date" id="ganhoData" required></div>
-                <div class="col"><label>Valor Bruto</label><input type="number" id="ganhoValor" step="0.01" required></div>
-            </div>
-            <label>Descrição</label><input type="text" id="ganhoDescricao" required placeholder="Ex: Rapel Anual">
-            <div class="row">
-                 <div class="col"><label>Parceiro (Opcional)</label><select id="ganhoParceiro"></select></div>
-                 <div class="col"><label>Banco</label><select id="ganhoBanco" required></select></div>
-            </div>
-             <div>
-                <label><input type="checkbox" id="ganhoRetencaoCheck" onchange="document.getElementById('ganhoRetencaoOptions').style.display = this.checked ? 'block' : 'none'"> Com retenção?</label>
-                <div id="ganhoRetencaoOptions" style="display:none; margin-top: .5em; padding-left: 1.5em;">
-                    <label style="font-weight: normal; margin-right: 1em;"><input type="radio" name="ganhoRetencaoPercent" value="0.23" checked> 23%</label>
-                    <label style="font-weight: normal;"><input type="radio" name="ganhoRetencaoPercent" value="0.25"> 25%</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="closeFormModal()">Cancelar</button>
-                <button type="submit" class="btn-primary">Guardar Ganho</button>
-            </div>
-        </form>`;
-    }
-
-    async function handleGanhoFormSubmit(id) {
-        const valorBruto = parseFloat(document.getElementById('ganhoValor').value);
-        const temRetencao = document.getElementById('ganhoRetencaoCheck').checked;
-        const retencaoPercent = temRetencao ? parseFloat(document.querySelector('input[name="ganhoRetencaoPercent"]:checked').value) : 0;
-        const valorRetencao = valorBruto * retencaoPercent;
-        const valorLiquido = valorBruto - valorRetencao;
-
-        const bancoSelect = document.getElementById('ganhoBanco');
-        const parceiroSelect = document.getElementById('ganhoParceiro');
-
-        const data = {
-            date: document.getElementById('ganhoData').value,
-            description: document.getElementById('ganhoDescricao').value,
-            valorBruto: valorBruto,
-            temRetencao: temRetencao,
-            retencaoPercent: retencaoPercent * 100,
-            valorLiquido: valorLiquido,
-            bancoId: bancoSelect.value,
-            bancoName: bancoSelect.options[bancoSelect.selectedIndex]?.text || '',
-            parceiroId: parceiroSelect.value,
-            parceiroName: parceiroSelect.options[parceiroSelect.selectedIndex]?.text || '',
-        };
-
-        if(!data.date || !data.bancoId || isNaN(valorBruto)) {
-            showToast('Por favor, preencha a data, valor e banco.', 'error');
-            return;
-        }
-
-        try {
-            const bancoRef = doc(db, 'bancos', data.bancoId);
-            await runTransaction(db, async (transaction) => {
-                 const bancoDoc = await transaction.get(bancoRef);
-                 if (!bancoDoc.exists()) throw "Banco não encontrado!";
-
-                 const novoSaldo = parseFloat(bancoDoc.data().balance) + valorLiquido;
-                 transaction.update(bancoRef, { balance: novoSaldo });
-
-                 const movimentoRef = doc(collection(db, 'bancos', data.bancoId, 'movimentos'));
-                 transaction.set(movimentoRef, {
-                    data: data.date,
-                    valor: valorLiquido,
-                    tipo: 'Outro Ganho',
-                    descricao: data.description,
-                    createdAt: serverTimestamp()
-                 });
-
-                 if (id) {
-                    // Lógica para editar (precisaria reverter o movimento antigo)
-                    await updateDoc(doc(db, 'outrosGanhos', id), data);
-                 } else {
-                    await addDoc(collection(db, 'outrosGanhos'), data);
-                 }
-            });
-
-            showToast('Ganho registado com sucesso!', 'success');
-            closeFormModal();
-            loadOutrosGanhos();
-            loadFinanceiraDashboard();
-            loadBancos();
-            loadMovimentos();
-
-        } catch (error) {
-            console.error("Erro ao registar ganho:", error);
-            showToast("Erro ao registar ganho.", "error");
-        }
-    }
-
-    async function loadOutrosGanhos() {
-        const tableBody = document.getElementById('outrosGanhosTable').querySelector('tbody');
-        tableBody.innerHTML = '';
-        const q = query(collection(db, 'outrosGanhos'), orderBy('date', 'desc'));
-        const snapshot = await getDocs(q);
-        snapshot.forEach(docSnap => {
-            const d = docSnap.data();
-            const row = tableBody.insertRow();
-            row.innerHTML = `
-                <td>${d.date}</td>
-                <td>${d.description}</td>
-                <td>${d.parceiroName || '-'}</td>
-                <td>€${d.valorBruto.toLocaleString('pt-PT')}</td>
-                <td>${d.temRetencao ? `${d.retencaoPercent}%` : 'N/A'}</td>
-                <td>€${d.valorLiquido.toLocaleString('pt-PT')}</td>
-                <td class="actions-cell">
-                    <button class="btn-danger" onclick="deleteItem('outrosGanhos', '${docSnap.id}', 'este ganho', loadOutrosGanhos)" title="Eliminar"><i class="ph ph-trash"></i></button>
-                </td>
-            `;
-        });
-    }
-    
-    // --- MÓDULO DE RELATÓRIOS ---
-    const setupReportsModule = window.setupReportsModule = async () => {
-        // Carregar dropdowns para os filtros
-        const comercialSelect = document.getElementById('filter-comercial');
-        comercialSelect.innerHTML = '<option value="">Todos</option>';
-        await loadComerciaisForDropdown('filter-comercial');
-
-        const fornecedorSelect = document.getElementById('filter-fornecedor');
-        fornecedorSelect.innerHTML = '<option value="">Todos</option>';
-        await loadPartnersForDropdown('fornecedores', 'filter-fornecedor');
-        
-        const financeiraSelect = document.getElementById('filter-financeira');
-        financeiraSelect.innerHTML = '<option value="">Todas</option>';
-        await loadPartnersForDropdown('financeiras', 'filter-financeira');
-    }
-
-    const clearReportFilters = window.clearReportFilters = () => {
-        document.getElementById('filter-start-date').value = '';
-        document.getElementById('filter-end-date').value = '';
-        document.getElementById('filter-comercial').value = '';
-        document.getElementById('filter-fornecedor').value = '';
-        document.getElementById('filter-financeira').value = '';
-        document.getElementById('search-freelance').value = '';
-        
-        // Limpar resultados
-        const initialText = '<p>Selecione os filtros e clique em "Filtrar" para gerar o relatório.</p>';
-        document.getElementById('report-comissao').innerHTML = initialText;
-        document.getElementById('report-producao-interno').innerHTML = initialText;
-        document.getElementById('report-pendentes').innerHTML = initialText;
-        document.getElementById('report-producao-freelance').innerHTML = initialText.replace('gerar o relatório', 'ver os resultados');
-        document.getElementById('freelancer-search-container').style.display = 'none';
-        document.getElementById('freelance-results').innerHTML = '';
-        cachedReportData = [];
-    }
-    
-    const generateReports = window.generateReports = async () => {
-        showToast('A gerar relatórios...', 'info');
-        
-        // 1. Obter valores dos filtros
-        const startDate = document.getElementById('filter-start-date').value;
-        const endDate = document.getElementById('filter-end-date').value;
-        const commercialId = document.getElementById('filter-comercial').value;
-        const fornecedorId = document.getElementById('filter-fornecedor').value;
-        const financeiraId = document.getElementById('filter-financeira').value;
-        
-        // 2. Fetch ALL contracts and filter on the client-side to avoid index errors
-        const contractsQuery = query(collection(db, 'contratos'));
-        const contractsSnapshot = await getDocs(contractsQuery);
-        let allContracts = [];
-        contractsSnapshot.forEach(doc => {
-            allContracts.push({ id: doc.id, ...doc.data() });
-        });
-
-        // 3. Filter the data in JavaScript
-        cachedReportData = allContracts.filter(contract => {
-            if (startDate && contract.startDate < startDate) return false;
-            if (endDate && contract.startDate > endDate) return false;
-            if (commercialId && contract.commercialId !== commercialId) return false;
-            if (fornecedorId && contract.fornecedorId !== fornecedorId) return false;
-            if (financeiraId && contract.financeiraId !== financeiraId) return false;
-            return true;
-        });
-        
-        // 4. Gerar e renderizar cada relatório
-        renderComissaoReport(cachedReportData);
-        renderProducaoInternoReport(cachedReportData);
-        await renderPendentesReport(); // Este é assíncrono e separado
-        renderFreelanceReport(cachedReportData);
-        
-        document.getElementById('freelancer-search-container').style.display = 'block';
-
-        showToast('Relatórios gerados com sucesso!', 'success');
-    }
-    
-    // --- Funções de Renderização dos Relatórios ---
-    function renderComissaoReport(data) {
-        const container = document.getElementById('report-comissao');
         let totalComissao = 0;
-        data.forEach(contract => {
-            totalComissao += parseFloat(contract.comissaoRecebida || 0);
+        let contractRows = '';
+        contracts.forEach(c => {
+            const comissao = parseFloat(c.comissaoAPagar || 0);
+            totalComissao += comissao;
+            contractRows += `
+                <div class="summary-item">
+                    <span>Contrato Cliente: <strong>${c.clientName}</strong> (Matrícula: ${c.creditoMatricula || 'N/A'})</span>
+                    <span>${comissao.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}</span>
+                </div>
+            `;
         });
-        
-        const iva = totalComissao * 0.23;
-        const totalFinal = totalComissao + iva;
-        
-        container.innerHTML = `
-            <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="kpi-card">
-                    <div class="title">Total Comissões</div>
-                    <div class="value">€${totalComissao.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</div>
+
+        return `
+            <div class="commission-letter">
+                <h3>Carta de Comissão</h3>
+                <div class="report-header">
+                    <p>
+                        <strong>Para:</strong> ${fornecedor.name}<br>
+                        <strong>NIF:</strong> ${fornecedor.nif}<br>
+                        <strong>Período:</strong> De ${startDate} a ${endDate}
+                    </p>
                 </div>
-                <div class="kpi-card">
-                    <div class="title">IVA (23%)</div>
-                    <div class="value">€${iva.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</div>
+                <p>Exmos. Senhores,</p>
+                <p>Junto enviamos o resumo dos contratos de crédito intermediados durante o período acima mencionado, para efeitos de liquidação da comissão devida.</p>
+                
+                ${contractRows}
+
+                <div class="summary-item total">
+                    <strong>Total a Liquidar:</strong>
+                    <strong>${totalComissao.toLocaleString('pt-PT', { style: 'currency', currency: 'EUR' })}</strong>
                 </div>
-                <div class="kpi-card">
-                    <div class="title">Total a Faturar</div>
-                    <div class="value">€${totalFinal.toLocaleString('pt-PT', {minimumFractionDigits: 2})}</div>
-                </div>
+
+                <p style="margin-top: 2em; font-size: .9em;">Com os melhores cumprimentos,<br>THE WAY</p>
             </div>
         `;
     }
 
-    function renderProducaoInternoReport(data) {
-        const container = document.getElementById('report-producao-interno');
-        const creditContracts = data.filter(c => c.type === 'Crédito');
+    const exportReportToPDF = window.exportReportToPDF = () => {
+        const reportContent = document.getElementById('report-results-container');
+        const reportType = document.getElementById('reportTypeSelect').value;
+        const pdf = new jsPDF();
         
-        if(creditContracts.length === 0) {
-            container.innerHTML = '<p>Nenhum contrato de crédito encontrado para os filtros selecionados.</p>';
-            return;
+        // A conversão de HTML para PDF pode ser complexa.
+        // Por agora, vamos usar um método simples que extrai o texto.
+        // Para layouts complexos, seria necessária uma biblioteca como html2canvas.
+        
+        const title = document.querySelector('#report-results-container h3')?.textContent || 'Relatório';
+        pdf.text(title, 14, 16);
+        
+        const header = document.querySelector('.report-header p')?.innerText;
+        if (header) {
+            pdf.setFontSize(10);
+            pdf.text(header, 14, 25);
         }
 
-        let tableHTML = `
-            <div class="table-container">
-                <table class="data-table">
-                    <thead><tr><th>Cliente</th><th>Matrícula</th><th>Valor Financiado</th><th>% Comissão</th><th>Comissão</th></tr></thead>
-                    <tbody>`;
-        
-        creditContracts.forEach(c => {
-            const clientNameParts = c.clientName.split(' ');
-            const displayName = clientNameParts.length > 1 ? `${clientNameParts[0]} ${clientNameParts[clientNameParts.length - 1]}` : c.clientName;
-            
-            tableHTML += `
-                <tr>
-                    <td>${displayName}</td>
-                    <td>${c.creditoMatricula || '-'}</td>
-                    <td>€${parseFloat(c.valorFinanciado || 0).toLocaleString('pt-PT')}</td>
-                    <td>${c.comissaoPercent || 0}%</td>
-                    <td>€${parseFloat(c.comissaoRecebida || 0).toLocaleString('pt-PT')}</td>
-                </tr>
-            `;
-        });
-        
-        tableHTML += `</tbody></table></div>`;
-        container.innerHTML = tableHTML;
-    }
-
-    async function renderPendentesReport() {
-        const container = document.getElementById('report-pendentes');
-        const q = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
-        const snapshot = await getDocs(q);
-        
-        if (snapshot.empty) {
-            container.innerHTML = '<p>Nenhuma tarefa pendente encontrada.</p>';
-            return;
-        }
-
-        let tableHTML = `
-            <div class="table-container">
-                <table class="data-table">
-                    <thead><tr><th>Pendente</th><th>Responsável</th><th>Dias em Aberto</th></tr></thead>
-                    <tbody>`;
-        
-        const today = new Date();
-        snapshot.forEach(doc => {
-            const task = doc.data();
-            let daysOpen = 'N/D';
-            if(task.createdAt && task.createdAt.toDate) {
-                const createdDate = task.createdAt.toDate();
-                const diffTime = Math.abs(today - createdDate);
-                daysOpen = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            }
-
-            tableHTML += `
-                <tr>
-                    <td>${task.title}</td>
-                    <td>${task.owner || 'N/D'}</td>
-                    <td>${daysOpen}</td>
-                </tr>
-            `;
+        const tableData = [];
+        document.querySelectorAll('.commission-letter .summary-item').forEach(item => {
+            const texts = [];
+            item.querySelectorAll('span, strong').forEach(span => texts.push(span.textContent.trim()));
+            tableData.push(texts);
         });
 
-        tableHTML += `</tbody></table></div>`;
-        container.innerHTML = tableHTML;
-    }
-
-    function renderFreelanceReport(data, searchTerm = '') {
-        const container = document.getElementById('freelance-results');
-        const freelanceContracts = data.filter(c => c.isFreelancer && c.freelancerName);
-        
-        if(freelanceContracts.length === 0) {
-            container.innerHTML = '<p>Nenhuma produção de freelancer encontrada para os filtros selecionados.</p>';
-            return;
+        if (tableData.length > 0) {
+            pdf.autoTable({
+                startY: 40,
+                body: tableData,
+                theme: 'plain'
+            });
         }
 
-        let filtered = freelanceContracts;
-        if (searchTerm) {
-            const lowerSearchTerm = searchTerm.toLowerCase();
-            filtered = freelanceContracts.filter(c => c.freelancerName.toLowerCase().includes(lowerSearchTerm));
-        }
-
-        if(filtered.length === 0) {
-            container.innerHTML = `<p>Nenhum resultado para a pesquisa "${searchTerm}".</p>`;
-            return;
-        }
-        
-        let tableHTML = `
-            <div class="table-container">
-                <table class="data-table">
-                    <thead><tr><th>Freelancer</th><th>Cliente</th><th>Matrícula</th></tr></thead>
-                    <tbody>`;
-        
-        filtered.forEach(c => {
-            tableHTML += `
-                <tr>
-                    <td>${c.freelancerName}</td>
-                    <td>${c.clientName}</td>
-                    <td>${c.matricula || '-'}</td>
-                </tr>
-            `;
-        });
-        
-        tableHTML += `</tbody></table></div>`;
-        container.innerHTML = tableHTML;
-    }
-
-    // --- Funções de Exportação PDF ---
-    const exportPdf = window.exportPdf = async (reportType) => {
-        const doc = new jsPDF();
-        const today = new Date().toLocaleDateString('pt-PT');
-        
-        // Cabeçalho Padrão
-        doc.setFontSize(18);
-        doc.text("THE WAY", 14, 22);
-        doc.setFontSize(11);
-        doc.text("Relatório Interno", 14, 30);
-        doc.text(`Data: ${today}`, 150, 22);
-
-        if (reportType === 'comissao') {
-            let totalComissao = 0;
-            cachedReportData.forEach(c => totalComissao += parseFloat(c.comissaoRecebida || 0));
-            const iva = totalComissao * 0.23;
-            const totalFinal = totalComissao + iva;
-            
-            doc.setFontSize(14);
-            doc.text("Carta de Comissão", 14, 50);
-            doc.autoTable({
-                startY: 60,
-                head: [['Descrição', 'Valor']],
-                body: [
-                    ['Soma das Comissões', `€${totalComissao.toFixed(2)}`],
-                    ['IVA (23%)', `€${iva.toFixed(2)}`],
-                ],
-                foot: [['TOTAL', `€${totalFinal.toFixed(2)}`]],
-                theme: 'striped'
-            });
-            doc.save(`carta_comissao_${today}.pdf`);
-
-        } else if (reportType === 'producao-interno') {
-            const creditContracts = cachedReportData.filter(c => c.type === 'Crédito');
-            const body = creditContracts.map(c => {
-                const clientNameParts = c.clientName.split(' ');
-                const displayName = clientNameParts.length > 1 ? `${clientNameParts[0]} ${clientNameParts[clientNameParts.length - 1]}` : c.clientName;
-                return [
-                    displayName,
-                    c.creditoMatricula || '-',
-                    `€${parseFloat(c.valorFinanciado || 0).toFixed(2)}`,
-                    `${c.comissaoPercent || 0}%`,
-                    `€${parseFloat(c.comissaoRecebida || 0).toFixed(2)}`
-                ];
-            });
-            doc.text("Mapa de Produção Interno", 14, 50);
-            doc.autoTable({
-                startY: 60,
-                head: [['Cliente', 'Matrícula', 'Valor Financiado', '% Comissão', 'Comissão']],
-                body: body,
-                theme: 'striped'
-            });
-            doc.save(`mapa_producao_interno_${today}.pdf`);
-
-        } else if (reportType === 'pendentes') {
-            const q = query(collection(db, 'tarefas'), where('status', '==', 'Pendente'));
-            const snapshot = await getDocs(q);
-            const body = [];
-            const todayDate = new Date();
-            snapshot.forEach(d => {
-                const task = d.data();
-                let daysOpen = 'N/D';
-                if(task.createdAt && task.createdAt.toDate) {
-                    const createdDate = task.createdAt.toDate();
-                    daysOpen = Math.ceil(Math.abs(todayDate - createdDate) / (1000 * 60 * 60 * 24));
-                }
-                body.push([task.title, task.owner || 'N/D', daysOpen]);
-            });
-            doc.text("Carta de Pendentes", 14, 50);
-            doc.autoTable({
-                startY: 60,
-                head: [['Pendente', 'Responsável', 'Dias em Aberto']],
-                body: body,
-                theme: 'striped'
-            });
-            doc.save(`carta_pendentes_${today}.pdf`);
-
-        } else if (reportType === 'producao-freelance') {
-            const searchTerm = document.getElementById('search-freelance').value;
-            let freelanceContracts = cachedReportData.filter(c => c.isFreelancer && c.freelancerName);
-            if(searchTerm) {
-                freelanceContracts = freelanceContracts.filter(c => c.freelancerName.toLowerCase().includes(searchTerm.toLowerCase()));
-            }
-            const body = freelanceContracts.map(c => [c.freelancerName, c.clientName, c.matricula || '-']);
-            
-            doc.text("Mapa de Produção - Freelance", 14, 50);
-            if(searchTerm) doc.text(`Filtro: ${searchTerm}`, 14, 56);
-            doc.autoTable({
-                startY: 65,
-                head: [['Freelancer', 'Cliente', 'Matrícula']],
-                body: body,
-                theme: 'striped'
-            });
-            doc.save(`mapa_freelance_${today}.pdf`);
-        }
+        pdf.save(`${reportType}.pdf`);
     }
 
   </script>
